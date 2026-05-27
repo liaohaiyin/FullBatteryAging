@@ -73,7 +73,7 @@ namespace BatteryAging
                 var channelCount = config.GetValue<int>("BatteryChannel:ChannelCount", 8);
                 var def = new Cabinet
                 {
-                    Name = "默认模拟机柜",
+                    Name = "机柜1",
                     CabinetIndex = 1,
                     DriverType = DriverType.Simulator,
                     ConnectionType = ConnectionType.Simulation,
@@ -84,7 +84,7 @@ namespace BatteryAging
                 await dataService.SaveCabinetAsync(def);
                 cabinets = new List<Cabinet> { def };
             }
-            channelMgr.InitializeFromCabinets(cabinets, sampleMs);
+            channelMgr.InitializeFromCabinets(cabinets);
         }
 
         private void ConfigureServices(IServiceCollection services, IConfiguration config)

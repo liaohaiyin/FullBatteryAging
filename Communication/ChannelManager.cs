@@ -26,13 +26,16 @@ namespace BatteryAging.Communication
         public event EventHandler<string> CommunicationError;
 
         /// <summary>用一组机柜初始化</summary>
-        public void InitializeFromCabinets(IEnumerable<Cabinet> cabinets, int samplingIntervalMs)
+        /// <summary>用一组机柜初始化</summary>
+        public void InitializeFromCabinets(IEnumerable<Cabinet> cabinets)
         {
             ClearAll();
             foreach (var cab in cabinets.Where(c => c.IsEnabled))
             {
                 _cabinets.Add(cab);
-                var driver = DriverFactory.Create(cab, samplingIntervalMs);
+                var sampleMs = cab.SamplingIntervalMs > 0 ? cab.SamplingIntervalMs : 1000;
+
+                var driver = DriverFactory.Create(cab, sampleMs);
                 driver.CommunicationError += (s, msg) =>
                 {
                     cab.Status = CabinetStatus.CommunicationError;
@@ -40,16 +43,14 @@ namespace BatteryAging.Communication
                 };
                 _drivers[cab.Id] = driver;
 
-                // 异步连接
                 _ = ConnectAsync(cab.Id, driver);
 
-                // 创建通道
                 for (int local = 1; local <= cab.ChannelCount; local++)
                 {
                     int global = cab.ChannelStartIndex + local - 1;
                     var executor = new ChannelExecutor(global, driver, cab.Id, local)
                     {
-                        SamplingIntervalMs = samplingIntervalMs
+                        SamplingIntervalMs = sampleMs
                     };
                     _channels[global] = executor;
                 }
@@ -68,9 +69,10 @@ namespace BatteryAging.Communication
                 ConnectionType = ConnectionType.Simulation,
                 ChannelStartIndex = 1,
                 ChannelCount = channelCount,
+                SamplingIntervalMs = samplingIntervalMs,
                 IsEnabled = true
             };
-            InitializeFromCabinets(new[] { cab }, samplingIntervalMs);
+            InitializeFromCabinets(new[] { cab });
         }
 
         private async Task ConnectAsync(string cabId, IDeviceDriver driver)

@@ -17,9 +17,9 @@ namespace BatteryAging.ViewModels
         private readonly IDialogService _dialog;
 
         public ObservableCollection<Cabinet> Cabinets { get; } = new();
-        public System.Collections.Generic.List<EnumDisplayItem<DriverType>> DriverTypes { get; }
+        public List<EnumDisplayItem<DriverType>> DriverTypes { get; }
             = EnumHelper.GetItems<DriverType>();
-        public System.Collections.Generic.List<EnumDisplayItem<ConnectionType>> ConnectionTypes { get; }
+        public List<EnumDisplayItem<ConnectionType>> ConnectionTypes { get; }
             = EnumHelper.GetItems<ConnectionType>();
 
         [ObservableProperty] private Cabinet _selectedCabinet;

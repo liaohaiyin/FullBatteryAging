@@ -211,6 +211,7 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Margin="0,0,8,0">
                                 <TextBlock Text="起始通道号" Style="{StaticResource FieldLabel}"/>
@@ -220,7 +221,11 @@
                                 <TextBlock Text="通道数" Style="{StaticResource FieldLabel}"/>
                                 <TextBox Text="{Binding ChannelCount, UpdateSourceTrigger=PropertyChanged}"/>
                             </StackPanel>
-                            <StackPanel Grid.Column="2" Margin="8,0,0,0">
+                            <StackPanel Grid.Column="2" Margin="8,0">
+                                <TextBlock Text="采样间隔 (ms)" Style="{StaticResource FieldLabel}"/>
+                                <TextBox Text="{Binding SamplingIntervalMs, UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="3" Margin="8,0,0,0">
                                 <TextBlock Text="启用" Style="{StaticResource FieldLabel}"/>
                                 <CheckBox IsChecked="{Binding IsEnabled}" Content="启用此机柜"
                                           Foreground="{StaticResource TextPrimaryBrush}"/>

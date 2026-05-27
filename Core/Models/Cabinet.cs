@@ -40,5 +40,8 @@ namespace BatteryAging.Core.Models
         public DateTime CreateTime { get; set; } = DateTime.Now;
         public DateTime UpdateTime { get; set; } = DateTime.Now;
         public string Remark { get; set; }
+
+        // ── 通道采样配置 ──
+        public int SamplingIntervalMs { get; set; } = 1000;   // 采样间隔(ms)
     }
 }
