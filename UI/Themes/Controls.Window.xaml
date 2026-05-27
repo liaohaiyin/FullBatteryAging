@@ -142,7 +142,7 @@
                                         <Button x:Name="PART_CloseButton"
                                                 Style="{StaticResource VsCloseButton}"
                                                 ToolTip="关闭"
-                                                Margin="0,2,5,0">
+                                                Margin="0,5,5,0">
                                             <!-- 叉 -->
                                             <Path Data="M0,0 L10,10 M10,0 L0,10"
                                                   Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
