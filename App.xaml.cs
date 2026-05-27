@@ -65,7 +65,6 @@ namespace BatteryAging
         {
             var dataService = Services.GetRequiredService<IDataService>();
             var channelMgr = Services.GetRequiredService<ChannelManager>();
-            var sampleMs = config.GetValue<int>("BatteryChannel:SamplingIntervalMs", 1000);
 
             var cabinets = await dataService.GetAllCabinetsAsync();
             if (cabinets.Count == 0)

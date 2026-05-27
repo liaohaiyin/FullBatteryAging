@@ -26,7 +26,6 @@ namespace BatteryAging.Communication
         public event EventHandler<string> CommunicationError;
 
         /// <summary>用一组机柜初始化</summary>
-        /// <summary>用一组机柜初始化</summary>
         public void InitializeFromCabinets(IEnumerable<Cabinet> cabinets)
         {
             ClearAll();
