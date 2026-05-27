@@ -30,6 +30,7 @@ namespace BatteryAging.UI.Pages
             // ── 深色主题 PlotModel ──
             _plotModel = new PlotModel
             {
+                DefaultFont = "微软雅黑",
                 Background = OxyColors.Transparent,
                 PlotAreaBorderColor = OxyColor.FromArgb(80, 110, 160, 200),
                 PlotAreaBorderThickness = new OxyThickness(1),

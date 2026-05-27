@@ -25,16 +25,17 @@ namespace BatteryAging.UI.Pages
 
             _model = new PlotModel
             {
-                //LegendPosition = LegendPosition.TopRight,
+                DefaultFont = "微软雅黑",
                 PlotMargins = new OxyThickness(60, 8, 60, 36),
                 PlotAreaBorderColor = OxyColor.FromArgb(60, 0, 0, 0)
+
             };
             _model.Axes.Add(new LinearAxis
             {
                 Position = AxisPosition.Bottom,
                 Title = "时间 (s)",
                 MajorGridlineStyle = LineStyle.Dot,
-                MajorGridlineColor = OxyColor.FromArgb(40, 0, 0, 0)
+                MajorGridlineColor = OxyColor.FromArgb(40, 0, 0, 0)                
             });
             _model.Axes.Add(new LinearAxis
             {
