@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib"
-                    xmlns:ctrl="clr-namespace:BatteryAging.UI.Controls">
+                    xmlns:ctrl="clr-namespace:BatteryAging.UI.Controls"
+                    xmlns:oxy="clr-namespace:OxyPlot.SkiaSharp.Wpf;assembly=OxyPlot.SkiaSharp.Wpf">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/BatteryAging;component/UI/Themes/Colors.xaml"/>
@@ -329,5 +330,11 @@
         <Setter Property="Padding" Value="6"/>
         <Setter Property="FontFamily" Value="Segoe UI, Microsoft YaHei"/>
         <Setter Property="FontSize" Value="12"/>
+    </Style>
+
+    <Style TargetType="{x:Type oxy:TrackerControl}" xmlns:oxy="http://oxyplot.org/wpf">
+        <Setter Property="Background" Value="{StaticResource VsBgHeaderBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource VsAccentBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
     </Style>
 </ResourceDictionary>

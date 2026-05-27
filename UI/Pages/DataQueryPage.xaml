@@ -5,13 +5,7 @@
       xmlns:ctrl="clr-namespace:BatteryAging.UI.Controls"
       Title="数据查询"
       Background="{StaticResource VsBgDeepBrush}">
-    <Page.Resources>
-        <Style TargetType="{x:Type oxy:TrackerControl}" xmlns:oxy="http://oxyplot.org/wpf">
-            <Setter Property="Background" Value="{StaticResource VsBgHeaderBrush}"/>
-            <Setter Property="BorderBrush" Value="{StaticResource VsAccentBrush}"/>
-            <Setter Property="BorderThickness" Value="1"/>        
-        </Style>
-    </Page.Resources>
+    
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
