@@ -211,7 +211,7 @@
                                         <!-- 时间 -->
                                         <TextBlock Grid.Row="0" Grid.Column="0" Text="时间" Style="{StaticResource CellLabelStyle}"/>
                                         <TextBlock Grid.Row="0" Grid.Column="1"
-                                                   Text="{Binding TotalElapsed}"
+                                                   Text="{Binding TotalElapsed,StringFormat={}{0:hh\\:mm\\:ss\\.fff}}"
                                                    Style="{StaticResource CellValueStyle}"
                                                    HorizontalAlignment="Right"/>
 
