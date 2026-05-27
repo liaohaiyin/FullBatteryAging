@@ -49,7 +49,7 @@
                         Style="{StaticResource VsAccentButton}"
                         Command="{Binding AnalyzeCommand}">
                     <StackPanel Orientation="Horizontal">
-                        <ctrl:VsIcon Kind="{StaticResource Icon.ChartBellCurve}" Width="16" Height="16" VerticalAlignment="Center"/>
+                        <ctrl:VsIcon Kind="{StaticResource Icon.ChartBellCurve}" Width="16" Height="16" VerticalAlignment="Center" Foreground="{StaticResource VsTextPrimaryBrush}"/>
                         <TextBlock Text="开始分析" Margin="6,0,0,0" FontWeight="Bold"/>
                     </StackPanel>
                 </Button>

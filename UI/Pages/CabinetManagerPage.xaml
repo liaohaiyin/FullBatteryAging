@@ -253,9 +253,9 @@
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                         <Button Style="{StaticResource MaterialDesignRaisedButton}"
                                 Command="{Binding SaveCabinetCommand}"
-                                Padding="20,6">
+                                Padding="8,6">
                             <StackPanel Orientation="Horizontal">
-                                <ctrl:VsIcon Kind="{StaticResource Icon.ContentSave}" Width="14" Height="14" VerticalAlignment="Center"/>
+                                <ctrl:VsIcon Kind="{StaticResource Icon.ContentSave}" Width="14" Height="14" VerticalAlignment="Center" Foreground="{StaticResource VsTextPrimaryBrush}"/>
                                 <TextBlock Text="保存机柜配置" Margin="6,0,0,0" FontWeight="Bold"/>
                             </StackPanel>
                         </Button>
