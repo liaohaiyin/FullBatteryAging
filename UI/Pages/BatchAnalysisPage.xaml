@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:ctrl="clr-namespace:BatteryAging.UI.Controls"
       xmlns:cv="clr-namespace:BatteryAging.UI.Converters"
+      xmlns:ap="clr-namespace:BatteryAging.UI.AttachedProperties"
       Title="批次分析"
       Background="{StaticResource VsBgDeepBrush}">
     <Page.Resources>
@@ -36,7 +37,8 @@
                 <TextBlock Text="电池条码前缀" VerticalAlignment="Center"
                            Foreground="{StaticResource VsTextSecondaryBrush}" Margin="0,0,10,0"/>
                 <TextBox Grid.Column="1" Text="{Binding BarCodePrefix, UpdateSourceTrigger=PropertyChanged}"                         
-                         Style="{StaticResource MaterialDesignTextBox}"/>
+                         Style="{StaticResource MaterialDesignTextBox}"
+                         ap:PlaceholderProperty.PlaceholderText="例如：BATCH2024_"/>
 
                 <TextBlock Grid.Column="2" Text="标称容量(Ah)" VerticalAlignment="Center"
                            Foreground="{StaticResource VsTextSecondaryBrush}" Margin="20,0,10,0"/>

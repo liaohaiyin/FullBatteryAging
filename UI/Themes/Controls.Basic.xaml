@@ -321,4 +321,13 @@
         <Setter Property="CalendarStyle" Value="{StaticResource VsCalendarStyle}"/>
     </Style>
 
+    <Style TargetType="ToolTip">
+        <Setter Property="Background" Value="{StaticResource VsBgHeaderBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource VsTextPrimaryBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource VsBorderBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="6"/>
+        <Setter Property="FontFamily" Value="Segoe UI, Microsoft YaHei"/>
+        <Setter Property="FontSize" Value="12"/>
+    </Style>
 </ResourceDictionary>
