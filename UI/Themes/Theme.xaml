@@ -1,0 +1,12 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/BatteryAging;component/UI/Themes/Colors.xaml"/>
+        <ResourceDictionary Source="/BatteryAging;component/UI/Themes/Icons.xaml"/>
+        <ResourceDictionary Source="/BatteryAging;component/UI/Themes/VsIcon.xaml"/>
+        <ResourceDictionary Source="/BatteryAging;component/UI/Themes/Controls.Basic.xaml"/>
+        <ResourceDictionary Source="/BatteryAging;component/UI/Themes/Controls.Selection.xaml"/>
+        <ResourceDictionary Source="/BatteryAging;component/UI/Themes/Controls.DataGrid.xaml"/>
+        <ResourceDictionary Source="/BatteryAging;component/UI/Themes/Controls.Card.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

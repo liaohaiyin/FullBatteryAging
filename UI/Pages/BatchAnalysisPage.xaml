@@ -1,0 +1,261 @@
+<Page x:Class="BatteryAging.UI.Pages.BatchAnalysisPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ctrl="clr-namespace:BatteryAging.UI.Controls"
+      xmlns:cv="clr-namespace:BatteryAging.UI.Converters"
+      Title="批次分析"
+      Background="{StaticResource VsBgDeepBrush}">
+    <Page.Resources>
+        <Style x:Key="CellValueStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFE8F4FF"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontFamily" Value="Consolas, Microsoft YaHei"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+    </Page.Resources>
+    <Grid Margin="14">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- 查询条件 -->
+        <Border Grid.Row="0" Style="{StaticResource VsCardStyle}" Padding="14,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="240"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="电池条码前缀" VerticalAlignment="Center"
+                           Foreground="{StaticResource VsTextSecondaryBrush}" Margin="0,0,10,0"/>
+                <TextBox Grid.Column="1" Text="{Binding BarCodePrefix, UpdateSourceTrigger=PropertyChanged}"                         
+                         Style="{StaticResource MaterialDesignTextBox}"/>
+
+                <TextBlock Grid.Column="2" Text="标称容量(Ah)" VerticalAlignment="Center"
+                           Foreground="{StaticResource VsTextSecondaryBrush}" Margin="20,0,10,0"/>
+                <TextBox Grid.Column="3" Text="{Binding NominalCapacity, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F3}}"
+                         Style="{StaticResource MaterialDesignTextBox}"/>
+
+                <Button Grid.Column="5"
+                        Style="{StaticResource VsAccentButton}"
+                        Command="{Binding AnalyzeCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <ctrl:VsIcon Kind="{StaticResource Icon.ChartBellCurve}" Width="16" Height="16" VerticalAlignment="Center"/>
+                        <TextBlock Text="开始分析" Margin="6,0,0,0" FontWeight="Bold"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </Border>
+
+        <!-- 一致性概要 -->
+        <Border Grid.Row="1" Style="{StaticResource VsCardStyle}" Margin="0,12,0,12">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Border Grid.Row="0" Background="{StaticResource VsBgHeaderBrush}"
+                        CornerRadius="3,3,0,0" Padding="14,8">
+                    <StackPanel Orientation="Horizontal">
+                        <ctrl:VsIcon Kind="{StaticResource Icon.GaugeFull}" Foreground="{StaticResource AccentCyanBrush}" VerticalAlignment="Center"/>
+                        <TextBlock Text="电芯一致性分析" FontWeight="Medium" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+                <UniformGrid Grid.Row="1" Columns="7" Margin="14,12,14,14">
+                    <StackPanel Margin="4,0">
+                        <TextBlock Text="样本数" Foreground="{StaticResource VsTextSecondaryBrush}"/>
+                        <TextBlock Style="{StaticResource ValueNumberStyle}" FontSize="22"
+                                   Text="{Binding SampleCount}" Foreground="{StaticResource AccentCyanBrush}"/>
+                    </StackPanel>
+                    <StackPanel Margin="4,0">
+                        <TextBlock Text="平均容量(Ah)" Foreground="{StaticResource VsTextSecondaryBrush}"/>
+                        <TextBlock Style="{StaticResource ValueNumberStyle}" FontSize="18"
+                                   Text="{Binding MeanCapacity, StringFormat={}{0:F4}}"/>
+                    </StackPanel>
+                    <StackPanel Margin="4,0">
+                        <TextBlock Text="标准差" Foreground="{StaticResource VsTextSecondaryBrush}"/>
+                        <TextBlock Style="{StaticResource ValueNumberStyle}" FontSize="18"
+                                   Text="{Binding StdDevCapacity, StringFormat={}{0:F4}}"/>
+                    </StackPanel>
+                    <StackPanel Margin="4,0">
+                        <TextBlock Text="极差" Foreground="{StaticResource VsTextSecondaryBrush}"/>
+                        <TextBlock Style="{StaticResource ValueNumberStyle}" FontSize="18"
+                                   Text="{Binding RangeCapacity, StringFormat={}{0:F4}}"/>
+                    </StackPanel>
+                    <StackPanel Margin="4,0">
+                        <TextBlock Text="最小/最大" Foreground="{StaticResource VsTextSecondaryBrush}"/>
+                        <TextBlock Style="{StaticResource CellValueStyle}" FontSize="13">
+                            <Run Text="{Binding MinCapacity, StringFormat={}{0:F3}}"/>
+                            <Run Text=" / "/>
+                            <Run Text="{Binding MaxCapacity, StringFormat={}{0:F3}}"/>
+                        </TextBlock>
+                    </StackPanel>
+                    <StackPanel Margin="4,0">
+                        <TextBlock Text="CV系数(%)" Foreground="{StaticResource VsTextSecondaryBrush}"/>
+                        <TextBlock Style="{StaticResource ValueNumberStyle}" FontSize="22"
+                                   Text="{Binding CvPercent, StringFormat={}{0:F2}}"
+                                   Foreground="{StaticResource AccentAmberBrush}"/>
+                    </StackPanel>
+                    <StackPanel Margin="4,0">
+                        <TextBlock Text="平均 SOH(%)" Foreground="{StaticResource VsTextSecondaryBrush}"/>
+                        <TextBlock Style="{StaticResource ValueNumberStyle}" FontSize="22"
+                                   Foreground="{StaticResource AccentGreenBrush}">
+                            <Run Text="{Binding AvgSoh, Converter={x:Static cv:SohPercentConverter.Instance}, FallbackValue=0}"/>
+                        </TextBlock>
+                    </StackPanel>
+                </UniformGrid>
+            </Grid>
+        </Border>
+
+        <!-- 分档结果 + 容量直方图 + 记录列表 -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="280"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="1.4*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- 分档桶 -->
+            <Border Grid.Column="0" Style="{StaticResource DarkCardStyle}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Border Grid.Row="0" Background="{StaticResource CardHeaderBrush}"
+                            CornerRadius="3,3,0,0" Padding="14,8">
+                        <StackPanel Orientation="Horizontal">
+                            <ctrl:VsIcon Kind="{StaticResource Icon.SortDescending}" Foreground="{StaticResource AccentCyanBrush}" VerticalAlignment="Center"/>
+                            <TextBlock Text="容量分档" FontWeight="Medium" Margin="8,0,0,0"/>
+                        </StackPanel>
+                    </Border>
+                    <ItemsControl Grid.Row="1" ItemsSource="{Binding GradeBuckets}" Margin="8">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Margin="4" Padding="10,8" CornerRadius="3"
+                                        Background="{StaticResource BgMidBrush}"
+                                        BorderBrush="{StaticResource BorderDimBrush}" BorderThickness="1">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="60"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="60"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding GradeName}" FontWeight="Bold"
+                                                   FontSize="18"
+                                                   Foreground="{StaticResource AccentCyanBrush}"
+                                                   VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding RangeText}"
+                                                   Foreground="{StaticResource TextSecondaryBrush}"
+                                                   FontSize="11" VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="2" Text="{Binding Count}"
+                                                   FontSize="20" FontWeight="Bold"
+                                                   FontFamily="Consolas"
+                                                   Foreground="{StaticResource AccentGreenBrush}"
+                                                   HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </Border>
+
+            <!-- 直方图 -->
+            <Border Grid.Column="1" Style="{StaticResource DarkCardStyle}" Margin="12,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Border Grid.Row="0" Background="{StaticResource CardHeaderBrush}"
+                            CornerRadius="3,3,0,0" Padding="14,8">
+                        <StackPanel Orientation="Horizontal">
+                            <ctrl:VsIcon Kind="{StaticResource Icon.ChartBar}" Foreground="{StaticResource AccentCyanBrush}" VerticalAlignment="Center"/>
+                            <TextBlock Text="容量分布直方图" FontWeight="Medium" Margin="8,0,0,0"/>
+                        </StackPanel>
+                    </Border>
+                    <ItemsControl Grid.Row="1" ItemsSource="{Binding Histogram}" Margin="14">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Rows="1"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid VerticalAlignment="Stretch" Margin="2,0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Rectangle Grid.Row="0" VerticalAlignment="Bottom" Width="36"
+                                               Height="{Binding Count, Converter={x:Static cv:HistogramHeightConverter.Instance}, FallbackValue=0}"
+                                               RadiusX="2" RadiusY="2">
+                                        <Rectangle.Fill>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                <GradientStop Color="#FF00E5FF" Offset="0"/>
+                                                <GradientStop Color="#FF2196F3" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Rectangle.Fill>
+                                    </Rectangle>
+                                    <TextBlock Grid.Row="1" Text="{Binding Count}"
+                                               HorizontalAlignment="Center"
+                                               Foreground="{StaticResource AccentCyanBrush}"
+                                               FontFamily="Consolas" FontSize="11" Margin="0,3,0,0"/>
+                                    <TextBlock Grid.Row="2" Text="{Binding Label}"
+                                               HorizontalAlignment="Center"
+                                               Foreground="{StaticResource TextMutedBrush}"
+                                               FontFamily="Consolas" FontSize="10"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </Border>
+
+            <!-- 记录列表 -->
+            <Border Grid.Column="2" Style="{StaticResource DarkCardStyle}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Border Grid.Row="0" Background="{StaticResource CardHeaderBrush}"
+                            CornerRadius="3,3,0,0" Padding="14,8">
+                        <StackPanel Orientation="Horizontal">
+                            <ctrl:VsIcon Kind="{StaticResource Icon.FormatListBulleted}" Foreground="{StaticResource AccentCyanBrush}" VerticalAlignment="Center"/>
+                            <TextBlock Text="批次记录" FontWeight="Medium" Margin="8,0,0,0"/>
+                        </StackPanel>
+                    </Border>
+                    <DataGrid Grid.Row="1" ItemsSource="{Binding Records}"
+                              AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True"
+                              GridLinesVisibility="Horizontal" HeadersVisibility="Column"
+                              RowHeaderWidth="0" Background="Transparent">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="通道" Binding="{Binding ChannelIndex}" Width="50"/>
+                            <DataGridTextColumn Header="条码" Binding="{Binding BarCode}" Width="*"/>
+                            <DataGridTextColumn Header="放电(Ah)" Binding="{Binding TotalDischargeCapacity, StringFormat={}{0:F4}}" Width="90"/>
+                            <DataGridTextColumn Header="SOH" Binding="{Binding SohEstimate, StringFormat={}{0:P1}}" Width="70"/>
+                            <DataGridTextColumn Header="档位" Binding="{Binding Grade}" Width="60"/>
+                            <DataGridTextColumn Header="结束时间" Binding="{Binding EndTime, StringFormat={}{0:MM-dd HH:mm}}" Width="100"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- 状态栏 -->
+        <Border Grid.Row="3" Padding="8,4" Margin="0,8,0,0">
+            <TextBlock Text="{Binding StatusText}" Opacity="0.7" FontSize="12"
+                       Foreground="{StaticResource TextSecondaryBrush}"/>
+        </Border>
+    </Grid>
+</Page>

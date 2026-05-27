@@ -1,0 +1,217 @@
+using System.ComponentModel;
+
+namespace BatteryAging.Core.Enums
+{
+    /// <summary>
+    /// 工步类型 - 锂电池充放电基础工步
+    /// </summary>
+    public enum StepType
+    {
+        [Description("恒流充电")]
+        CC_Charge,           // 恒流充电
+
+        [Description("恒压充电")]
+        CV_Charge,           // 恒压充电
+
+        [Description("恒流恒压充电")]
+        CCCV_Charge,         // 恒流恒压充电
+
+        [Description("恒流放电")]
+        CC_Discharge,        // 恒流放电
+
+        [Description("静置")]
+        Rest,                // 静置
+
+        [Description("循环")]
+        Loop,                // 循环
+
+        [Description("结束")]
+        End                  // 结束
+    }
+
+    /// <summary>
+    /// 触发条件类型
+    /// </summary>
+    public enum TriggerType
+    {
+        [Description("时间")]
+        Time,                // 时间触发
+
+        [Description("电压")]
+        Voltage,             // 电压触发
+
+        [Description("电流")]
+        Current,             // 电流触发
+
+        [Description("容量")]
+        Capacity,            // 容量触发
+
+        [Description("能量")]
+        Energy,              // 能量触发
+
+        [Description("温度")]
+        Temperature          // 温度触发
+    }
+
+    /// <summary>
+    /// 比较操作符
+    /// </summary>
+    public enum CompareOperator
+    {
+        [Description("大于等于")]
+        GreaterOrEqual,
+
+        [Description("小于等于")]
+        LessOrEqual,
+
+        [Description("等于")]
+        Equal,
+
+        [Description("大于")]
+        Greater,
+
+        [Description("小于")]
+        Less
+    }
+
+    /// <summary>
+    /// 通道运行状态
+    /// </summary>
+    public enum ChannelStatus
+    {
+        [Description("空闲")]
+        Idle,
+
+        [Description("运行中")]
+        Running,
+
+        [Description("已暂停")]
+        Paused,
+
+        [Description("已完成")]
+        Completed,
+
+        [Description("已停止")]
+        Stopped,
+
+        [Description("故障")]
+        Error,
+
+        [Description("保护")]
+        Protected
+    }
+
+    /// <summary>
+    /// 工步运行状态
+    /// </summary>
+    public enum StepStatus
+    {
+        [Description("未开始")]
+        NotStarted,
+
+        [Description("运行中")]
+        Running,
+
+        [Description("已完成")]
+        Completed,
+
+        [Description("已跳过")]
+        Skipped,
+
+        [Description("已中止")]
+        Aborted
+    }
+
+    /// <summary>
+    /// 保护类型
+    /// </summary>
+    public enum ProtectionType
+    {
+        [Description("无")]
+        None,
+        [Description("过压")]
+        OverVoltage,
+        [Description("欠压")]
+        UnderVoltage,
+        [Description("过流")]
+        OverCurrent,
+        [Description("过温")]
+        OverTemperature,
+        [Description("超时")]
+        Timeout,
+        [Description("反接")]
+        ReversePolarity,
+        [Description("电压跌落异常")]
+        VoltageDropAnomaly,
+        [Description("通讯中断")]
+        CommunicationLost
+    }
+
+    /// <summary>
+    /// 驱动类型 - 支持的设备厂商
+    /// </summary>
+    public enum DriverType
+    {
+        [Description("模拟器")]
+        Simulator,
+        [Description("新威")]
+        NeWare,
+        [Description("蓝电")]
+        Land,
+        [Description("鑫达能")]
+        XinDaNeng,
+        [Description("致茂")]
+        Chroma,
+        [Description("艾诺")]
+        Arbin,
+        [Description("ETS")]
+        Ets
+    }
+
+    /// <summary>
+    /// 通讯方式
+    /// </summary>
+    public enum ConnectionType
+    {
+        [Description("模拟")]
+        Simulation,
+        [Description("TCP/IP")]
+        Tcp,
+        [Description("串口")]
+        Serial
+    }
+
+    /// <summary>
+    /// 机柜状态
+    /// </summary>
+    public enum CabinetStatus
+    {
+        [Description("离线")]
+        Offline,
+        [Description("已连接")]
+        Connected,
+        [Description("通讯异常")]
+        CommunicationError,
+        [Description("已禁用")]
+        Disabled
+    }
+
+    /// <summary>
+    /// 容量档位
+    /// </summary>
+    public enum CapacityGrade
+    {
+        [Description("未分档")]
+        Unknown,
+        [Description("A档")]
+        A,
+        [Description("B档")]
+        B,
+        [Description("C档")]
+        C,
+        [Description("D档")]
+        D,
+        [Description("不合格")]
+        Reject
+    }
+}
