@@ -313,16 +313,16 @@
             </ScrollViewer>
 
             <!-- 通道选择列表 -->
-            <Border Grid.Row="3" Style="{StaticResource VsCardStyle}" Padding="8" Margin="0,12,0,0">
+            <Border Grid.Row="3" Style="{StaticResource VsCardStyle}" Padding="2" Margin="0,5,0,0">
                 <ListBox ItemsSource="{Binding Channels}"
                          SelectedItem="{Binding SelectedChannel}"
                          BorderThickness="0"
                          Background="Transparent"
-                         ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                          ScrollViewer.VerticalScrollBarVisibility="Disabled">
                     <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal"/>
+                            <WrapPanel Orientation="Horizontal"/>
                         </ItemsPanelTemplate>
                     </ListBox.ItemsPanel>
                     <ListBox.ItemContainerStyle>
@@ -334,7 +334,7 @@
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="ListBoxItem">
-                                        <Border x:Name="Bd" CornerRadius="3" Padding="10,5"
+                                        <Border x:Name="Bd" CornerRadius="3" Padding="5,2"
                                                 Background="{StaticResource VsBgHeaderBrush}"
                                                 BorderThickness="1"
                                                 BorderBrush="{StaticResource VsBorderBrush}">

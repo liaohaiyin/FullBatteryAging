@@ -30,7 +30,7 @@
 
                 <StackPanel Orientation="Horizontal" Margin="12,0">
                     <ctrl:VsIcon Kind="{StaticResource Icon.BatteryChargingHigh}"
-                                 Width="18" Height="18"
+                                 Width="28" Height="28"
                                  Foreground="{StaticResource VsAccentBrush}"
                                  VerticalAlignment="Center"/>
                     <TextBlock Text="锂电池充放电老化上位机"
