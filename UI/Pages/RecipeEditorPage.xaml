@@ -308,7 +308,7 @@
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" Margin="4,0,0,0">
                                     <TextBlock Text="阈值" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
-                                    <TextBox Text="{Binding TriggerValue, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F3}}"/>
+                                    <TextBox Text="{Binding TriggerValue, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F3}}" Height="30"/>
                                 </StackPanel>
                             </Grid>
                         </StackPanel>
