@@ -108,6 +108,8 @@ namespace BatteryAging.Communication
             _consecutiveCommErrors = 0;
             _lastVoltage = double.NaN;
             _cts = new CancellationTokenSource();
+            if (_driver is SimulatorDriver sim)
+                sim.SetNominalCapacity(LocalChannelIndex, recipe.NominalCapacity);
             ChangeStatus(ChannelStatus.Running, resumeFromCheckpoint ? "从断点恢复" : "测试启动");
 
             _runningTask = Task.Run(() => RunLoop(_cts.Token), _cts.Token);

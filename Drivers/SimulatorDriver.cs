@@ -30,7 +30,7 @@ namespace BatteryAging.Drivers
             {
                 _batteries[i] = new BatteryCellSimulator(
                     initialSoc: 0.2 + (i * 0.05) % 0.4,
-                    nominalCapacity: 2.6);
+                    nominalCapacity: 2.6, internalResistance: 0.15);
             }
         }
 
@@ -107,9 +107,20 @@ namespace BatteryAging.Drivers
             return cc;
         }
 
-        /// <summary>电池模拟器访问入口（用于 SOC 等内部状态读取）</summary>
+        /// <summary>
+        /// 电池模拟器访问入口（用于 SOC 等内部状态读取）
+        /// </summary>
         public BatteryCellSimulator GetBattery(int channelIndex)
             => _batteries.TryGetValue(channelIndex, out var b) ? b : null;
+
+        /// <summary>
+        /// 设置指定通道电池的标称容量（用于让模拟器跟随测试方案）
+        /// </summary>
+        public void SetNominalCapacity(int channelIndex, double nominalCapacity)
+        {
+            if (nominalCapacity > 0 && _batteries.TryGetValue(channelIndex, out var b))
+                b.NominalCapacity = nominalCapacity;
+        }
 
         public void Dispose() => IsConnected = false;
     }
