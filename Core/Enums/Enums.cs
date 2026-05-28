@@ -159,13 +159,7 @@ namespace BatteryAging.Core.Enums
         [Description("蓝电")]
         Land,
         [Description("鑫达能")]
-        XinDaNeng,
-        [Description("致茂")]
-        Chroma,
-        [Description("艾诺")]
-        Arbin,
-        [Description("ETS")]
-        Ets
+        XinDaNeng        
     }
 
     /// <summary>
@@ -177,8 +171,8 @@ namespace BatteryAging.Core.Enums
         Simulation,
         [Description("TCP/IP")]
         Tcp,
-        [Description("串口")]
-        Serial
+        [Description("RS485")]
+        RS485
     }
 
     /// <summary>

@@ -107,10 +107,10 @@ namespace BatteryAging.Drivers
     }
 
     /// <summary>致茂驱动占位 - 通常用 SCPI</summary>
-    public class ChromaDriver : TcpDriverBase
+    public class XinDaNengDriver : TcpDriverBase
     {
-        public override DriverType DriverType => DriverType.Chroma;
-        public ChromaDriver(string host, int port) : base(host, port) { }
+        public override DriverType DriverType => DriverType.XinDaNeng;
+        public XinDaNengDriver(string host, int port) : base(host, port) { }
         public override Task ApplyStepAsync(int channelIndex, StepSetpoint setpoint, CancellationToken token = default) => throw new NotImplementedException();
         public override Task StopChannelAsync(int channelIndex, CancellationToken token = default) => throw new NotImplementedException();
         public override Task<DeviceMeasurement> ReadAsync(int channelIndex, CancellationToken token = default) => throw new NotImplementedException();
