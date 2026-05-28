@@ -12,7 +12,16 @@ namespace BatteryAging.Drivers
         public static IDeviceDriver Create(Cabinet cabinet, int samplingIntervalMs)
         {
             if (cabinet == null) throw new ArgumentNullException(nameof(cabinet));
+            return cabinet.ConnectionType switch
+            {
+                ConnectionType.Tcp => CreateTcpDriver(cabinet, samplingIntervalMs),
+                ConnectionType.RS485 => throw new NotSupportedException("RS485 connection type is not supported yet."),
+                _ => CreateTcpDriver(cabinet, samplingIntervalMs)
+            };
+        }
 
+        private static IDeviceDriver CreateTcpDriver(Cabinet cabinet, int samplingIntervalMs)
+        {
             return cabinet.DriverType switch
             {
                 DriverType.Simulator => new SimulatorDriver(cabinet.ChannelCount, samplingIntervalMs),

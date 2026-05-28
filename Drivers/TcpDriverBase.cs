@@ -8,7 +8,7 @@ namespace BatteryAging.Drivers
 {
     /// <summary>
     /// TCP 驱动基类 - 各厂商 TCP 驱动可继承此类
-    /// 当前为骨架实现，留待对接具体协议（NeWare / Land / Chroma 等）
+    /// 当前为骨架实现，留待对接具体协议（NeWare / Land / XinDaNeng）
     /// </summary>
     public abstract class TcpDriverBase : IDeviceDriver
     {
