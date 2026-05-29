@@ -18,6 +18,8 @@
             <cv:InverseBooleanConverter x:Key="InvBoolCv"/>
             <cv:InverseBoolToVisibilityConverter x:Key="InvBoolVisCv"/>
             <cv:StepTypeEqualsToVisibilityConverter x:Key="StepTypeEqVisCv"/>
+            <cv:SocToHeightConverter x:Key="SocToHeightCv"/>
+            <cv:SocToBrushConverter x:Key="SocToBrushCv"/>
             <BooleanToVisibilityConverter x:Key="BoolVisCv"/>
         </ResourceDictionary>
     </Application.Resources>

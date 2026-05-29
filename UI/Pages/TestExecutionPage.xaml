@@ -4,6 +4,7 @@
       xmlns:oxy="clr-namespace:OxyPlot.SkiaSharp.Wpf;assembly=OxyPlot.SkiaSharp.Wpf"
       xmlns:ap="clr-namespace:BatteryAging.UI.AttachedProperties"
       xmlns:ctrl="clr-namespace:BatteryAging.UI.Controls"
+      xmlns:cv="clr-namespace:BatteryAging.UI.Converters"
       Title="测试执行"
       Background="{StaticResource VsBgDeepBrush}">
     <Page.Resources>
@@ -141,225 +142,241 @@
             </Border>
 
             <!-- 通道矩阵：紧凑横向卡片 4 列 -->
-            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                <ItemsControl ItemsSource="{Binding Channels}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <UniformGrid Columns="5"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border Margin="4" CornerRadius="4"
-                                    Background="{StaticResource VsBgPanelBrush}"
-                                    BorderBrush="{StaticResource VsBorderBrush}"
-                                    BorderThickness="1"
-                                    Height="170">
-                                <Border.Effect>
-                                    <DropShadowEffect Color="#FF000814" Opacity="0.4"
-                                                      BlurRadius="6" ShadowDepth="2"/>
-                                </Border.Effect>
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="40"/>
-                                        <RowDefinition Height="*"/>
-                                    </Grid.RowDefinitions>
+            <ListBox Grid.Row="1"
+                     ItemsSource="{Binding Channels}"
+                     SelectedItem="{Binding SelectedChannel}"
+                     BorderThickness="0"
+                     Background="Transparent"
+                     HorizontalContentAlignment="Stretch"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="5"/>
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Padding" Value="0"/>
+                        <Setter Property="Margin" Value="0"/>
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBoxItem">
+                                    <ContentPresenter/>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border Margin="4" CornerRadius="4"
+                                Background="{StaticResource VsBgPanelBrush}"
+                                Height="170"
+                                Cursor="Hand">
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Setter Property="BorderBrush" Value="{StaticResource VsBorderBrush}"/>
+                                    <Setter Property="BorderThickness" Value="1"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsSelected,
+                                                     RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Value="True">
+                                            <Setter Property="BorderBrush" Value="{StaticResource VsSuccessBrush}"/>
+                                            <Setter Property="BorderThickness" Value="2"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                            <Border.Effect>
+                                <DropShadowEffect Color="#FF000814" Opacity="0.4"
+                                                  BlurRadius="6" ShadowDepth="2"/>
+                            </Border.Effect>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
 
-                                    <!-- 左侧编号条 -->
-                                    <Border Grid.Column="0"
-                                            Background="{Binding Status, Converter={StaticResource ChannelStatusBrushCv}}"
-                                            CornerRadius="3,0,0,3">
-                                        <Grid>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="*"/>
-                                                <RowDefinition Height="Auto"/>
-                                            </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0"
-                                                       Text="{Binding ShortLabel}"
-                                                       Foreground="White"
-                                                       FontSize="22"
-                                                       FontWeight="Bold"
-                                                       HorizontalAlignment="Center"
-                                                       VerticalAlignment="Center"/>
-                                            <Border Grid.Row="1" Background="#44000000" Padding="2,3">
-                                                <TextBlock Text="{Binding ChannelName}"
-                                                           Foreground="White"
-                                                           FontSize="11"
-                                                           HorizontalAlignment="Center"
-                                                           Opacity="0.9"/>
-                                            </Border>
-                                        </Grid>
-                                    </Border>
-
-                                    <!-- 右侧数据区 -->
-                                    <Grid Grid.Row="1" Margin="8,6,8,6">
+                                <!-- 上侧编号条 -->
+                                <Border Grid.Column="0"
+                                        Background="{Binding Status, Converter={StaticResource ChannelStatusBrushCv}}"
+                                        CornerRadius="3,0,0,3">
+                                    <Grid>
                                         <Grid.RowDefinitions>
-                                            <RowDefinition Height="*"/>
-                                            <RowDefinition Height="*"/>
-                                            <RowDefinition Height="*"/>
-                                            <RowDefinition Height="*"/>
-                                            <RowDefinition Height="*"/>
-                                            <RowDefinition Height="*"/>
                                             <RowDefinition Height="*"/>
                                             <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="28"/>
-                                            <ColumnDefinition Width="*"/>
-                                        </Grid.ColumnDefinitions>
-
-                                        <!-- 时间 -->
-                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="时间" Style="{StaticResource CellLabelStyle}"/>
-                                        <TextBlock Grid.Row="0" Grid.Column="1"
-                                                   Text="{Binding TotalElapsed,StringFormat={}{0:hh\\:mm\\:ss\\.fff}}"
-                                                   Style="{StaticResource CellValueStyle}"
-                                                   HorizontalAlignment="Right"/>
-
-                                        <!-- 电流 -->
-                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="电流" Style="{StaticResource CellLabelStyle}"/>
-                                        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                                            <TextBlock Text="{Binding Current, StringFormat={}{0:F4}, Mode=OneWay}"
-                                                       Style="{StaticResource CellValueStyle}"
-                                                       Foreground="{StaticResource AccentAmberBrush}"/>
-                                            <TextBlock Text="A" Style="{StaticResource CellUnitStyle}"/>
-                                        </StackPanel>
-
-                                        <!-- 电压 -->
-                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="电压" Style="{StaticResource CellLabelStyle}"/>
-                                        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                                            <TextBlock Text="{Binding Voltage, StringFormat={}{0:F4}, Mode=OneWay}"
-                                                       Style="{StaticResource CellValueStyle}"
-                                                       Foreground="{StaticResource AccentCyanBrush}"/>
-                                            <TextBlock Text="V" Style="{StaticResource CellUnitStyle}"/>
-                                        </StackPanel>
-
-                                        <!-- 容量+温度 同一行 -->
-                                        <TextBlock Grid.Row="3" Grid.Column="0" Text="容量" Style="{StaticResource CellLabelStyle}"/>
-                                        <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                                            <TextBlock Text="{Binding Capacity, StringFormat={}{0:F3}, Mode=OneWay}"
-                                                       Style="{StaticResource CellValueStyle}"
-                                                       FontSize="11"/>
-                                            <TextBlock Text="Ah" Style="{StaticResource CellUnitStyle}"/>
-                                        </StackPanel>
-
-                                        <TextBlock Grid.Row="4" Grid.Column="0" Text="温度" Style="{StaticResource CellLabelStyle}"/>
-                                        <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                                            <TextBlock Text="{Binding Temperature, StringFormat={}{0:F1}, Mode=OneWay}"
-                                                       Style="{StaticResource CellValueStyle}"
-                                                       FontSize="11"/>
-                                            <TextBlock Text="°C" Style="{StaticResource CellUnitStyle}"/>
-                                        </StackPanel>
-
-                                        <!-- 工步 -->
-                                        <TextBlock Grid.Row="5" Grid.Column="0" Text="工步" Style="{StaticResource CellLabelStyle}"/>
-                                        <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                                            <Border Background="{Binding CurrentStepType, Converter={StaticResource StepTypeBrushCv}}"
-                                                    CornerRadius="2" Padding="4,1">
-                                                <TextBlock Text="{Binding CurrentStepType, Converter={StaticResource EnumDescCv}}"
-                                                           Foreground="White" FontSize="9"/>
-                                            </Border>
-                                            <TextBlock Style="{StaticResource CellLabelStyle}" Margin="4,0,0,0">
-                                                <Run Text="{Binding CurrentStepIndex, Mode=OneWay}"/>
-                                                <Run Text="/"/>
-                                                <Run Text="{Binding TotalSteps, Mode=OneWay}"/>
-                                            </TextBlock>
-                                        </StackPanel>
-
-                                        <TextBlock Grid.Row="6" Grid.Column="0" Text="条码" Style="{StaticResource CellLabelStyle}"/>
-                                        <TextBlock Grid.Row="6" Grid.Column="1"
-                                                   Text="{Binding BarCode, Mode=OneWay}"
-                                                   Style="{StaticResource CellValueStyle}"
-                                                   FontSize="11"
-                                                   HorizontalAlignment="Right"/>
-
-                                        <!-- 状态条 -->
-                                        <Border Grid.Row="7" Grid.ColumnSpan="2" Margin="0,6,0,0"
-                                                Background="#33000000" CornerRadius="2" Padding="5,3">
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*"/>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                </Grid.ColumnDefinitions>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <Ellipse Width="7" Height="7"
-                                                             Fill="{Binding Status, Converter={StaticResource ChannelStatusBrushCv}}"
-                                                             VerticalAlignment="Center"/>
-                                                    <TextBlock Text="{Binding StatusText}"
-                                                               Style="{StaticResource CellValueStyle}"
-                                                               FontSize="11"
-                                                               Margin="5,0,0,0"/>
-                                                </StackPanel>
-                                                <TextBlock Grid.Column="1"
-                                                           Text="{Binding RecipeName}"
-                                                           Style="{StaticResource CellLabelStyle}"
-                                                           TextTrimming="CharacterEllipsis"
-                                                           MaxWidth="120"
-                                                           HorizontalAlignment="Right"/>
-                                            </Grid>
+                                        <TextBlock Grid.Row="0"
+                                                    Text="{Binding ShortLabel}"
+                                                    Foreground="White"
+                                                    FontSize="22"
+                                                    FontWeight="Bold"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"/>
+                                        <Border Grid.Row="1" Background="#44000000" Padding="2,3">
+                                            <TextBlock Text="{Binding ChannelName}"
+                                                        Foreground="White"
+                                                        FontSize="11"
+                                                        HorizontalAlignment="Center"
+                                                        Opacity="0.9"/>
                                         </Border>
                                     </Grid>
-                                </Grid>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
+                                </Border>
 
-            <!-- 通道选择列表 -->
-            <Border Grid.Row="3" Style="{StaticResource VsCardStyle}" Padding="2" Margin="0,5,0,0">
-                <ListBox ItemsSource="{Binding Channels}"
-                         SelectedItem="{Binding SelectedChannel}"
-                         BorderThickness="0"
-                         Background="Transparent"
-                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                         ScrollViewer.VerticalScrollBarVisibility="Disabled">
-                    <ListBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel Orientation="Horizontal"/>
-                        </ItemsPanelTemplate>
-                    </ListBox.ItemsPanel>
-                    <ListBox.ItemContainerStyle>
-                        <Style TargetType="ListBoxItem">
-                            <Setter Property="Padding" Value="0"/>
-                            <Setter Property="Margin" Value="3"/>
-                            <Setter Property="BorderThickness" Value="0"/>
-                            <Setter Property="Background" Value="Transparent"/>
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="ListBoxItem">
-                                        <Border x:Name="Bd" CornerRadius="3" Padding="5,2"
-                                                Background="{StaticResource VsBgHeaderBrush}"
-                                                BorderThickness="1"
-                                                BorderBrush="{StaticResource VsBorderBrush}">
-                                            <ContentPresenter/>
+                                <!-- 下侧数据区 -->
+                                <Grid Grid.Row="1" Margin="5,6">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="28"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- 时间 -->
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="时间" Style="{StaticResource CellLabelStyle}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="1"
+                                                Text="{Binding TotalElapsed,StringFormat={}{0:hh\\:mm\\:ss\\.fff}}"
+                                                Style="{StaticResource CellValueStyle}"
+                                                HorizontalAlignment="Right"/>
+
+                                    <!-- 电流 -->
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="电流" Style="{StaticResource CellLabelStyle}"/>
+                                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <TextBlock Text="{Binding Current, StringFormat={}{0:F4}, Mode=OneWay}"
+                                                    Style="{StaticResource CellValueStyle}"
+                                                    Foreground="{StaticResource AccentAmberBrush}"/>
+                                        <TextBlock Text="A" Style="{StaticResource CellUnitStyle}"/>
+                                    </StackPanel>
+
+                                    <!-- 电压 -->
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="电压" Style="{StaticResource CellLabelStyle}"/>
+                                    <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <TextBlock Text="{Binding Voltage, StringFormat={}{0:F4}, Mode=OneWay}"
+                                                    Style="{StaticResource CellValueStyle}"
+                                                    Foreground="{StaticResource AccentCyanBrush}"/>
+                                        <TextBlock Text="V" Style="{StaticResource CellUnitStyle}"/>
+                                    </StackPanel>
+
+                                    <!-- 容量+温度 同一行 -->
+                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="容量" Style="{StaticResource CellLabelStyle}"/>
+                                    <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <TextBlock Text="{Binding Capacity, StringFormat={}{0:F3}, Mode=OneWay}"
+                                                    Style="{StaticResource CellValueStyle}"
+                                                    FontSize="11"/>
+                                        <TextBlock Text="Ah" Style="{StaticResource CellUnitStyle}"/>
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Row="4" Grid.Column="0" Text="温度" Style="{StaticResource CellLabelStyle}"/>
+                                    <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <TextBlock Text="{Binding Temperature, StringFormat={}{0:F1}, Mode=OneWay}"
+                                                    Style="{StaticResource CellValueStyle}"
+                                                    FontSize="11"/>
+                                        <TextBlock Text="°C" Style="{StaticResource CellUnitStyle}"/>
+                                    </StackPanel>
+
+                                    <!-- 工步 -->
+                                    <TextBlock Grid.Row="5" Grid.Column="0" Text="工步" Style="{StaticResource CellLabelStyle}"/>
+                                    <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <Border Background="{Binding CurrentStepType, Converter={StaticResource StepTypeBrushCv}}"
+                                                CornerRadius="2" Padding="4,1">
+                                            <TextBlock Text="{Binding CurrentStepType, Converter={StaticResource EnumDescCv}}"
+                                                        Foreground="White" FontSize="9"/>
                                         </Border>
-                                        <ControlTemplate.Triggers>
-                                            <Trigger Property="IsSelected" Value="True">
-                                                <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource VsAccentBrush}"/>
-                                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource VsBgActiveBrush}"/>
-                                            </Trigger>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource VsAccentBrush}"/>
-                                            </Trigger>
-                                        </ControlTemplate.Triggers>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </ListBox.ItemContainerStyle>
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <Ellipse Width="9" Height="9" Margin="0,0,6,0"
-                                         Fill="{Binding Status, Converter={StaticResource ChannelStatusBrushCv}}"/>
-                                <TextBlock Text="{Binding ChannelName}" FontSize="12"
-                                           VerticalAlignment="Center"
-                                           Foreground="{StaticResource VsTextPrimaryBrush}"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            </Border>
+                                        <TextBlock Style="{StaticResource CellLabelStyle}" Margin="4,0,0,0">
+                                            <Run Text="{Binding CurrentStepIndex, Mode=OneWay}"/>
+                                            <Run Text="/"/>
+                                            <Run Text="{Binding TotalSteps, Mode=OneWay}"/>
+                                        </TextBlock>
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Row="6" Grid.Column="0" Text="条码" Style="{StaticResource CellLabelStyle}"/>
+                                    <TextBlock Grid.Row="6" Grid.Column="1"
+                                                Text="{Binding BarCode, Mode=OneWay}"
+                                                Style="{StaticResource CellValueStyle}"
+                                                FontSize="11"
+                                                HorizontalAlignment="Right"/>
+
+                                    <!-- 状态条 -->
+                                    <Border Grid.Row="7" Grid.ColumnSpan="3" Margin="0,6,0,0"
+                                            Background="#33000000" CornerRadius="2" Padding="5,3">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Ellipse Width="7" Height="7"
+                                                            Fill="{Binding Status, Converter={StaticResource ChannelStatusBrushCv}}"
+                                                            VerticalAlignment="Center"/>
+                                                <TextBlock Text="{Binding StatusText}"
+                                                            Style="{StaticResource CellValueStyle}"
+                                                            FontSize="11"
+                                                            Margin="5,0,0,0"/>
+                                            </StackPanel>
+                                            <TextBlock Grid.Column="1"
+                                                        Text="{Binding RecipeName}"
+                                                        Style="{StaticResource CellLabelStyle}"
+                                                        TextTrimming="CharacterEllipsis"
+                                                        MaxWidth="120"
+                                                        HorizontalAlignment="Right"/>
+                                        </Grid>
+                                    </Border>
+                                    <!-- 中部：电池图形 -->
+                                    <StackPanel Grid.Row="0" Grid.RowSpan="7" Grid.Column="2" HorizontalAlignment="Stretch"
+                                                VerticalAlignment="Stretch" Margin="5,0,0,0">
+                                        <!-- 正极凸起 -->
+                                        <Border Width="15" Height="5"
+                                                Background="{StaticResource VsBorderLightBrush}"
+                                                CornerRadius="1,1,0,0" HorizontalAlignment="Center"/>
+                                        <!-- 电池主体 -->
+                                        <Border Width="40" Height="83"
+                                                BorderBrush="{StaticResource VsBorderLightBrush}"
+                                                BorderThickness="2" CornerRadius="3"
+                                                Background="#FF101820">
+                                            <Grid Margin="2" ClipToBounds="True">
+                                                <!-- 液位（底部向上填充） -->
+                                                <Rectangle VerticalAlignment="Bottom"
+                                                           Fill="{Binding Soc, Converter={x:Static cv:SocToBrushConverter.Instance}}"
+                                                           Height="{Binding Soc, Converter={x:Static cv:SocToHeightConverter.Instance}, ConverterParameter=79}"
+                                                           RadiusX="1" RadiusY="1" Opacity="0.8"/>
+                                                <!-- 液位刻度（横线） -->
+                                                <StackPanel VerticalAlignment="Stretch" Margin="0,4">
+                                                    <Rectangle Height="1" Fill="#33FFFFFF" Margin="0,0,0,20"/>
+                                                    <Rectangle Height="1" Fill="#33FFFFFF" Margin="0,0,0,20"/>
+                                                    <Rectangle Height="1" Fill="#33FFFFFF" Margin="0,0,0,20"/>
+                                                </StackPanel>
+                                                <!-- SOC 百分比 -->
+                                                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                    <TextBlock FontFamily="Consolas" FontWeight="Bold"
+                                                               FontSize="18" Foreground="White"
+                                                               HorizontalAlignment="Center">
+                                                        <Run Text="{Binding Soc, StringFormat={}{0:F0}, Mode=OneWay}"/>
+                                                    </TextBlock>
+                                                    <TextBlock Text="SOC %" FontSize="9"
+                                                               Foreground="#CCFFFFFF"
+                                                               HorizontalAlignment="Center" Margin="0,-2,0,0"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                    </StackPanel>
+                                </Grid>                              
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>            
         </Grid>
 
         <!-- ═══ 右侧：曲线 + 汇总 + 日志 ═══ -->

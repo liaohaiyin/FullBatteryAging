@@ -20,7 +20,7 @@ namespace BatteryAging.ViewModels
         public ObservableCollection<DataPoint> DataPoints { get; } = new();
 
         [ObservableProperty] private TestRecord _selectedRecord;
-        [ObservableProperty] private DateTime _startDate = DateTime.Today.AddDays(-30);
+        [ObservableProperty] private DateTime _startDate = DateTime.Today.AddDays(-7);
         [ObservableProperty] private DateTime _endDate = DateTime.Today.AddDays(1);
         [ObservableProperty] private string _barCode;
         [ObservableProperty] private int? _channelFilter;

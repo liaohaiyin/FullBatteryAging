@@ -8,7 +8,17 @@
     <UseWPF>true</UseWPF>
     <RootNamespace>BatteryAging</RootNamespace>
     <AssemblyName>BatteryAging</AssemblyName>
+    <PackageIcon>logo.png</PackageIcon>
+    <ApplicationIcon>Resouces\logo.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="UI\Windows\logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resouces\logo.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
@@ -21,6 +31,10 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.8" />
     <PackageReference Include="OxyPlot.SkiaSharp.Wpf" Version="2.2.0" />
     <PackageReference Include="System.IO.Ports" Version="9.0.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="UI\Windows\logo.png" />
   </ItemGroup>
 
   <ItemGroup>

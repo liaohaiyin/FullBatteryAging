@@ -171,4 +171,37 @@ namespace BatteryAging.UI.Converters
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
             => null;
     }
+
+    /// <summary>SOC (0~100) → 高度，ConverterParameter = 最大高度（像素）</summary>
+    public class SocToHeightConverter : IValueConverter
+    {
+        public static readonly SocToHeightConverter Instance = new();
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            double soc = value is double d ? d : 0;
+            soc = Math.Clamp(soc, 0, 100);
+            double max = 80;
+            if (parameter is string s &&
+                double.TryParse(s, NumberStyles.Float, CultureInfo.InvariantCulture, out var m))
+                max = m;
+            return soc / 100.0 * max;
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            => Binding.DoNothing;
+    }
+
+    /// <summary>SOC → 液位颜色（绿/琥珀/红）</summary>
+    public class SocToBrushConverter : IValueConverter
+    {
+        public static readonly SocToBrushConverter Instance = new();
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            double soc = value is double d ? d : 0;
+            if (soc >= 60) return new SolidColorBrush(Color.FromRgb(0x4C, 0xAF, 0x50));
+            if (soc >= 25) return new SolidColorBrush(Color.FromRgb(0xFF, 0xB3, 0x00));
+            return new SolidColorBrush(Color.FromRgb(0xE5, 0x39, 0x35));
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            => Binding.DoNothing;
+    }
 }
