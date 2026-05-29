@@ -346,7 +346,7 @@
                                                 BorderThickness="2" CornerRadius="3"
                                                 Background="#FF101820">
                                             <Grid Margin="2" ClipToBounds="True">
-                                                <!-- 液位（底部向上填充） -->
+                                                <!-- 液位（底部向上填充） Height="83" - 4 = 79-->
                                                 <Rectangle VerticalAlignment="Bottom"
                                                            Fill="{Binding Soc, Converter={x:Static cv:SocToBrushConverter.Instance}}"
                                                            Height="{Binding Soc, Converter={x:Static cv:SocToHeightConverter.Instance}, ConverterParameter=79}"

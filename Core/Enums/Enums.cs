@@ -171,8 +171,8 @@ namespace BatteryAging.Core.Enums
         Simulation,
         [Description("TCP/IP")]
         Tcp,
-        [Description("RS485")]
-        RS485
+        [Description("串口")]
+        Serial
     }
 
     /// <summary>

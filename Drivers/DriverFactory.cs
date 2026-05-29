@@ -15,8 +15,9 @@ namespace BatteryAging.Drivers
             return cabinet.ConnectionType switch
             {
                 ConnectionType.Tcp => CreateTcpDriver(cabinet, samplingIntervalMs),
-                ConnectionType.RS485 => throw new NotSupportedException("RS485 connection type is not supported yet."),
-                _ => CreateTcpDriver(cabinet, samplingIntervalMs)
+                ConnectionType.Serial => CreateSerialDriver(cabinet, samplingIntervalMs),
+                ConnectionType.Simulation => new SimulatorDriver(cabinet.ChannelCount, samplingIntervalMs),
+                _ => new SimulatorDriver(cabinet.ChannelCount, samplingIntervalMs)
             };
         }
 
@@ -28,6 +29,21 @@ namespace BatteryAging.Drivers
                 DriverType.NeWare => new NewareDriver(cabinet.IpAddress, cabinet.TcpPort),
                 DriverType.Land => new LandDriver(cabinet.IpAddress, cabinet.TcpPort),
                 DriverType.XinDaNeng => new XinDaNengDriver(cabinet.IpAddress, cabinet.TcpPort),
+                _ => new SimulatorDriver(cabinet.ChannelCount, samplingIntervalMs)
+            };
+        }
+
+        private static IDeviceDriver CreateSerialDriver(Cabinet cabinet, int samplingIntervalMs)
+        {
+            return cabinet.DriverType switch
+            {
+                DriverType.Simulator => new SimulatorDriver(cabinet.ChannelCount, samplingIntervalMs),
+                DriverType.NeWare => new NewareSerialDriver(cabinet.SerialPort, cabinet.BaudRate,
+                                            cabinet.DataBits, cabinet.StopBits, cabinet.Parity),
+                DriverType.Land => new LandSerialDriver(cabinet.SerialPort, cabinet.BaudRate,
+                                            cabinet.DataBits, cabinet.StopBits, cabinet.Parity),
+                DriverType.XinDaNeng => new XinDaNengSerialDriver(cabinet.SerialPort, cabinet.BaudRate,
+                                            cabinet.DataBits, cabinet.StopBits, cabinet.Parity),
                 _ => new SimulatorDriver(cabinet.ChannelCount, samplingIntervalMs)
             };
         }

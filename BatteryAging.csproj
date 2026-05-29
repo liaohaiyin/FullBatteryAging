@@ -34,10 +34,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="UI\Windows\logo.png" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
