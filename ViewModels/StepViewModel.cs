@@ -43,87 +43,87 @@ namespace BatteryAging.ViewModels
         }
 
         [ObservableProperty] private int _sequence;
-        partial void OnSequenceChanged(int v) => _step.Sequence = v;
+        partial void OnSequenceChanged(int value) => _step.Sequence = value;
 
         [ObservableProperty] private string _name;
-        partial void OnNameChanged(string v) => _step.Name = v;
+        partial void OnNameChanged(string value) => _step.Name = value;
 
         [ObservableProperty] private StepType _type;
-        partial void OnTypeChanged(StepType v) => _step.Type = v;
+        partial void OnTypeChanged(StepType value) => _step.Type = value;
 
         [ObservableProperty] private double _current;
-        partial void OnCurrentChanged(double v) => _step.Current = v;
+        partial void OnCurrentChanged(double value) => _step.Current = value;
 
         [ObservableProperty] private double _voltage;
-        partial void OnVoltageChanged(double v) => _step.Voltage = v;
+        partial void OnVoltageChanged(double value) => _step.Voltage = value;
 
         [ObservableProperty] private double _cutoffCurrent;
-        partial void OnCutoffCurrentChanged(double v) => _step.CutoffCurrent = v;
+        partial void OnCutoffCurrentChanged(double value) => _step.CutoffCurrent = value;
 
         [ObservableProperty] private double _cutoffVoltage;
-        partial void OnCutoffVoltageChanged(double v) => _step.CutoffVoltage = v;
+        partial void OnCutoffVoltageChanged(double value) => _step.CutoffVoltage = value;
 
         [ObservableProperty] private double _durationSeconds;
-        partial void OnDurationSecondsChanged(double v) => _step.DurationSeconds = v;
+        partial void OnDurationSecondsChanged(double value) => _step.DurationSeconds = value;
 
         [ObservableProperty] private double _capacityLimit;
-        partial void OnCapacityLimitChanged(double v) => _step.CapacityLimit = v;
+        partial void OnCapacityLimitChanged(double value) => _step.CapacityLimit = value;
 
         [ObservableProperty] private TriggerType _triggerType;
-        partial void OnTriggerTypeChanged(TriggerType v) => _step.TriggerType = v;
+        partial void OnTriggerTypeChanged(TriggerType value) => _step.TriggerType = value;
 
         [ObservableProperty] private CompareOperator _triggerOperator;
-        partial void OnTriggerOperatorChanged(CompareOperator v) => _step.TriggerOperator = v;
+        partial void OnTriggerOperatorChanged(CompareOperator value) => _step.TriggerOperator = value;
 
         [ObservableProperty] private double _triggerValue;
-        partial void OnTriggerValueChanged(double v) => _step.TriggerValue = v;
+        partial void OnTriggerValueChanged(double value) => _step.TriggerValue = value;
 
         [ObservableProperty] private int _loopStartIndex;
-        partial void OnLoopStartIndexChanged(int v) => _step.LoopStartIndex = v;
+        partial void OnLoopStartIndexChanged(int value) => _step.LoopStartIndex = value;
 
         [ObservableProperty] private int _loopCount;
-        partial void OnLoopCountChanged(int v) => _step.LoopCount = v;
+        partial void OnLoopCountChanged(int value) => _step.LoopCount = value;
 
         [ObservableProperty] private double _maxVoltage;
-        partial void OnMaxVoltageChanged(double v) => _step.MaxVoltage = v;
+        partial void OnMaxVoltageChanged(double value) => _step.MaxVoltage = value;
 
         [ObservableProperty] private double _minVoltage;
-        partial void OnMinVoltageChanged(double v) => _step.MinVoltage = v;
+        partial void OnMinVoltageChanged(double value) => _step.MinVoltage = value;
 
         [ObservableProperty] private double _maxCurrent;
-        partial void OnMaxCurrentChanged(double v) => _step.MaxCurrent = v;
+        partial void OnMaxCurrentChanged(double value) => _step.MaxCurrent = value;
 
         [ObservableProperty] private double _maxTemperature;
-        partial void OnMaxTemperatureChanged(double v) => _step.MaxTemperature = v;
+        partial void OnMaxTemperatureChanged(double value) => _step.MaxTemperature = value;
 
         [ObservableProperty] private double _protectionTimeSeconds;
-        partial void OnProtectionTimeSecondsChanged(double v) => _step.ProtectionTimeSeconds = v;
+        partial void OnProtectionTimeSecondsChanged(double value) => _step.ProtectionTimeSeconds = value;
 
         [ObservableProperty] private bool _reversePolarityCheck;
-        partial void OnReversePolarityCheckChanged(bool v) => _step.ReversePolarityCheck = v;
+        partial void OnReversePolarityCheckChanged(bool value) => _step.ReversePolarityCheck = value;
 
         [ObservableProperty] private double _maxVoltageDropRate;
-        partial void OnMaxVoltageDropRateChanged(double v) => _step.MaxVoltageDropRate = v;
+        partial void OnMaxVoltageDropRateChanged(double value) => _step.MaxVoltageDropRate = value;
 
         [ObservableProperty] private string _remark;
-        partial void OnRemarkChanged(string v) => _step.Remark = v;
+        partial void OnRemarkChanged(string value) => _step.Remark = value;
 
         [ObservableProperty] private int _jumpTargetIndex;
-        partial void OnJumpTargetIndexChanged(int v) => _step.JumpTargetIndex = v;
+        partial void OnJumpTargetIndexChanged(int value) => _step.JumpTargetIndex = value;
 
         [ObservableProperty] private double _power;
-        partial void OnPowerChanged(double v) => _step.Power = v;
+        partial void OnPowerChanged(double value) => _step.Power = value;
 
         [ObservableProperty] private double _resistance;
-        partial void OnResistanceChanged(double v) => _step.Resistance = v;
+        partial void OnResistanceChanged(double value) => _step.Resistance = value;
 
         [ObservableProperty] private double _pulseCurrent;
-        partial void OnPulseCurrentChanged(double v) => _step.PulseCurrent = v;
+        partial void OnPulseCurrentChanged(double value) => _step.PulseCurrent = value;
 
         [ObservableProperty] private double _pulseOnSeconds;
-        partial void OnPulseOnSecondsChanged(double v) => _step.PulseOnSeconds = v;
+        partial void OnPulseOnSecondsChanged(double value) => _step.PulseOnSeconds = value;
 
         [ObservableProperty] private double _pulseOffSeconds;
-        partial void OnPulseOffSecondsChanged(double v) => _step.PulseOffSeconds = v;
+        partial void OnPulseOffSecondsChanged(double value) => _step.PulseOffSeconds = value;
     }
 }
