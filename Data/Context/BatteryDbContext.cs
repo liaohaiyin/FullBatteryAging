@@ -12,6 +12,7 @@ namespace BatteryAging.Data.Context
         public DbSet<TestRecord> TestRecords { get; set; }
         public DbSet<DataPoint> DataPoints { get; set; }
         public DbSet<Cabinet> Cabinets { get; set; }
+        public DbSet<CycleData> CycleData { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -49,6 +50,12 @@ namespace BatteryAging.Data.Context
                 e.HasKey(c => c.Id);
                 e.Property(c => c.Name).HasMaxLength(100);
                 e.HasIndex(c => c.CabinetIndex);
+            });
+
+            modelBuilder.Entity<CycleData>(e =>
+            {
+                e.HasKey(c => c.Id);
+                e.HasIndex(c => new { c.TestRecordId, c.CycleIndex });
             });
 
             base.OnModelCreating(modelBuilder);

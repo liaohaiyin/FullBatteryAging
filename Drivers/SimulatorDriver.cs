@@ -15,6 +15,7 @@ namespace BatteryAging.Drivers
         private readonly ConcurrentDictionary<int, BatteryCellSimulator> _batteries = new();
         private readonly ConcurrentDictionary<int, StepSetpoint> _setpoints = new();
         private readonly ConcurrentDictionary<int, double> _lastCvCurrents = new();
+        private readonly ConcurrentDictionary<int, double> _setpointElapsed = new();
         private readonly int _samplingIntervalMs;
         private DateTime _lastReadTime = DateTime.Now;
 
@@ -51,6 +52,7 @@ namespace BatteryAging.Drivers
 
         public Task ApplyStepAsync(int channelIndex, StepSetpoint setpoint, CancellationToken token = default)
         {
+            _setpointElapsed[channelIndex] = 0;
             _setpoints[channelIndex] = setpoint;
             return Task.CompletedTask;
         }
@@ -71,6 +73,7 @@ namespace BatteryAging.Drivers
 
             // 推进电池模拟
             double dt = _samplingIntervalMs / 1000.0;
+            _setpointElapsed.AddOrUpdate(channelIndex, dt, (_, v) => v + dt);
             battery.Step(appliedCurrent, dt);
 
             return Task.FromResult(new DeviceMeasurement
@@ -85,15 +88,30 @@ namespace BatteryAging.Drivers
         private double ComputeCurrent(StepSetpoint sp, BatteryCellSimulator battery, int chIdx)
         {
             if (sp == null) return 0;
+            double v = battery.GetOcv(battery.Soc);      // 用 OCV 近似端电压做功率/电阻换算
+            if (v < 0.5) v = 0.5;                          // 防除零
             return sp.Type switch
             {
                 StepType.CC_Charge => Math.Abs(sp.Current),
                 StepType.CC_Discharge => -Math.Abs(sp.Current),
                 StepType.CV_Charge => battery.GetCvCurrent(sp.Voltage, Math.Abs(sp.Current)),
                 StepType.CCCV_Charge => ComputeCccv(sp, battery, chIdx),
+                StepType.CP_Charge => Math.Abs(sp.Power) / v,
+                StepType.CP_Discharge => -Math.Abs(sp.Power) / v,
+                StepType.CR_Discharge => sp.Resistance > 0 ? -(v / sp.Resistance) : 0,
+                StepType.Pulse => ComputePulse(sp, chIdx),
                 StepType.Rest => 0,
                 _ => 0
             };
+        }
+
+        private double ComputePulse(StepSetpoint sp, int chIdx)
+        {
+            var period = sp.PulseOnSeconds + sp.PulseOffSeconds;
+            if (period <= 0) return sp.PulseCurrent;
+            var t = _setpointElapsed.TryGetValue(chIdx, out var e) ? e : 0;
+            var phase = t % period;
+            return phase < sp.PulseOnSeconds ? sp.PulseCurrent : 0;   // 正充负放由 PulseCurrent 符号决定
         }
 
         private double ComputeCccv(StepSetpoint sp, BatteryCellSimulator battery, int chIdx)

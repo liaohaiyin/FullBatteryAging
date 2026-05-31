@@ -34,6 +34,12 @@ namespace BatteryAging.ViewModels
             _reversePolarityCheck = step.ReversePolarityCheck;
             _maxVoltageDropRate = step.MaxVoltageDropRate;
             _remark = step.Remark;
+            _power = step.Power;
+            _resistance = step.Resistance;
+            _pulseCurrent = step.PulseCurrent;
+            _pulseOnSeconds = step.PulseOnSeconds;
+            _pulseOffSeconds = step.PulseOffSeconds;
+            _jumpTargetIndex = step.JumpTargetIndex;
         }
 
         [ObservableProperty] private int _sequence;
@@ -101,5 +107,23 @@ namespace BatteryAging.ViewModels
 
         [ObservableProperty] private string _remark;
         partial void OnRemarkChanged(string v) => _step.Remark = v;
+
+        [ObservableProperty] private int _jumpTargetIndex;
+        partial void OnJumpTargetIndexChanged(int v) => _step.JumpTargetIndex = v;
+
+        [ObservableProperty] private double _power;
+        partial void OnPowerChanged(double v) => _step.Power = v;
+
+        [ObservableProperty] private double _resistance;
+        partial void OnResistanceChanged(double v) => _step.Resistance = v;
+
+        [ObservableProperty] private double _pulseCurrent;
+        partial void OnPulseCurrentChanged(double v) => _step.PulseCurrent = v;
+
+        [ObservableProperty] private double _pulseOnSeconds;
+        partial void OnPulseOnSecondsChanged(double v) => _step.PulseOnSeconds = v;
+
+        [ObservableProperty] private double _pulseOffSeconds;
+        partial void OnPulseOffSecondsChanged(double v) => _step.PulseOffSeconds = v;
     }
 }

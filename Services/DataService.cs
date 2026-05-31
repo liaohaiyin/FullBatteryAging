@@ -32,6 +32,8 @@ namespace BatteryAging.Services
 
         // ── 分析 ──
         Task<List<TestRecord>> GetRecordsByBarCodePrefixAsync(string barCodePrefix);
+        Task SaveCycleDataAsync(CycleData cycle);
+        Task<List<CycleData>> GetCycleDataAsync(int recordId);
     }
 
     public class DataService : IDataService
@@ -203,6 +205,22 @@ namespace BatteryAging.Services
                 .Where(r => r.BarCode.StartsWith(barCodePrefix))
                 .OrderByDescending(r => r.StartTime)
                 .Take(500).ToListAsync();
+        }
+
+        public async Task SaveCycleDataAsync(CycleData cycle)
+        {
+            await using var db = await _factory.CreateDbContextAsync();
+            db.Set<CycleData>().Add(cycle);
+            await db.SaveChangesAsync();
+        }
+
+        public async Task<List<CycleData>> GetCycleDataAsync(int recordId)
+        {
+            await using var db = await _factory.CreateDbContextAsync();
+            return await db.Set<CycleData>()
+                .Where(c => c.TestRecordId == recordId)
+                .OrderBy(c => c.CycleIndex)
+                .ToListAsync();
         }
     }
 }

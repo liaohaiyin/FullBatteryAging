@@ -24,19 +24,27 @@ namespace BatteryAging.Core.Models
         public double Voltage { get; set; }              // 设定电压 (V)
         public double CutoffCurrent { get; set; }        // 截止电流 (A) - CV/CCCV用
 
+        public double Power { get; set; }            // 设定功率 (W) - CP 用
+        public double Resistance { get; set; }       // 设定电阻 (Ω) - CR 用
+                                                     // ── 脉冲参数 (Pulse / DCIR) ──
+        public double PulseCurrent { get; set; }     // 脉冲电流幅值 (A)，正充负放
+        public double PulseOnSeconds { get; set; }   // 脉冲导通时长 (s)
+        public double PulseOffSeconds { get; set; }  // 脉冲间歇时长 (s)
+
         // ── 截止条件 ──
         public double CutoffVoltage { get; set; }        // 截止电压 (V)
         public double DurationSeconds { get; set; }      // 工步时长 (s)
         public double CapacityLimit { get; set; }        // 容量上限 (Ah)
 
         // ── 触发跳转 ──
-        public TriggerType TriggerType { get; set; }     // 触发类型
+        public TriggerType TriggerType { get; set; }
         public CompareOperator TriggerOperator { get; set; }
-        public double TriggerValue { get; set; }         // 触发阈值
+        public double TriggerValue { get; set; }
+        public int JumpTargetIndex { get; set; } = -1;   // 触发后跳转到的工步索引(0-based)，-1=不跳转(仅结束本步)
 
         // ── 循环参数 ──（仅 Loop 类型有效）
         public int LoopStartIndex { get; set; }          // 从哪一步开始循环
-        public int LoopCount { get; set; } = 1;          // 循环次数（1~999）
+        public int LoopCount { get; set; } = 1;          // 循环次数（1~99999）
 
         // ── 保护参数 ──
         public double MaxVoltage { get; set; } = 4.2;    // 上限电压保护

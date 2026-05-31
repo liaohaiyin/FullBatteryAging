@@ -19,6 +19,18 @@ namespace BatteryAging.Core.Enums
         [Description("恒流放电")]
         CC_Discharge,        // 恒流放电
 
+        [Description("恒功率充电")]
+        CP_Charge,
+
+        [Description("恒功率放电")]
+        CP_Discharge,
+
+        [Description("恒阻放电")]
+        CR_Discharge,
+
+        [Description("脉冲")]
+        Pulse,
+
         [Description("静置")]
         Rest,                // 静置
 

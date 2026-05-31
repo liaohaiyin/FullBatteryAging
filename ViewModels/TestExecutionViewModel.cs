@@ -64,6 +64,7 @@ namespace BatteryAging.ViewModels
                 executor.StatusChanged += OnChannelStatusChanged;
                 executor.StepChanged += OnChannelStepChanged;
                 executor.CheckpointReached += OnCheckpointReached;
+                executor.CycleCompleted += OnCycleCompleted;
             }
 
             _channelManager.CommunicationError += (s, msg) => AppendLog($"⚠ 通讯异常: {msg}");
@@ -341,6 +342,31 @@ namespace BatteryAging.ViewModels
                 if (e.CurrentStep != null)
                     AppendLog($"通道{e.ChannelIndex}: → 工步 #{e.CurrentStep.Sequence} {e.CurrentStep.Name} [Loop {e.LoopIndex}]");
             });
+        }
+
+        private async void OnCycleCompleted(object sender, CycleCompletedEventArgs e)
+        {
+            try
+            {
+                var ch = Channels.FirstOrDefault(c => c.ChannelIndex == e.ChannelIndex);
+                if (ch == null || ch.TestRecordId == 0) return;
+                var ce = e.ChargeCapacity > 0 ? e.DischargeCapacity / e.ChargeCapacity : 0;
+                var ee = e.ChargeEnergy > 0 ? e.DischargeEnergy / e.ChargeEnergy : 0;
+                await _dataService.SaveCycleDataAsync(new CycleData
+                {
+                    TestRecordId = ch.TestRecordId,
+                    ChannelIndex = e.ChannelIndex,
+                    CycleIndex = e.CycleIndex,
+                    ChargeCapacity = e.ChargeCapacity,
+                    DischargeCapacity = e.DischargeCapacity,
+                    ChargeEnergy = e.ChargeEnergy,
+                    DischargeEnergy = e.DischargeEnergy,
+                    CoulombicEfficiency = Math.Round(ce, 4),
+                    EnergyEfficiency = Math.Round(ee, 4)
+                });
+                AppendLog($"通道{e.ChannelIndex} 第{e.CycleIndex}循环: 放电{e.DischargeCapacity:F4}Ah CE={ce * 100:F1}%");
+            }
+            catch (Exception ex) { AppendLog($"循环记录保存失败: {ex.Message}"); }
         }
 
         private async Task FinalizeRecordAsync(int channelIndex, ChannelStatus status,

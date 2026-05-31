@@ -26,6 +26,11 @@ namespace BatteryAging.Drivers
         public double Voltage { get; set; }
         public double CutoffCurrent { get; set; }
         public double CutoffVoltage { get; set; }
+        public double Power { get; set; }
+        public double Resistance { get; set; }
+        public double PulseCurrent { get; set; }
+        public double PulseOnSeconds { get; set; }
+        public double PulseOffSeconds { get; set; }
     }
 
     /// <summary>

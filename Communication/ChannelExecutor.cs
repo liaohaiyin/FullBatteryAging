@@ -20,6 +20,11 @@ namespace BatteryAging.Communication
         private readonly IDeviceDriver _driver;
         private CancellationTokenSource _cts;
         private Task _runningTask;
+        // ── 条件跳转 ──
+        private int _jumpRequest = -1;
+        private int _jumpGuard = 0;                       // 防止死循环的跳转计数
+        private const int MaxJumps = 100000;
+        private double _cycBaseChgCap, _cycBaseDisCap, _cycBaseChgEng, _cycBaseDisEng;
 
         // 用于多通道同步触发的屏障（外部传入）
         public Barrier SyncBarrier { get; set; }
@@ -63,6 +68,7 @@ namespace BatteryAging.Communication
         public event EventHandler<StepChangedEventArgs> StepChanged;
         public event EventHandler<ChannelStatusChangedEventArgs> StatusChanged;
         public event EventHandler<CheckpointEventArgs> CheckpointReached;
+        public event EventHandler<CycleCompletedEventArgs> CycleCompleted;
 
         public ChannelExecutor(int globalChannelIndex, IDeviceDriver driver,
             string cabinetId = null, int localChannelIndex = 0)
@@ -93,6 +99,10 @@ namespace BatteryAging.Communication
                 TotalDischargeCapacity = record.TotalDischargeCapacity;
                 TotalChargeEnergy = record.TotalChargeEnergy;
                 TotalDischargeEnergy = record.TotalDischargeEnergy;
+                _cycBaseChgCap = record.TotalChargeCapacity;
+                _cycBaseDisCap = record.TotalDischargeCapacity;
+                _cycBaseChgEng = record.TotalChargeEnergy;
+                _cycBaseDisEng = record.TotalDischargeEnergy;
             }
             else
             {
@@ -103,6 +113,10 @@ namespace BatteryAging.Communication
                 TotalDischargeCapacity = 0;
                 TotalChargeEnergy = 0;
                 TotalDischargeEnergy = 0;
+                _cycBaseChgCap = 0;
+                _cycBaseDisCap = 0;
+                _cycBaseChgEng = 0;
+                _cycBaseDisEng = 0;
             }
 
             _consecutiveCommErrors = 0;
@@ -168,6 +182,24 @@ namespace BatteryAging.Communication
                     {
                         if (CurrentLoopIndex < step.LoopCount - 1)
                         {
+                            var chg = TotalChargeCapacity - _cycBaseChgCap;
+                            var dis = TotalDischargeCapacity - _cycBaseDisCap;
+                            var chgE = TotalChargeEnergy - _cycBaseChgEng;
+                            var disE = TotalDischargeEnergy - _cycBaseDisEng;
+                            CycleCompleted?.Invoke(this, new CycleCompletedEventArgs
+                            {
+                                ChannelIndex = ChannelIndex,
+                                CycleIndex = CurrentLoopIndex + 1,
+                                ChargeCapacity = chg,
+                                DischargeCapacity = dis,
+                                ChargeEnergy = chgE,
+                                DischargeEnergy = disE
+                            });
+                            _cycBaseChgCap = TotalChargeCapacity;
+                            _cycBaseDisCap = TotalDischargeCapacity;
+                            _cycBaseChgEng = TotalChargeEnergy;
+                            _cycBaseDisEng = TotalDischargeEnergy;
+
                             CurrentLoopIndex++;
                             CurrentStepIndex = Math.Max(0, step.LoopStartIndex);
                             continue;
@@ -200,6 +232,18 @@ namespace BatteryAging.Communication
                         return;
                     }
 
+                    if (_jumpRequest >= 0 && _jumpRequest < CurrentRecipe.Steps.Count)
+                    {
+                        if (++_jumpGuard > MaxJumps)
+                        {
+                            ChangeStatus(ChannelStatus.Error, "跳转次数超限，疑似死循环");
+                            return;
+                        }
+                        CurrentStepIndex = _jumpRequest;
+                        _jumpRequest = -1;
+                        continue;
+                    }
+                    _jumpRequest = -1;
                     CurrentStepIndex++;
                 }
 
@@ -252,7 +296,12 @@ namespace BatteryAging.Communication
                 Current = step.Current,
                 Voltage = step.Voltage,
                 CutoffCurrent = step.CutoffCurrent,
-                CutoffVoltage = step.CutoffVoltage
+                CutoffVoltage = step.CutoffVoltage,
+                Power = step.Power,
+                Resistance = step.Resistance,
+                PulseCurrent = step.PulseCurrent,
+                PulseOnSeconds = step.PulseOnSeconds,
+                PulseOffSeconds = step.PulseOffSeconds
             };
             try
             {
@@ -299,12 +348,17 @@ namespace BatteryAging.Communication
                 Capacity += dAh;
                 Energy += dWh;
 
-                if (IsChargeStep(step.Type))
+                if (step.Type == StepType.Pulse)
+                {
+                    if (m.Current > 0) { TotalChargeCapacity += dAh; TotalChargeEnergy += dWh; }
+                    else if (m.Current < 0) { TotalDischargeCapacity += dAh; TotalDischargeEnergy += dWh; }
+                }
+                else if (IsChargeStep(step.Type))
                 {
                     TotalChargeCapacity += dAh;
                     TotalChargeEnergy += dWh;
                 }
-                else if (step.Type == StepType.CC_Discharge)
+                else if (IsDischargeStep(step.Type))
                 {
                     TotalDischargeCapacity += dAh;
                     TotalDischargeEnergy += dWh;
@@ -366,8 +420,9 @@ namespace BatteryAging.Communication
             return ProtectionType.None;
         }
 
-        private bool IsChargeStep(StepType t) =>
-            t == StepType.CC_Charge || t == StepType.CV_Charge || t == StepType.CCCV_Charge;
+        private bool IsChargeStep(StepType t) => t == StepType.CC_Charge || t == StepType.CV_Charge || t == StepType.CCCV_Charge || t == StepType.CP_Charge;
+
+        private bool IsDischargeStep(StepType t) => t == StepType.CC_Discharge || t == StepType.CP_Discharge || t == StepType.CR_Discharge;
 
         private bool IsStepFinished(TestStep step)
         {
@@ -380,7 +435,12 @@ namespace BatteryAging.Communication
                     if (step.CutoffVoltage > 0 && Voltage >= step.CutoffVoltage) return true;
                     break;
                 case StepType.CC_Discharge:
+                case StepType.CP_Discharge:
+                case StepType.CR_Discharge:
                     if (step.CutoffVoltage > 0 && Voltage <= step.CutoffVoltage) return true;
+                    break;
+                case StepType.CP_Charge:
+                    if (step.CutoffVoltage > 0 && Voltage >= step.CutoffVoltage) return true;
                     break;
                 case StepType.CV_Charge:
                 case StepType.CCCV_Charge:
@@ -405,7 +465,7 @@ namespace BatteryAging.Communication
             };
             if (double.IsNaN(actual) || step.TriggerValue == 0) return false;
 
-            return step.TriggerOperator switch
+            bool hit = step.TriggerOperator switch
             {
                 CompareOperator.Greater => actual > step.TriggerValue,
                 CompareOperator.GreaterOrEqual => actual >= step.TriggerValue,
@@ -414,6 +474,10 @@ namespace BatteryAging.Communication
                 CompareOperator.Equal => Math.Abs(actual - step.TriggerValue) < 0.001,
                 _ => false
             };
+
+            if (hit && step.JumpTargetIndex >= 0)
+                _jumpRequest = step.JumpTargetIndex;       // 记录跳转目标
+            return hit;                                     // 命中即结束本步
         }
 
         private ProtectionType CheckProtection(TestStep step, DeviceMeasurement m)

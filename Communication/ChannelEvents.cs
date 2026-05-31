@@ -41,4 +41,13 @@ namespace BatteryAging.Communication
         public double TotalChargeEnergy { get; set; }
         public double TotalDischargeEnergy { get; set; }
     }
+    public class CycleCompletedEventArgs : EventArgs
+    {
+        public int ChannelIndex { get; set; }
+        public int CycleIndex { get; set; }
+        public double ChargeCapacity { get; set; }
+        public double DischargeCapacity { get; set; }
+        public double ChargeEnergy { get; set; }
+        public double DischargeEnergy { get; set; }
+    }
 }

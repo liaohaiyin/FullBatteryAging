@@ -18,6 +18,7 @@ namespace BatteryAging.ViewModels
 
         public ObservableCollection<TestRecord> Records { get; } = new();
         public ObservableCollection<DataPoint> DataPoints { get; } = new();
+        public ObservableCollection<CycleData> CycleData { get; } = new();
 
         [ObservableProperty] private TestRecord _selectedRecord;
         [ObservableProperty] private DateTime _startDate = DateTime.Today.AddDays(-7);
@@ -70,7 +71,10 @@ namespace BatteryAging.ViewModels
                 var pts = await _dataService.GetDataPointsAsync(SelectedRecord.Id);
                 DataPoints.Clear();
                 foreach (var p in pts) DataPoints.Add(p);
-                StatusText = $"加载 {DataPoints.Count} 个数据点";
+                var cycles = await _dataService.GetCycleDataAsync(SelectedRecord.Id);
+                CycleData.Clear();
+                foreach (var c in cycles) CycleData.Add(c);
+                StatusText = $"加载 {DataPoints.Count} 个数据点，{CycleData.Count} 个循环数据";
             }
             catch (Exception ex)
             {

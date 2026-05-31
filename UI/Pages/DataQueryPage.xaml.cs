@@ -13,9 +13,11 @@ namespace BatteryAging.UI.Pages
     {
         private readonly DataQueryViewModel _vm;
         private readonly PlotModel _model;
+        private readonly PlotModel _cycleModel;
         private readonly LineSeries _voltage;
         private readonly LineSeries _current;
         private readonly LineSeries _temperature;
+        private readonly LineSeries _cycleSeries;
 
         public DataQueryPage(DataQueryViewModel vm)
         {
@@ -65,6 +67,40 @@ namespace BatteryAging.UI.Pages
 
             _vm.PropertyChanged += OnVmPropertyChanged;
             ((INotifyCollectionChanged)_vm.DataPoints).CollectionChanged += OnDataChanged;
+
+            _cycleModel = new PlotModel
+            {
+                DefaultFont = "微软雅黑",
+                PlotMargins = new OxyThickness(60, 8, 20, 36),
+                PlotAreaBorderColor = OxyColor.FromArgb(60, 0, 0, 0)
+            };
+            _cycleModel.Axes.Add(new LinearAxis
+            {
+                Position = AxisPosition.Bottom,
+                Title = "循环次数",
+                MajorGridlineStyle = LineStyle.Dot,
+                MajorGridlineColor = OxyColor.FromArgb(40, 0, 0, 0)
+            });
+            _cycleModel.Axes.Add(new LinearAxis
+            {
+                Position = AxisPosition.Left,
+                Title = "放电容量 (Ah)",
+                TitleColor = OxyColor.FromRgb(0x00, 0x79, 0x6B),
+                MajorGridlineStyle = LineStyle.Dot,
+                MajorGridlineColor = OxyColor.FromArgb(40, 0, 0, 0)
+            });
+            _cycleSeries = new LineSeries
+            {
+                Title = "容量衰减",
+                Color = OxyColor.FromRgb(0x00, 0x79, 0x6B),
+                StrokeThickness = 1.6,
+                MarkerType = MarkerType.Circle,
+                MarkerSize = 3
+            };
+            _cycleModel.Series.Add(_cycleSeries);
+            CyclePlot.Model = _cycleModel;
+
+            ((INotifyCollectionChanged)_vm.CycleData).CollectionChanged += OnCycleChanged;
         }
 
         private void OnVmPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -106,6 +142,17 @@ namespace BatteryAging.UI.Pages
                 _temperature.Points.Add(new DataPoint(p.ElapsedSeconds, p.Temperature));
             }
             _model.InvalidatePlot(true);
+        }
+
+        private void OnCycleChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            _cycleSeries.Points.Clear();
+            foreach (var c in _vm.CycleData)
+            {
+                // 直接画放电容量：
+                _cycleSeries.Points.Add(new DataPoint(c.CycleIndex, c.DischargeCapacity));
+            }
+            _cycleModel.InvalidatePlot(true);
         }
     }
 }

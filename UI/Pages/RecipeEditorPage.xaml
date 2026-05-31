@@ -4,6 +4,7 @@
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:ctrl="clr-namespace:BatteryAging.UI.Controls"
       xmlns:ap="clr-namespace:BatteryAging.UI.AttachedProperties"
+      xmlns:em="clr-namespace:BatteryAging.Core.Enums"
       Title="工步编辑"
       Background="{StaticResource VsBgDeepBrush}">
     <Grid Margin="12">
@@ -235,8 +236,10 @@
                         <Separator Margin="0,0,0,8"/>
 
                         <TextBlock Text="电气参数" FontWeight="SemiBold" Margin="0,0,0,6" FontSize="12"
-                                   Foreground="{StaticResource VsSuccessBrush}"/>
-                        <Grid Margin="0,0,0,12">
+           Foreground="{StaticResource VsSuccessBrush}"/>
+
+                        <!-- 通用：电流 / 电压（CC/CV/CCCV 等用） -->
+                        <Grid Margin="0,0,0,8">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
@@ -250,6 +253,41 @@
                                 <TextBox Text="{Binding Voltage, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F3}}"/>
                             </StackPanel>
                         </Grid>
+
+                        <!-- 恒功率：CP_Charge / CP_Discharge -->
+                        <StackPanel Margin="0,0,0,8"
+                                    Visibility="{Binding Type, Converter={StaticResource StepTypeEqVisCv}, ConverterParameter='CP_Charge,CP_Discharge'}">
+                            <TextBlock Text="设定功率 (W)" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                            <TextBox Text="{Binding Power, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F2}}"/>
+                        </StackPanel>
+
+                        <!-- 恒阻：CR_Discharge -->
+                        <StackPanel Margin="0,0,0,8"
+                                    Visibility="{Binding Type, Converter={StaticResource StepTypeEqVisCv}, ConverterParameter=CR_Discharge}">
+                            <TextBlock Text="设定电阻 (Ω)" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                            <TextBox Text="{Binding Resistance, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F4}}"/>
+                        </StackPanel>
+
+                        <!-- 脉冲：Pulse -->
+                        <StackPanel Margin="0,0,0,12"
+            Visibility="{Binding Type, Converter={StaticResource StepTypeEqVisCv}, ConverterParameter=Pulse}">
+                            <TextBlock Text="脉冲电流 (A，正充负放)" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                            <TextBox Text="{Binding PulseCurrent, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F3}}"/>
+                            <Grid Margin="0,6,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Margin="0,0,4,0">
+                                    <TextBlock Text="导通时长 (s)" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                                    <TextBox Text="{Binding PulseOnSeconds, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F1}}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="4,0,0,0">
+                                    <TextBlock Text="间歇时长 (s)" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                                    <TextBox Text="{Binding PulseOffSeconds, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F1}}"/>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
 
                         <Separator Margin="0,0,0,8"/>
 
@@ -298,6 +336,7 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0" Margin="0,0,4,0">
                                     <TextBlock Text="比较" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
@@ -309,8 +348,10 @@
                                 <StackPanel Grid.Column="1" Margin="4,0,0,0">
                                     <TextBlock Text="阈值" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
                                     <TextBox Text="{Binding TriggerValue, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F3}}" Height="30"/>
-                                </StackPanel>
+                                </StackPanel>                                
                             </Grid>
+                            <TextBlock Text="跳转目标工步(0基,-1=不跳)" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11" Margin="0,6,0,0"/>
+                            <TextBox Text="{Binding JumpTargetIndex, UpdateSourceTrigger=PropertyChanged}"/>
                         </StackPanel>
 
                         <Separator Margin="0,0,0,8"/>
