@@ -101,6 +101,7 @@ namespace BatteryAging.UI.Pages
             CyclePlot.Model = _cycleModel;
 
             ((INotifyCollectionChanged)_vm.CycleData).CollectionChanged += OnCycleChanged;
+            Unloaded += OnPageUnloaded;
         }
 
         private void OnVmPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -154,6 +155,12 @@ namespace BatteryAging.UI.Pages
 
             _cycleSeries.Points.Clear();
             _cycleModel.InvalidatePlot(true);
+        }
+        private void OnPageUnloaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            _vm.PropertyChanged -= OnVmPropertyChanged;
+            ((INotifyCollectionChanged)_vm.DataPoints).CollectionChanged -= OnDataChanged;
+            ((INotifyCollectionChanged)_vm.CycleData).CollectionChanged -= OnCycleChanged;
         }
     }
 }

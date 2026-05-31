@@ -61,7 +61,6 @@ namespace BatteryAging.Communication
         {
             var cab = new Cabinet
             {
-                Id = "default",
                 Name = "机柜1",
                 CabinetIndex = 1,
                 DriverType = DriverType.Simulator,
@@ -98,17 +97,30 @@ namespace BatteryAging.Communication
             => _channels.Values.Where(c => c.CabinetId == cabinetId);
 
         /// <summary>多通道同步启动 - 用 Barrier 让通道在同一时刻开始</summary>
-        public async Task SyncStartAsync(IEnumerable<(ChannelExecutor exec, TestRecipe recipe, TestRecord record)> jobs)
+        /// <summary>多通道同步启动 - 用 Barrier 让通道在同一时刻开始</summary>
+        public Task SyncStartAsync(IEnumerable<(ChannelExecutor exec, TestRecipe recipe, TestRecord record)> jobs)
         {
             var list = jobs.ToList();
-            if (list.Count == 0) return;
+            if (list.Count == 0) return Task.CompletedTask;
 
             var barrier = new Barrier(list.Count);
             foreach (var (exec, _, _) in list) exec.SyncBarrier = barrier;
 
-            var tasks = list.Select(j => j.exec.StartAsync(j.recipe, j.record)).ToList();
-            await Task.WhenAll(tasks.Select(t => Task.Run(() => { })));
-            foreach (var (exec, _, _) in list) exec.SyncBarrier = null;
+            // 真正的运行任务（每个 StartAsync 返回的是其 RunLoop 任务）
+            var runningTasks = list
+                .Select(j => j.exec.StartAsync(j.recipe, j.record))
+                .ToList();
+
+            // 等所有通道运行结束后再清理屏障，避免过早置空导致 SignalAndWait 永远等不齐
+            return Task.WhenAll(runningTasks).ContinueWith(_ =>
+            {
+                foreach (var (exec, _, _) in list)
+                {
+                    if (ReferenceEquals(exec.SyncBarrier, barrier))
+                        exec.SyncBarrier = null;
+                }
+                barrier.Dispose();
+            }, TaskScheduler.Default);
         }
 
         public void StopAll()

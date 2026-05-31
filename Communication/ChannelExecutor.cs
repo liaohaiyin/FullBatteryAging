@@ -445,8 +445,12 @@ namespace BatteryAging.Communication
                     break;
                 case StepType.CV_Charge:
                 case StepType.CCCV_Charge:
-                    if (step.CutoffCurrent > 0 && Voltage >= step.Voltage - 0.005
-                        && Math.Abs(Current) <= step.CutoffCurrent) return true;
+                    {
+                        var cvTarget = step.Voltage > 0 ? step.Voltage : step.CutoffVoltage;
+                        if (step.CutoffCurrent > 0 && cvTarget > 0
+                            && Voltage >= cvTarget - 0.005
+                            && Math.Abs(Current) <= step.CutoffCurrent) return true;
+                    }
                     break;
             }
             return CheckTrigger(step);

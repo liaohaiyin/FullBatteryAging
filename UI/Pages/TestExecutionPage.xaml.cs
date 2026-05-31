@@ -128,6 +128,7 @@ namespace BatteryAging.UI.Pages
             // 监听 SelectedChannel 切换
             _vm.PropertyChanged += OnVmPropertyChanged;
             AttachChannel(_vm.SelectedChannel);
+            Unloaded += OnPageUnloaded;
         }
 
         private void OnVmPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -193,6 +194,15 @@ namespace BatteryAging.UI.Pages
                 }
             }
             _plotModel.InvalidatePlot(true);
+        }
+        private void OnPageUnloaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            _vm.PropertyChanged -= OnVmPropertyChanged;
+            if (_currentChannel != null)
+            {
+                _currentChannel.RecentSamples.CollectionChanged -= OnSamplesChanged;
+                _currentChannel = null;
+            }
         }
     }
 }

@@ -168,7 +168,7 @@
                           HeadersVisibility="Column"
                           RowHeaderWidth="0">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="#" Binding="{Binding Sequence}" Width="50" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="序号" Binding="{Binding Sequence}" Width="50" IsReadOnly="True"/>
                         <DataGridTextColumn Header="名称" Binding="{Binding Name}" Width="120"/>
                         <DataGridTemplateColumn Header="类型" Width="120">
                             <DataGridTemplateColumn.CellTemplate>
@@ -349,7 +349,11 @@
                                     <TextBox Text="{Binding TriggerValue, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F3}}" Height="30"/>
                                 </StackPanel>                                
                             </Grid>
-                            <TextBlock Text="跳转目标工步(0基,-1=不跳)" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11" Margin="0,6,0,0"/>
+                            <TextBlock Foreground="{StaticResource VsTextMutedBrush}" FontSize="11" Margin="0,6,0,0" TextWrapping="Wrap">
+                                <Run Text="跳转目标工步" FontWeight="SemiBold"/>
+                                <LineBreak/>
+                                <Run Text="序号减1（跳到1填0，2填1…），-1=不跳转" Foreground="{StaticResource VsTextDisabledBrush}"/>
+                            </TextBlock>
                             <TextBox Text="{Binding JumpTargetIndex, UpdateSourceTrigger=PropertyChanged}"/>
                         </StackPanel>
 

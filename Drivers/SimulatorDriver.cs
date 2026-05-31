@@ -115,11 +115,16 @@ namespace BatteryAging.Drivers
         private double ComputeCccv(StepSetpoint sp, BatteryCellSimulator battery, int chIdx)
         {
             var cc = Math.Abs(sp.Current);
+            // CV 平台电压：优先用设定电压 Voltage，与 ChannelExecutor 的截止判断保持一致；
+            // 若未填则回退到 CutoffVoltage
+            var cvTarget = sp.Voltage > 0 ? sp.Voltage : sp.CutoffVoltage;
+            if (cvTarget <= 0) return cc;   // 无有效目标电压，按恒流处理
+
             var ocv = battery.GetOcv(battery.Soc);
             // 端电压 ≈ OCV + I*R 估算
             var estTerminal = ocv + cc * battery.InternalResistance;
-            if (estTerminal >= sp.CutoffVoltage - 0.001)
-                return battery.GetCvCurrent(sp.CutoffVoltage, cc);
+            if (estTerminal >= cvTarget - 0.001)
+                return battery.GetCvCurrent(cvTarget, cc);
             return cc;
         }
 
