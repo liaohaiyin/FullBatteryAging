@@ -197,27 +197,10 @@ namespace BatteryAging.Communication
                         _cycBaseDisCap = TotalDischargeCapacity;
                         _cycBaseChgEng = TotalChargeEnergy;
                         _cycBaseDisEng = TotalDischargeEnergy;
-                        _completedCycles = CurrentLoopIndex + 1;   // 见下一条
+                        _completedCycles = CurrentLoopIndex + 1;
+
                         if (CurrentLoopIndex < step.LoopCount - 1)
                         {
-                            var chg = TotalChargeCapacity - _cycBaseChgCap;
-                            var dis = TotalDischargeCapacity - _cycBaseDisCap;
-                            var chgE = TotalChargeEnergy - _cycBaseChgEng;
-                            var disE = TotalDischargeEnergy - _cycBaseDisEng;
-                            CycleCompleted?.Invoke(this, new CycleCompletedEventArgs
-                            {
-                                ChannelIndex = ChannelIndex,
-                                CycleIndex = CurrentLoopIndex + 1,
-                                ChargeCapacity = chg,
-                                DischargeCapacity = dis,
-                                ChargeEnergy = chgE,
-                                DischargeEnergy = disE
-                            });
-                            _cycBaseChgCap = TotalChargeCapacity;
-                            _cycBaseDisCap = TotalDischargeCapacity;
-                            _cycBaseChgEng = TotalChargeEnergy;
-                            _cycBaseDisEng = TotalDischargeEnergy;
-
                             CurrentLoopIndex++;
                             CurrentStepIndex = Math.Max(0, step.LoopStartIndex);
                             continue;

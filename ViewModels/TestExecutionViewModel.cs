@@ -398,7 +398,7 @@ namespace BatteryAging.ViewModels
                     TotalDischargeCapacity = executor.TotalDischargeCapacity,
                     TotalChargeEnergy = executor.TotalChargeEnergy,
                     TotalDischargeEnergy = executor.TotalDischargeEnergy,
-                    CompletedCycles = executor.CurrentLoopIndex,
+                    CompletedCycles = executor.CompletedCycles,
                     LastStepIndex = executor.CurrentStepIndex,
                     LastLoopIndex = executor.CurrentLoopIndex,
                     LastTotalElapsed = executor.TotalElapsedSeconds,

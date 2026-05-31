@@ -108,8 +108,6 @@ namespace BatteryAging.Communication
 
             var tasks = list.Select(j => j.exec.StartAsync(j.recipe, j.record)).ToList();
             await Task.WhenAll(tasks.Select(t => Task.Run(() => { })));
-
-            // 清除引用
             foreach (var (exec, _, _) in list) exec.SyncBarrier = null;
         }
 
