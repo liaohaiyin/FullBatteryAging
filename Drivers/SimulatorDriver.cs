@@ -14,10 +14,8 @@ namespace BatteryAging.Drivers
     {
         private readonly ConcurrentDictionary<int, BatteryCellSimulator> _batteries = new();
         private readonly ConcurrentDictionary<int, StepSetpoint> _setpoints = new();
-        private readonly ConcurrentDictionary<int, double> _lastCvCurrents = new();
         private readonly ConcurrentDictionary<int, double> _setpointElapsed = new();
         private readonly int _samplingIntervalMs;
-        private DateTime _lastReadTime = DateTime.Now;
 
         public DriverType DriverType => DriverType.Simulator;
         public bool IsConnected { get; private set; }

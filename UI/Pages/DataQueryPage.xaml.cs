@@ -111,20 +111,11 @@ namespace BatteryAging.UI.Pages
                 {
                     if (Dispatcher.CheckAccess())
                     {
-                        _voltage.Points.Clear();
-                        _current.Points.Clear();
-                        _temperature.Points.Clear();
-                        _model.InvalidatePlot(true);
+                        ClearAllSeries();
                     }
                     else
                     {
-                        Dispatcher.BeginInvoke((Action)(() =>
-                        {
-                            _voltage.Points.Clear();
-                            _current.Points.Clear();
-                            _temperature.Points.Clear();
-                            _model.InvalidatePlot(true);
-                        }));
+                        Dispatcher.BeginInvoke((Action)ClearAllSeries);
                     }
                 }
             }
@@ -152,6 +143,16 @@ namespace BatteryAging.UI.Pages
                 // 直接画放电容量：
                 _cycleSeries.Points.Add(new DataPoint(c.CycleIndex, c.DischargeCapacity));
             }
+            _cycleModel.InvalidatePlot(true);
+        }
+        private void ClearAllSeries()
+        {
+            _voltage.Points.Clear();
+            _current.Points.Clear();
+            _temperature.Points.Clear();
+            _model.InvalidatePlot(true);
+
+            _cycleSeries.Points.Clear();
             _cycleModel.InvalidatePlot(true);
         }
     }

@@ -45,7 +45,15 @@ namespace BatteryAging.ViewModels
 
         partial void OnSelectedRecordChanged(TestRecord value)
         {
-            if (value != null) _ = LoadDataPointsAsync();
+            if (value != null)
+            {
+                _ = LoadDataPointsAsync();
+            }
+            else
+            {
+                DataPoints.Clear();
+                CycleData.Clear();
+            }
         }
 
         private async Task QueryAsync()

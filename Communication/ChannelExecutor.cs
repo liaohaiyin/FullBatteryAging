@@ -25,6 +25,7 @@ namespace BatteryAging.Communication
         private int _jumpGuard = 0;                       // 防止死循环的跳转计数
         private const int MaxJumps = 100000;
         private double _cycBaseChgCap, _cycBaseDisCap, _cycBaseChgEng, _cycBaseDisEng;
+        private int _completedCycles = 0;        
 
         // 用于多通道同步触发的屏障（外部传入）
         public Barrier SyncBarrier { get; set; }
@@ -36,6 +37,8 @@ namespace BatteryAging.Communication
         public int CurrentStepIndex { get; private set; }
         public int CurrentLoopIndex { get; private set; }
         public TestRecord CurrentRecord { get; private set; }
+
+        public int CompletedCycles => _completedCycles;
 
         // ── 实时测量值 ──
         public double Voltage { get; private set; }
@@ -180,6 +183,21 @@ namespace BatteryAging.Communication
 
                     if (step.Type == StepType.Loop)
                     {
+                        // 刚跑完一圈循环体，先结算（无论是不是最后一圈）
+                        CycleCompleted?.Invoke(this, new CycleCompletedEventArgs
+                        {
+                            ChannelIndex = ChannelIndex,
+                            CycleIndex = CurrentLoopIndex + 1,
+                            ChargeCapacity = TotalChargeCapacity - _cycBaseChgCap,
+                            DischargeCapacity = TotalDischargeCapacity - _cycBaseDisCap,
+                            ChargeEnergy = TotalChargeEnergy - _cycBaseChgEng,
+                            DischargeEnergy = TotalDischargeEnergy - _cycBaseDisEng
+                        });
+                        _cycBaseChgCap = TotalChargeCapacity;
+                        _cycBaseDisCap = TotalDischargeCapacity;
+                        _cycBaseChgEng = TotalChargeEnergy;
+                        _cycBaseDisEng = TotalDischargeEnergy;
+                        _completedCycles = CurrentLoopIndex + 1;   // 见下一条
                         if (CurrentLoopIndex < step.LoopCount - 1)
                         {
                             var chg = TotalChargeCapacity - _cycBaseChgCap;

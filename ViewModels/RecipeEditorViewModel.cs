@@ -142,6 +142,25 @@ namespace BatteryAging.ViewModels
                     recipe.Steps.Add(s.Model);
                 }
 
+                // 校验：Pulse / CR_Discharge 必须有时长/容量/触发任一截止条件，否则会一直跑到超时保护
+                foreach (var s in recipe.Steps)
+                {
+                    if (s.Type == StepType.Pulse || s.Type == StepType.CR_Discharge)
+                    {
+                        bool hasCutoff = s.DurationSeconds > 0
+                            || s.CapacityLimit > 0
+                            || s.CutoffVoltage > 0
+                            || s.TriggerValue != 0;
+                        if (!hasCutoff)
+                        {
+                            _dialogService.ShowWarning(
+                                $"工步 #{s.Sequence} ({EnumHelper.GetDescription(s.Type)}) " +
+                                "未设置任何截止条件（时长/容量/截止电压/触发），\n请补充后再保存。");
+                            return;
+                        }
+                    }
+                }
+
                 await _dataService.SaveRecipeAsync(recipe);
                 await LoadAsync();
                 SelectedRecipe = Recipes.FirstOrDefault(r => r.Id == recipe.Id);

@@ -4,7 +4,6 @@
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:ctrl="clr-namespace:BatteryAging.UI.Controls"
       xmlns:ap="clr-namespace:BatteryAging.UI.AttachedProperties"
-      xmlns:em="clr-namespace:BatteryAging.Core.Enums"
       Title="工步编辑"
       Background="{StaticResource VsBgDeepBrush}">
     <Grid Margin="12">
