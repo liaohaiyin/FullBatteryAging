@@ -62,7 +62,7 @@ namespace BatteryAging.Communication
             var cab = new Cabinet
             {
                 Id = "default",
-                Name = "默认机柜",
+                Name = "机柜1",
                 CabinetIndex = 1,
                 DriverType = DriverType.Simulator,
                 ConnectionType = ConnectionType.Simulation,

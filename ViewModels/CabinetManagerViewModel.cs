@@ -60,7 +60,7 @@ namespace BatteryAging.ViewModels
                     // 首次：插入一个默认模拟机柜
                     var def = new Cabinet
                     {
-                        Name = "默认模拟机柜",
+                        Name = "机柜1",
                         CabinetIndex = 1,
                         DriverType = DriverType.Simulator,
                         ConnectionType = ConnectionType.Simulation,
