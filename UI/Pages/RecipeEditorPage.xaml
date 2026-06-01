@@ -180,9 +180,9 @@
                             <DataGridTemplateColumn.CellEditingTemplate>
                                 <DataTemplate>
                                     <ComboBox ItemsSource="{Binding DataContext.StepTypes, RelativeSource={RelativeSource AncestorType=Page}}"
-                          DisplayMemberPath="DisplayName"
-                          SelectedValuePath="Value"
-                          SelectedValue="{Binding Type, UpdateSourceTrigger=PropertyChanged}"/>
+                                              DisplayMemberPath="DisplayName"
+                                              SelectedValuePath="Value"
+                                              SelectedValue="{Binding Type, UpdateSourceTrigger=PropertyChanged}"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellEditingTemplate>
                         </DataGridTemplateColumn>
@@ -235,7 +235,7 @@
                         <Separator Margin="0,0,0,8"/>
 
                         <TextBlock Text="电气参数" FontWeight="SemiBold" Margin="0,0,0,6" FontSize="12"
-           Foreground="{StaticResource VsSuccessBrush}"/>
+                                   Foreground="{StaticResource VsSuccessBrush}"/>
 
                         <!-- 通用：电流 / 电压（CC/CV/CCCV 等用） -->
                         <Grid Margin="0,0,0,8">
@@ -269,7 +269,7 @@
 
                         <!-- 脉冲：Pulse -->
                         <StackPanel Margin="0,0,0,12"
-            Visibility="{Binding Type, Converter={StaticResource StepTypeEqVisCv}, ConverterParameter=Pulse}">
+                                    Visibility="{Binding Type, Converter={StaticResource StepTypeEqVisCv}, ConverterParameter=Pulse}">
                             <TextBlock Text="脉冲电流 (A，正充负放)" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
                             <TextBox Text="{Binding PulseCurrent, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F3}}"/>
                             <Grid Margin="0,6,0,0">

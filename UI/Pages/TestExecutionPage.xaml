@@ -126,6 +126,15 @@
                                 <TextBlock Text="全部启动" Margin="4,0,0,0" FontWeight="Bold"/>
                             </StackPanel>
                         </Button>
+                        <Button Style="{StaticResource VsAccentButton}"
+                                Command="{Binding SyncStartAllCommand}"
+                                ToolTip="所有空闲通道同一时刻同步启动"
+                                Margin="2,0" Padding="10,4">
+                            <StackPanel Orientation="Horizontal">
+                                <ctrl:VsIcon Kind="{StaticResource Icon.PlayBoxMultiple}" VerticalAlignment="Center" Foreground="White"/>
+                                <TextBlock Text="同步启动" Margin="4,0,0,0" FontWeight="Bold"/>
+                            </StackPanel>
+                        </Button>
                         <Button Style="{StaticResource VsOutlinedButton}"
                                 Foreground="{StaticResource TextPrimaryBrush}"
                                 BorderBrush="{StaticResource TextMutedBrush}"
@@ -236,6 +245,7 @@
                                         <RowDefinition Height="*"/>
                                         <RowDefinition Height="*"/>
                                         <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
@@ -286,11 +296,18 @@
                                         <TextBlock Text="°C" Style="{StaticResource CellUnitStyle}"/>
                                     </StackPanel>
 
-                                    <!-- 工步 -->
-                                    <TextBlock Grid.Row="5" Grid.Column="0" Text="工步" Style="{StaticResource CellLabelStyle}"/>
+                                    <!-- 功率 -->
+                                    <TextBlock Grid.Row="5" Grid.Column="0" Text="功率" Style="{StaticResource CellLabelStyle}"/>
                                     <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <TextBlock Text="{Binding Power, StringFormat={}{0:F2}, Mode=OneWay}" Style="{StaticResource CellValueStyle}" FontSize="11"/>
+                                        <TextBlock Text="W" Style="{StaticResource CellUnitStyle}"/>
+                                    </StackPanel>
+
+                                    <!-- 工步 -->
+                                    <TextBlock Grid.Row="6" Grid.Column="0" Text="工步" Style="{StaticResource CellLabelStyle}"/>
+                                    <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                                         <Border Background="{Binding CurrentStepType, Converter={StaticResource StepTypeBrushCv}}"
-                                                CornerRadius="2" Padding="4,1">
+                                                CornerRadius="2" Padding="4,0">
                                             <TextBlock Text="{Binding CurrentStepType, Converter={StaticResource EnumDescCv}}"
                                                         Foreground="White" FontSize="9"/>
                                         </Border>
@@ -301,15 +318,15 @@
                                         </TextBlock>
                                     </StackPanel>
 
-                                    <TextBlock Grid.Row="6" Grid.Column="0" Text="条码" Style="{StaticResource CellLabelStyle}"/>
-                                    <TextBlock Grid.Row="6" Grid.Column="1"
+                                    <TextBlock Grid.Row="7" Grid.Column="0" Text="条码" Style="{StaticResource CellLabelStyle}"/>
+                                    <TextBlock Grid.Row="7" Grid.Column="1"
                                                 Text="{Binding BarCode, Mode=OneWay}"
                                                 Style="{StaticResource CellValueStyle}"
                                                 FontSize="11"
                                                 HorizontalAlignment="Right"/>
 
                                     <!-- 状态条 -->
-                                    <Border Grid.Row="7" Grid.ColumnSpan="3" Margin="0,6,0,0"
+                                    <Border Grid.Row="8" Grid.ColumnSpan="3" Margin="0,6,0,0"
                                             Background="#33000000" CornerRadius="2" Padding="5,3">
                                         <Grid>
                                             <Grid.ColumnDefinitions>

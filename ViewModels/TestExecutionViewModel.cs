@@ -65,6 +65,10 @@ namespace BatteryAging.ViewModels
                 executor.StepChanged += OnChannelStepChanged;
                 executor.CheckpointReached += OnCheckpointReached;
                 executor.CycleCompleted += OnCycleCompleted;
+                executor.DcirMeasured += async (s, e) => {
+                    await _dataService.SaveDcirAsync(e.Result);
+                    App.UIDispatch(() => AppendLog($"通道{e.ChannelIndex} DCIR={e.Result.Resistance * 1000:F2} mΩ @SOC{e.Result.Soc:F0}%"));
+                };
             }
 
             _channelManager.CommunicationError += (s, msg) => AppendLog($"⚠ 通讯异常: {msg}");
@@ -233,6 +237,19 @@ namespace BatteryAging.ViewModels
                 };
                 record = await _dataService.CreateRecordAsync(record);
                 ch.TestRecordId = record.Id;
+                if (recipe.Steps.Any(s => s.Type == StepType.SubCall))
+                {
+                    var flat = RecipeFlattener.Flatten(recipe, id => _dataService.GetRecipeAsync(id).GetAwaiter().GetResult());
+                    recipe = new TestRecipe
+                    {
+                        Id = recipe.Id,
+                        Name = recipe.Name,
+                        NominalCapacity = recipe.NominalCapacity,
+                        NominalVoltage = recipe.NominalVoltage,
+                        BatteryType = recipe.BatteryType,
+                        Steps = flat
+                    };
+                }
 
                 AppendLog($"通道{ch.ChannelIndex} [{record.BarCode}] 启动: {recipe.Name}");
                 _ = ch.Executor.StartAsync(recipe, record);
@@ -290,6 +307,19 @@ namespace BatteryAging.ViewModels
                 record = await _dataService.CreateRecordAsync(record);
                 ch.TestRecordId = record.Id;
                 jobs.Add((ch.Executor, SelectedRecipe, record));
+                if (SelectedRecipe.Steps.Any(s => s.Type == StepType.SubCall))
+                {
+                    var flat = RecipeFlattener.Flatten(SelectedRecipe, id => _dataService.GetRecipeAsync(id).GetAwaiter().GetResult());
+                    SelectedRecipe = new TestRecipe
+                    {
+                        Id = SelectedRecipe.Id,
+                        Name = SelectedRecipe.Name,
+                        NominalCapacity = SelectedRecipe.NominalCapacity,
+                        NominalVoltage = SelectedRecipe.NominalVoltage,
+                        BatteryType = SelectedRecipe.BatteryType,
+                        Steps = flat
+                    };
+                }
             }
 
             AppendLog($"同步启动 {jobs.Count} 个通道");

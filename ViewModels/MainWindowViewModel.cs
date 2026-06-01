@@ -24,6 +24,7 @@ namespace BatteryAging.ViewModels
         public IRelayCommand NavBatchCommand { get; }
         public IRelayCommand NavCabinetCommand { get; }
         public IRelayCommand NavAboutCommand { get; }
+        public IRelayCommand NavCompareCommand { get; }
 
         public MainWindowViewModel(IServiceProvider services)
         {
@@ -48,6 +49,11 @@ namespace BatteryAging.ViewModels
             {
                 CurrentPage = _services.GetRequiredService<BatchAnalysisPage>();
                 NavTitle = "批次分析";
+            });
+            NavCompareCommand = new RelayCommand(() =>
+            {
+                CurrentPage = _services.GetRequiredService<ComparisonPage>();
+                NavTitle = "对比分析";
             });
             NavCabinetCommand = new RelayCommand(() =>
             {

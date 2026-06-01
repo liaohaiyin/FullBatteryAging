@@ -40,6 +40,18 @@ namespace BatteryAging.Communication
                     cab.Status = CabinetStatus.CommunicationError;
                     CommunicationError?.Invoke(this, $"[{cab.Name}] {msg}");
                 };
+                IClimateChamber chamber = null;
+                if (cab.HasChamber)
+                {
+                    // 复用一个 Modbus 主站（温箱通常独立 IP）
+                    var chamberDrv = new ModbusDeviceDriver(cab.ChamberIp, cab.ChamberPort);
+                    _ = chamberDrv.ConnectAsync();
+                    chamber = new ModbusClimateChamber(
+                        read: (u, a, c) => chamberDrv.ReadHoldingForChamber(u, a, c),   // 见 §5.1
+                        write: (u, a, v) => chamberDrv.WriteRegistersForChamber(u, a, v),
+                        map: new ChamberRegisterMap());
+                    _ = chamber.ConnectAsync();
+                }
                 _drivers[cab.Id] = driver;
 
                 _ = ConnectAsync(cab.Id, driver);
@@ -47,10 +59,7 @@ namespace BatteryAging.Communication
                 for (int local = 1; local <= cab.ChannelCount; local++)
                 {
                     int global = cab.ChannelStartIndex + local - 1;
-                    var executor = new ChannelExecutor(global, driver, cab.Id, local)
-                    {
-                        SamplingIntervalMs = sampleMs
-                    };
+                    var executor = new ChannelExecutor(global, driver, cab.Id, local) { SamplingIntervalMs = sampleMs, Chamber = chamber };
                     _channels[global] = executor;
                 }
             }

@@ -13,6 +13,7 @@ namespace BatteryAging.Data.Context
         public DbSet<DataPoint> DataPoints { get; set; }
         public DbSet<Cabinet> Cabinets { get; set; }
         public DbSet<CycleData> CycleData { get; set; }
+        public DbSet<DcirResult> DcirResults { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -58,6 +59,13 @@ namespace BatteryAging.Data.Context
                 e.HasIndex(c => new { c.TestRecordId, c.CycleIndex });
             });
 
+            modelBuilder.Entity<DcirResult>(e => {
+                e.HasKey(d => d.Id);
+                e.HasIndex(d => new { d.TestRecordId, d.ChannelIndex });
+                e.Ignore(d => d.ResistanceByTime);       // 字典不直接映射
+                e.Ignore(d => d.Resistance);
+                e.Property<string>("ResistanceJson");     // 用 JSON 列存字典
+            });
             base.OnModelCreating(modelBuilder);
         }
     }

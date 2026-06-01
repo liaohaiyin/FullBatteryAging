@@ -114,6 +114,7 @@ namespace BatteryAging
             services.AddSingleton<DataQueryViewModel>();
             services.AddSingleton<BatchAnalysisViewModel>();
             services.AddSingleton<CabinetManagerViewModel>();
+            services.AddSingleton<ComparisonViewModel>();
 
             services.AddTransient<MainWindow>();
             services.AddTransient<TestExecutionPage>();
@@ -121,6 +122,7 @@ namespace BatteryAging
             services.AddTransient<DataQueryPage>();
             services.AddTransient<BatchAnalysisPage>();
             services.AddTransient<CabinetManagerPage>();
+            services.AddTransient<ComparisonPage>();
         }
 
         public static void UIDispatch(Action action)

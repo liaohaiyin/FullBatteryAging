@@ -54,6 +54,7 @@ namespace BatteryAging.Communication
         public double TotalDischargeCapacity { get; private set; }
         public double TotalChargeEnergy { get; private set; }
         public double TotalDischargeEnergy { get; private set; }
+        public IClimateChamber Chamber { get; set; }
 
         // ── dV/dt 检测 ──
         private double _lastVoltage = double.NaN;
@@ -72,6 +73,7 @@ namespace BatteryAging.Communication
         public event EventHandler<ChannelStatusChangedEventArgs> StatusChanged;
         public event EventHandler<CheckpointEventArgs> CheckpointReached;
         public event EventHandler<CycleCompletedEventArgs> CycleCompleted;
+        public event EventHandler<DcirResultEventArgs> DcirMeasured;
 
         public ChannelExecutor(int globalChannelIndex, IDeviceDriver driver,
             string cabinetId = null, int localChannelIndex = 0)
@@ -226,6 +228,33 @@ namespace BatteryAging.Communication
                         }
                     }
 
+                    if (Chamber != null && step.TargetTemperature is double tt)
+                    {
+                        try
+                        {
+                            await Chamber.SetTemperatureAsync(tt, token);
+                            await Chamber.RunAsync(true, token);
+                            if (step.WaitForTempStable)
+                                await Chamber.WaitForTemperatureAsync(tt, 1.0, 120, 7200, null, token);
+                        }
+                        catch { /* 温箱异常不阻断主流程，按需改为保护 */ }
+                    }
+                    // ── DCIR 工步 ──
+                    if (step.Type == StepType.DCIR)
+                    {
+                        var profile = new Services.DcirProfile
+                        {
+                            PulseCurrent = step.PulseCurrent != 0 ? step.PulseCurrent : -Math.Abs(step.Current),
+                            PreRestSeconds = step.PulseOffSeconds > 0 ? step.PulseOffSeconds : 30,
+                            SampleTimes = new double[] { 1, 10, Math.Max(11, step.PulseOnSeconds) }
+                        };
+                        var dcir = await Services.DcirCalculator.MeasureAsync(
+                            _driver, LocalChannelIndex, profile, EstimateSoc(),
+                            CurrentRecord?.Id ?? 0, ChannelIndex, token);
+                        DcirMeasured?.Invoke(this, new DcirResultEventArgs { ChannelIndex = ChannelIndex, Result = dcir });
+                        CurrentStepIndex++;
+                        continue;   // DCIR 自成一步，跳过常规 ExecuteStepAsync
+                    }
                     var stepProt = await ExecuteStepAsync(step, token);
                     if (stepProt != ProtectionType.None)
                     {

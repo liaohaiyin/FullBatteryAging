@@ -28,7 +28,7 @@ namespace BatteryAging.Drivers
                 DriverType.Simulator => new SimulatorDriver(cabinet.ChannelCount, samplingIntervalMs),
                 DriverType.NeWare => new NewareDriver(cabinet.IpAddress, cabinet.TcpPort),
                 DriverType.Land => new LandDriver(cabinet.IpAddress, cabinet.TcpPort),
-                DriverType.XinDaNeng => new XinDaNengDriver(cabinet.IpAddress, cabinet.TcpPort),
+                DriverType.XinDaNeng => new ModbusDeviceDriver(cabinet.IpAddress, cabinet.TcpPort, BuildMap(cabinet)),
                 _ => new SimulatorDriver(cabinet.ChannelCount, samplingIntervalMs)
             };
         }
@@ -42,10 +42,16 @@ namespace BatteryAging.Drivers
                                             cabinet.DataBits, cabinet.StopBits, cabinet.Parity),
                 DriverType.Land => new LandSerialDriver(cabinet.SerialPort, cabinet.BaudRate,
                                             cabinet.DataBits, cabinet.StopBits, cabinet.Parity),
-                DriverType.XinDaNeng => new XinDaNengSerialDriver(cabinet.SerialPort, cabinet.BaudRate,
-                                            cabinet.DataBits, cabinet.StopBits, cabinet.Parity),
+                DriverType.XinDaNeng => new ModbusDeviceDriver(cabinet.SerialPort, cabinet.BaudRate,
+                                            cabinet.DataBits, cabinet.StopBits, cabinet.Parity, BuildMap(cabinet)),
                 _ => new SimulatorDriver(cabinet.ChannelCount, samplingIntervalMs)
             };
         }
+
+        private static ModbusRegisterMap BuildMap(Cabinet cab) => new ModbusRegisterMap
+        {
+            // TODO: 按设备《Modbus 协议手册》调整。默认值仅为占位。
+            UnitIdBase = 1,
+        };
     }
 }

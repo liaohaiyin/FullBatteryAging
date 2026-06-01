@@ -72,6 +72,13 @@
                             <TextBlock Text="批次分析" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
                         </StackPanel>
                     </Button>
+                    <Button Style="{StaticResource VsFlatButton}" HorizontalContentAlignment="Left"
+                            Padding="16,8" Command="{Binding NavCompareCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <ctrl:VsIcon Kind="{StaticResource Icon.ChartLine}" Width="18" Height="18" VerticalAlignment="Center"/>
+                            <TextBlock Text="对比分析" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
+                        </StackPanel>
+                    </Button>
                     <Button Style="{StaticResource VsFlatButton}"
                             HorizontalContentAlignment="Left"
                             Padding="16,8"

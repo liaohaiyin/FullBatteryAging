@@ -57,6 +57,13 @@ namespace BatteryAging.Core.Models
         public bool ReversePolarityCheck { get; set; } = true;   // 启动时反接检测
         public double MaxVoltageDropRate { get; set; } = 0.0;    // 电压跌落速率阈值 (V/s)，0=不检测
 
+        // ── 环境仓联动 ──
+        public double? TargetTemperature { get; set; } = null; // 该工步目标温度(℃)，null不控温
+        public bool WaitForTempStable { get; set; } = false;        // 是否等温度稳定后再开始
+
+        // ── 子程序调用（Type=SubCall 时有效）──
+        public string SubRecipeId { get; set; }                     // 引用的子方案 Id
+
         public string Remark { get; set; }               // 备注
     }
 }

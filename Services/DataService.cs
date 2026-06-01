@@ -34,6 +34,8 @@ namespace BatteryAging.Services
         Task<List<TestRecord>> GetRecordsByBarCodePrefixAsync(string barCodePrefix);
         Task SaveCycleDataAsync(CycleData cycle);
         Task<List<CycleData>> GetCycleDataAsync(int recordId);
+        Task SaveDcirAsync(DcirResult r);
+        Task<List<DcirResult>> GetDcirAsync(int recordId);
     }
 
     public class DataService : IDataService
@@ -221,6 +223,27 @@ namespace BatteryAging.Services
                 .Where(c => c.TestRecordId == recordId)
                 .OrderBy(c => c.CycleIndex)
                 .ToListAsync();
+        }
+        public async Task SaveDcirAsync(DcirResult r)
+        {
+            await using var db = await _factory.CreateDbContextAsync();
+            var entry = db.Add(r);
+            entry.Property("ResistanceJson").CurrentValue =
+                System.Text.Json.JsonSerializer.Serialize(r.ResistanceByTime);
+            await db.SaveChangesAsync();
+        }
+        public async Task<List<DcirResult>> GetDcirAsync(int recordId)
+        {
+            await using var db = await _factory.CreateDbContextAsync();
+            var list = await db.Set<DcirResult>().Where(d => d.TestRecordId == recordId).ToListAsync();
+            foreach (var d in list)
+            {
+                var json = db.Entry(d).Property("ResistanceJson").CurrentValue as string;
+                if (!string.IsNullOrEmpty(json))
+                    d.ResistanceByTime = System.Text.Json.JsonSerializer
+                        .Deserialize<Dictionary<double, double>>(json);
+            }
+            return list;
         }
     }
 }

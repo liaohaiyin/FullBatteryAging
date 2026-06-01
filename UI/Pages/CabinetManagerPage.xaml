@@ -115,6 +115,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Margin="0,0,8,0">
                                 <TextBlock Text="机柜名称" Style="{StaticResource FieldLabel}"/>
@@ -123,6 +124,13 @@
                             <StackPanel Grid.Column="1" Margin="8,0,0,0">
                                 <TextBlock Text="机柜编号" Style="{StaticResource FieldLabel}"/>
                                 <TextBox Text="{Binding CabinetIndex, UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Margin="8,0,0,0">
+                                <TextBlock Text="机柜类型" Style="{StaticResource FieldLabel}"/>
+                                <ComboBox ItemsSource="{Binding DataContext.CabinetTypes, RelativeSource={RelativeSource AncestorType=Page}}"
+                                          DisplayMemberPath="DisplayName" SelectedValuePath="Value"
+                                          SelectedValue="{Binding CabinetType}"
+                                          Height="25"/>
                             </StackPanel>
                         </Grid>
 

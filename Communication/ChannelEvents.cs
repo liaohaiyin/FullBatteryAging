@@ -50,4 +50,9 @@ namespace BatteryAging.Communication
         public double ChargeEnergy { get; set; }
         public double DischargeEnergy { get; set; }
     }
+    public class DcirResultEventArgs : EventArgs
+    {
+        public int ChannelIndex { get; set; }
+        public DcirResult Result { get; set; }
+    }
 }

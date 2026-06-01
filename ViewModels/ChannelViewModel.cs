@@ -49,6 +49,8 @@ namespace BatteryAging.ViewModels
 
         [ObservableProperty] private TestRecipe _selectedRecipe;
         [ObservableProperty] private int _testRecordId;
+        [ObservableProperty] private double _power;              // 实时功率 W = V*I
+        [ObservableProperty] private double _internalResistance; // 最近一次 DCIR 内阻 Ω
 
         // 历史采样点 - 用于绘图
         public ObservableCollection<DataPoint> RecentSamples { get; } = new();
@@ -83,6 +85,7 @@ namespace BatteryAging.ViewModels
                 TotalDischargeCapacity = _executor.TotalDischargeCapacity;
                 TotalChargeEnergy = _executor.TotalChargeEnergy;
                 TotalDischargeEnergy = _executor.TotalDischargeEnergy;
+                Power = Math.Round(d.Voltage * d.Current, 3);
 
                 // 保留近 600 个点用于绘图（约 10 分钟 @1Hz）
                 RecentSamples.Add(d);

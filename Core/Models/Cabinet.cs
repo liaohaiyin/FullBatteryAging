@@ -43,5 +43,11 @@ namespace BatteryAging.Core.Models
 
         // ── 通道采样配置 ──
         public int SamplingIntervalMs { get; set; } = 1000;   // 采样间隔(ms)
+        public CabinetType CabinetType { get; set; } = CabinetType.Cell;
+
+        // 关联温箱（环境仓联动）
+        public bool HasChamber { get; set; } = false;
+        public string ChamberIp { get; set; } = "127.0.0.1";
+        public int ChamberPort { get; set; } = 502;
     }
 }

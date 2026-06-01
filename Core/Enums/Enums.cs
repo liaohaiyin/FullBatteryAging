@@ -37,6 +37,12 @@ namespace BatteryAging.Core.Enums
         [Description("循环")]
         Loop,                // 循环
 
+        [Description("DCIR内阻")]
+        DCIR,
+
+        [Description("子程序调用")]
+        SubCall,
+
         [Description("结束")]
         End                  // 结束
     }
@@ -219,5 +225,17 @@ namespace BatteryAging.Core.Enums
         D,
         [Description("不合格")]
         Reject
+    }
+
+    public enum CabinetType
+    {
+        [Description("电芯柜")] 
+        Cell,
+        [Description("模组柜")] 
+        Module,
+        [Description("PACK柜")] 
+        Pack,
+        [Description("温箱")] 
+        Chamber
     }
 }
