@@ -351,7 +351,7 @@
                                         </Grid>
                                     </Border>
                                     <!-- 中部：电池图形 -->
-                                    <StackPanel Grid.Row="0" Grid.RowSpan="7" Grid.Column="2" HorizontalAlignment="Stretch"
+                                    <StackPanel Grid.Row="0" Grid.RowSpan="8" Grid.Column="2" HorizontalAlignment="Stretch"
                                                 VerticalAlignment="Stretch" Margin="5,0,0,0">
                                         <!-- 正极凸起 -->
                                         <Border Width="15" Height="5"

@@ -106,7 +106,6 @@ namespace BatteryAging.Communication
             => _channels.Values.Where(c => c.CabinetId == cabinetId);
 
         /// <summary>多通道同步启动 - 用 Barrier 让通道在同一时刻开始</summary>
-        /// <summary>多通道同步启动 - 用 Barrier 让通道在同一时刻开始</summary>
         public Task SyncStartAsync(IEnumerable<(ChannelExecutor exec, TestRecipe recipe, TestRecord record)> jobs)
         {
             var list = jobs.ToList();
