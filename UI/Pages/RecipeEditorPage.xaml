@@ -57,6 +57,13 @@
                         <ctrl:VsIcon Kind="{StaticResource Icon.FileDocumentOutline}" Width="14" Height="14"
                                      Foreground="{StaticResource VsWarningBrush}"/>
                     </Button>
+                    <Button Style="{StaticResource VsFlatButton}"
+                            Command="{Binding GenerateBuilderCommand}"
+                            ToolTip="用内置模板生成方案（日历/HPPC/最大能量）"
+                            Padding="6">
+                        <ctrl:VsIcon Kind="{StaticResource Icon.ChartBellCurve}" Width="14" Height="14"
+                                     Foreground="{StaticResource VsSuccessBrush}"/>
+                    </Button>
                 </StackPanel>
 
                 <ListBox Grid.Row="2"                        
@@ -410,6 +417,25 @@
                             <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,0,4,0">
                                 <TextBlock Text="保护时间 (s)" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
                                 <TextBox Text="{Binding ProtectionTimeSeconds, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F0}}"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Separator Margin="0,8,0,8"/>
+
+                        <TextBlock Text="环境仓联动" FontWeight="SemiBold" Margin="0,0,0,6" FontSize="12"
+                                   Foreground="{StaticResource VsSuccessBrush}"/>
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0,0,4,0">
+                                <TextBlock Text="目标温度 (°C，空=不控温)" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                                <TextBox Text="{Binding TargetTemperature, UpdateSourceTrigger=PropertyChanged, TargetNullValue='', StringFormat={}{0:F1}}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Margin="4,0,0,0" VerticalAlignment="Bottom">
+                                <CheckBox IsChecked="{Binding WaitForTempStable}" Content="等温度稳定后开始"
+                                          Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,4"/>
                             </StackPanel>
                         </Grid>
                     </StackPanel>

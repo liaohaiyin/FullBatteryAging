@@ -282,12 +282,29 @@ namespace BatteryAging.ViewModels
                 c.Status == ChannelStatus.Stopped).ToList();
             if (targets.Count == 0) return;
 
+            // 先展开子程序（只做一次），所有通道共用同一份扁平化方案，避免污染绑定属性 SelectedRecipe
+            var runRecipe = SelectedRecipe;
+            if (runRecipe.Steps.Any(s => s.Type == StepType.SubCall))
+            {
+                var flat = RecipeFlattener.Flatten(runRecipe,
+                    id => _dataService.GetRecipeAsync(id).GetAwaiter().GetResult());
+                runRecipe = new TestRecipe
+                {
+                    Id = runRecipe.Id,
+                    Name = runRecipe.Name,
+                    NominalCapacity = runRecipe.NominalCapacity,
+                    NominalVoltage = runRecipe.NominalVoltage,
+                    BatteryType = runRecipe.BatteryType,
+                    Steps = flat
+                };
+            }
+
             var jobs = new List<(ChannelExecutor, TestRecipe, TestRecord)>();
             foreach (var ch in targets)
             {
                 ch.Reset();
-                ch.RecipeName = SelectedRecipe.Name;
-                ch.TotalSteps = SelectedRecipe.Steps.Count;
+                ch.RecipeName = runRecipe.Name;
+                ch.TotalSteps = runRecipe.Steps.Count;
                 if (!string.IsNullOrWhiteSpace(BarCode)) ch.BarCode = BarCode;
 
                 var record = new TestRecord
@@ -297,29 +314,16 @@ namespace BatteryAging.ViewModels
                     BarCode = string.IsNullOrWhiteSpace(ch.BarCode)
                         ? $"SYNC_{DateTime.Now:yyMMddHHmmss}_CH{ch.ChannelIndex}"
                         : ch.BarCode,
-                    RecipeId = SelectedRecipe.Id,
-                    RecipeName = SelectedRecipe.Name,
-                    NominalCapacity = SelectedRecipe.NominalCapacity,
+                    RecipeId = runRecipe.Id,
+                    RecipeName = runRecipe.Name,
+                    NominalCapacity = runRecipe.NominalCapacity,
                     StartTime = DateTime.Now,
                     Status = ChannelStatus.Running,
                     LastCheckpointTime = DateTime.Now
                 };
                 record = await _dataService.CreateRecordAsync(record);
                 ch.TestRecordId = record.Id;
-                jobs.Add((ch.Executor, SelectedRecipe, record));
-                if (SelectedRecipe.Steps.Any(s => s.Type == StepType.SubCall))
-                {
-                    var flat = RecipeFlattener.Flatten(SelectedRecipe, id => _dataService.GetRecipeAsync(id).GetAwaiter().GetResult());
-                    SelectedRecipe = new TestRecipe
-                    {
-                        Id = SelectedRecipe.Id,
-                        Name = SelectedRecipe.Name,
-                        NominalCapacity = SelectedRecipe.NominalCapacity,
-                        NominalVoltage = SelectedRecipe.NominalVoltage,
-                        BatteryType = SelectedRecipe.BatteryType,
-                        Steps = flat
-                    };
-                }
+                jobs.Add((ch.Executor, runRecipe, record));
             }
 
             AppendLog($"同步启动 {jobs.Count} 个通道");

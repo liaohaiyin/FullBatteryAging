@@ -40,6 +40,9 @@ namespace BatteryAging.ViewModels
             _pulseOnSeconds = step.PulseOnSeconds;
             _pulseOffSeconds = step.PulseOffSeconds;
             _jumpTargetIndex = step.JumpTargetIndex;
+            _jumpTargetIndex = step.JumpTargetIndex;
+            _targetTemperature = step.TargetTemperature;
+            _waitForTempStable = step.WaitForTempStable;
         }
 
         [ObservableProperty] private int _sequence;
@@ -125,5 +128,12 @@ namespace BatteryAging.ViewModels
 
         [ObservableProperty] private double _pulseOffSeconds;
         partial void OnPulseOffSecondsChanged(double value) => _step.PulseOffSeconds = value;
+
+        // ── 环境仓联动 ──
+        [ObservableProperty] private double? _targetTemperature;
+        partial void OnTargetTemperatureChanged(double? value) => _step.TargetTemperature = value;
+
+        [ObservableProperty] private bool _waitForTempStable;
+        partial void OnWaitForTempStableChanged(bool value) => _step.WaitForTempStable = value;
     }
 }

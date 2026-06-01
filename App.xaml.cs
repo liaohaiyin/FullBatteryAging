@@ -45,7 +45,7 @@ namespace BatteryAging
             using (var scope = Services.CreateScope())
             {
                 var db = scope.ServiceProvider.GetRequiredService<BatteryDbContext>();
-                db.Database.EnsureCreated();
+                db.Database.Migrate();// 自动建库 / 升级到最新迁移，保留已有数据
                 // SQLite WAL 模式：崩溃时不丢数据，支持掉电续测
                 try { db.Database.ExecuteSqlRaw("PRAGMA journal_mode=WAL;"); } catch { }
                 try { db.Database.ExecuteSqlRaw("PRAGMA synchronous=NORMAL;"); } catch { }

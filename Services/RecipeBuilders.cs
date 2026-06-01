@@ -9,7 +9,6 @@ namespace BatteryAging.Services
     // ════════════════════════════════════════════════════════════════════
     //  老化测试方案构建器（生成 TestRecipe，可直接保存/运行）
     //  依赖 TestStep 新增字段：TargetTemperature / WaitForTempStable / SubRecipeId
-    //  （见 INTEGRATION.md 对 TestStep 与 StepType 的补丁）
     // ════════════════════════════════════════════════════════════════════
 
     public class CalendarAgingOptions
@@ -53,7 +52,12 @@ namespace BatteryAging.Services
             // —— 循环体起点 ——
             int loopStart = steps.Count; // 0-based 索引
             S($"{o.StorageTempC:F0}℃ 存放 {o.CheckIntervalDays} 天", StepType.Rest, s =>
-                { s.DurationSeconds = o.CheckIntervalDays * 86400.0; s.TargetTemperature = o.StorageTempC; s.WaitForTempStable = true; });
+            {
+                s.DurationSeconds = o.CheckIntervalDays * 86400.0;
+                s.TargetTemperature = o.StorageTempC;
+                s.WaitForTempStable = true;
+                s.ProtectionTimeSeconds = s.DurationSeconds + 86400; // 保护时间必须大于存放时长，否则误触发超时保护
+            });
 
             // RPT 标定：满充→满放(测容量)→回到存放 SOC，均在 25℃
             S("RPT-恒流充电", StepType.CC_Charge, s => { s.Current = o.ChargeCurrent; s.CutoffVoltage = o.FullVoltage; s.TargetTemperature = o.RptTempC; s.WaitForTempStable = true; });

@@ -1,5 +1,6 @@
-using System.Windows;
 using Microsoft.Win32;
+using System.Windows;
+using System.Windows.Media.Media3D;
 
 namespace BatteryAging.Services
 {
@@ -47,6 +48,7 @@ namespace BatteryAging.Services
                 Title = title,
                 Prompt = prompt,
                 InputText = defaultValue,
+                MinHeight = 230,
                 Owner = Application.Current?.MainWindow
             };
             return win.ShowDialog() == true ? win.InputText : null;

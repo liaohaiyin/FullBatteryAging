@@ -229,11 +229,11 @@ namespace BatteryAging.Core.Enums
 
     public enum CabinetType
     {
-        [Description("电芯柜")] 
+        [Description("电芯柜")]  //单体
         Cell,
-        [Description("模组柜")] 
+        [Description("模组柜")] //多个电芯串并联
         Module,
-        [Description("PACK柜")] 
+        [Description("PACK柜")]  //多个模组
         Pack,
         [Description("温箱")] 
         Chamber

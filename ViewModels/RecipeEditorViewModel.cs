@@ -43,6 +43,7 @@ namespace BatteryAging.ViewModels
         public IRelayCommand MoveUpCommand { get; }
         public IRelayCommand MoveDownCommand { get; }
         public IRelayCommand LoadSampleCommand { get; }
+        public IRelayCommand GenerateBuilderCommand { get; }
 
         public RecipeEditorViewModel(IDataService dataService, IDialogService dialogService)
         {
@@ -58,6 +59,7 @@ namespace BatteryAging.ViewModels
             MoveUpCommand = new RelayCommand(MoveUp, () => SelectedStep != null && Steps.IndexOf(SelectedStep) > 0);
             MoveDownCommand = new RelayCommand(MoveDown, () => SelectedStep != null && Steps.IndexOf(SelectedStep) < Steps.Count - 1);
             LoadSampleCommand = new RelayCommand(LoadSampleRecipe);
+            GenerateBuilderCommand = new RelayCommand(GenerateFromBuilder);
 
             _ = LoadAsync();
         }
@@ -303,6 +305,49 @@ namespace BatteryAging.ViewModels
                 Sequence = 6, Name = "循环 3 次", Type = StepType.Loop,
                 LoopStartIndex = 0, LoopCount = 3
             }));
+
+            IsDirty = true;
+        }
+
+        /// <summary>用内置 Builder 生成老化方案模板，参数取默认值 + 当前标称容量，生成后可在工步表继续微调</summary>
+        private void GenerateFromBuilder()
+        {
+            // 用 InputDialog 让用户三选一（1=日历寿命 2=HPPC 3=最大能量）
+            var pick = _dialogService.InputDialog(
+                "选择要生成的方案模板：\n1 = 日历寿命 (Calendar)\n2 = HPPC 功率特性\n3 = 最大能量",
+                "生成方案模板", "1");
+            if (string.IsNullOrWhiteSpace(pick)) return;
+
+            var cn = NominalCapacity > 0 ? NominalCapacity : 2.6;
+            TestRecipe recipe;
+            switch (pick.Trim())
+            {
+                case "1":
+                    recipe = CalendarAgingBuilder.Build(new CalendarAgingOptions { NominalCapacity = cn });
+                    break;
+                case "2":
+                    recipe = HppcBuilder.Build(new HppcOptions { NominalCapacity = cn });
+                    break;
+                case "3":
+                    recipe = MaxEnergyBuilder.Build(new MaxEnergyOptions { NominalCapacity = cn });
+                    break;
+                default:
+                    _dialogService.ShowWarning("请输入 1、2 或 3");
+                    return;
+            }
+
+            // 载入到编辑器（视为新建未保存方案）
+            SelectedRecipe = null;
+            RecipeName = recipe.Name;
+            RecipeDescription = recipe.Description;
+            BatteryType = recipe.BatteryType;
+            NominalCapacity = recipe.NominalCapacity;
+            NominalVoltage = recipe.NominalVoltage;
+
+            Steps.Clear();
+            foreach (var s in recipe.Steps.OrderBy(s => s.Sequence))
+                Steps.Add(new StepViewModel(s));
+            ResequenceSteps();
 
             IsDirty = true;
         }
