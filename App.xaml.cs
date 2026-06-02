@@ -45,10 +45,25 @@ namespace BatteryAging
             using (var scope = Services.CreateScope())
             {
                 var db = scope.ServiceProvider.GetRequiredService<BatteryDbContext>();
-                db.Database.Migrate(); //Migrate// 自动建库 / 升级到最新迁移，保留已有数据
+                db.Database.EnsureCreated(); //Migrate// 自动建库 / 升级到最新迁移，保留已有数据
                 // SQLite WAL 模式：崩溃时不丢数据，支持掉电续测
                 try { db.Database.ExecuteSqlRaw("PRAGMA journal_mode=WAL;"); } catch { }
                 try { db.Database.ExecuteSqlRaw("PRAGMA synchronous=NORMAL;"); } catch { }
+            }
+
+            // ── 语言服务（构造即加载资源字典；必须在显示任何窗口之前）──
+            _ = Services.GetRequiredService<ILanguageService>();
+
+            // ── 鉴权初始化（建内置角色 + 默认 admin）──
+            Services.GetRequiredService<IAuthService>().InitializeAsync().GetAwaiter().GetResult();
+
+            // ── 登录闸门 ──
+            var loginVm = Services.GetRequiredService<LoginWindowViewModel>();
+            var login = new LoginWindow(loginVm);
+            if (login.ShowDialog() != true)
+            {
+                Shutdown();
+                return;
             }
 
             // ── 初始化机柜与通道 ──
@@ -60,7 +75,6 @@ namespace BatteryAging
             Shutdown();
         }
 
-        /// <summary>从数据库加载机柜配置初始化；若无机柜则按 appsettings 创建默认</summary>
         private static async Task InitializeChannelsAsync(IConfiguration config)
         {
             var dataService = Services.GetRequiredService<IDataService>();
@@ -108,6 +122,11 @@ namespace BatteryAging
             services.AddSingleton<IBatteryAnalyticsService, BatteryAnalyticsService>();
             services.AddSingleton<ChannelManager>();
 
+            services.AddSingleton<IAuthService, AuthService>();
+            services.AddSingleton<ILanguageService, LanguageService>();
+            services.AddSingleton<LoginWindowViewModel>();
+            services.AddSingleton<UserManagementViewModel>();
+
             services.AddSingleton<MainWindowViewModel>();
             services.AddSingleton<TestExecutionViewModel>();
             services.AddSingleton<RecipeEditorViewModel>();
@@ -123,6 +142,7 @@ namespace BatteryAging
             services.AddTransient<BatchAnalysisPage>();
             services.AddTransient<CabinetManagerPage>();
             services.AddTransient<ComparisonPage>();
+            services.AddTransient<UserManagementPage>();
         }
 
         public static void UIDispatch(Action action)

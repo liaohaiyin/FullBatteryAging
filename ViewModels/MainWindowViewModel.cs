@@ -25,6 +25,7 @@ namespace BatteryAging.ViewModels
         public IRelayCommand NavCabinetCommand { get; }
         public IRelayCommand NavAboutCommand { get; }
         public IRelayCommand NavCompareCommand { get; }
+        public IRelayCommand NavUserMgmtCommand { get; }
 
         public MainWindowViewModel(IServiceProvider services)
         {
@@ -59,6 +60,11 @@ namespace BatteryAging.ViewModels
             {
                 CurrentPage = _services.GetRequiredService<CabinetManagerPage>();
                 NavTitle = "机柜管理";
+            });
+            NavUserMgmtCommand = new RelayCommand(() =>
+            {
+                CurrentPage = _services.GetRequiredService<UI.Pages.UserManagementPage>();
+                NavTitle = "用户管理";
             });
             NavAboutCommand = new RelayCommand(() =>
             {

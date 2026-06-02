@@ -1,0 +1,147 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <!-- ── Common ── -->
+    <sys:String x:Key="Save">Save</sys:String>
+    <sys:String x:Key="Cancel">Cancel</sys:String>
+    <sys:String x:Key="Description">Description</sys:String>
+
+    <!-- ── Common actions/buttons (reusable across pages/windows) ── -->
+    <sys:String x:Key="Common_OK">OK</sys:String>
+    <sys:String x:Key="Common_Confirm">Confirm</sys:String>
+    <sys:String x:Key="Common_Close">Close</sys:String>
+    <sys:String x:Key="Common_Delete">Delete</sys:String>
+    <sys:String x:Key="Common_Edit">Edit</sys:String>
+    <sys:String x:Key="Common_New">New</sys:String>
+    <sys:String x:Key="Common_Refresh">Refresh</sys:String>
+    <sys:String x:Key="Common_Search">Search</sys:String>
+    <sys:String x:Key="Common_Export">Export</sys:String>
+    <sys:String x:Key="Common_Import">Import</sys:String>
+    <sys:String x:Key="Common_Apply">Apply</sys:String>
+    <sys:String x:Key="Common_Reset">Reset</sys:String>
+    <sys:String x:Key="Common_Yes">Yes</sys:String>
+    <sys:String x:Key="Common_No">No</sys:String>
+    <sys:String x:Key="Common_Loading">Loading…</sys:String>
+    <sys:String x:Key="Common_NoData">No data</sys:String>
+    <!-- Execution action verbs (aligned with permission items) -->
+    <sys:String x:Key="Common_Start">Start</sys:String>
+    <sys:String x:Key="Common_Stop">Stop</sys:String>
+    <sys:String x:Key="Common_Pause">Pause</sys:String>
+    <sys:String x:Key="Common_Resume">Resume</sys:String>
+    <sys:String x:Key="Common_StartAll">Start all</sys:String>
+    <sys:String x:Key="Common_StopAll">Stop all</sys:String>
+    <sys:String x:Key="Common_SyncStart">Synchronized start</sys:String>
+    <sys:String x:Key="Common_SkipStep">Skip step</sys:String>
+    <sys:String x:Key="Common_ClearFault">Clear protection/fault</sys:String>
+    <sys:String x:Key="Common_EmergencyStop">Emergency stop</sys:String>
+
+    <!-- ── Built-in roles (read by RoleLocalizer) ── -->
+    <sys:String x:Key="Role_Admin_Name">Administrator</sys:String>
+    <sys:String x:Key="Role_Admin_Description">Full permissions</sys:String>
+    <sys:String x:Key="Role_Engineer_Name">Engineer</sys:String>
+    <sys:String x:Key="Role_Engineer_Description">Flow editing and test execution</sys:String>
+    <sys:String x:Key="Role_Operator_Name">Operator</sys:String>
+    <sys:String x:Key="Role_Operator_Description">Run tests and view data only</sys:String>
+    <sys:String x:Key="Role_Viewer_Name">Viewer</sys:String>
+    <sys:String x:Key="Role_Viewer_Description">Read-only access</sys:String>
+
+    <!-- ── Login ── -->
+    <sys:String x:Key="Login_WindowTitle">Sign In</sys:String>
+    <sys:String x:Key="Login_BrandLine1">Battery Charge/Discharge</sys:String>
+    <sys:String x:Key="Login_BrandLine2">Aging Test System</sys:String>
+    <sys:String x:Key="Login_BrandSubtitle">Battery Aging Test Platform</sys:String>
+    <sys:String x:Key="Login_Feature_MultiProtocol">Multi-protocol devices</sys:String>
+    <sys:String x:Key="Login_Feature_MultiProtocolDesc">NeWare / Land / Modbus / Simulator</sys:String>
+    <sys:String x:Key="Login_Feature_VisualFlow">Visual step editing</sys:String>
+    <sys:String x:Key="Login_Feature_VisualFlowDesc">Loops / jumps / sub-routines / chamber</sys:String>
+    <sys:String x:Key="Login_Feature_RolePermission">Role-based permissions</sys:String>
+    <sys:String x:Key="Login_Feature_RolePermissionDesc">Multi-user tiered access control</sys:String>
+    <sys:String x:Key="Login_CloseTooltip">Close</sys:String>
+    <sys:String x:Key="Login_WelcomeTitle">Welcome back</sys:String>
+    <sys:String x:Key="Login_WelcomeSubtitle">Please sign in to continue</sys:String>
+    <sys:String x:Key="Login_UsernameLabel">Username</sys:String>
+    <sys:String x:Key="Login_UsernameHint">Enter username</sys:String>
+    <sys:String x:Key="Login_PasswordLabel">Password</sys:String>
+    <sys:String x:Key="Login_PasswordHint">Enter password</sys:String>
+    <sys:String x:Key="Login_TogglePasswordTooltip">Show / hide password</sys:String>
+    <sys:String x:Key="Login_RememberUsername">Remember username</sys:String>
+    <sys:String x:Key="Login_SignInButton">Sign In</sys:String>
+    <sys:String x:Key="Login_DefaultAccountHint">Default account admin / admin123</sys:String>
+    <sys:String x:Key="Login_Msg_PasswordRequired">Please enter a password</sys:String>
+
+    <!-- ── User management ── -->
+    <sys:String x:Key="UserManagement_PageTitle">User Management</sys:String>
+    <sys:String x:Key="UserManagement_UsersTab">Users</sys:String>
+    <sys:String x:Key="UserManagement_RolesTab">Roles &amp; Permissions</sys:String>
+    <sys:String x:Key="UserManagement_NewUser">New User</sys:String>
+    <sys:String x:Key="UserManagement_EditUser">Edit</sys:String>
+    <sys:String x:Key="UserManagement_DeleteUser">Delete</sys:String>
+    <sys:String x:Key="UserManagement_UnlockUser">Unlock</sys:String>
+    <sys:String x:Key="UserManagement_Username">Username</sys:String>
+    <sys:String x:Key="UserManagement_DisplayName">Display Name</sys:String>
+    <sys:String x:Key="UserManagement_Role">Role</sys:String>
+    <sys:String x:Key="UserManagement_Email">Email</sys:String>
+    <sys:String x:Key="UserManagement_LastLogin">Last Login</sys:String>
+    <sys:String x:Key="UserManagement_AccountStatus">Status</sys:String>
+    <sys:String x:Key="UserManagement_Locked">Locked</sys:String>
+    <sys:String x:Key="UserManagement_NewUserHeader">New User</sys:String>
+    <sys:String x:Key="UserManagement_EditUserHeader">Edit User</sys:String>
+    <sys:String x:Key="UserManagement_Password">Password</sys:String>
+    <sys:String x:Key="UserManagement_NewPasswordOptional">New password (blank = keep)</sys:String>
+    <sys:String x:Key="UserManagement_ConfirmPassword">Confirm Password</sys:String>
+    <sys:String x:Key="UserManagement_AccountEnabled">Account enabled</sys:String>
+    <sys:String x:Key="UserManagement_NewRole">New Role</sys:String>
+    <sys:String x:Key="UserManagement_EditRole">Edit Role</sys:String>
+    <sys:String x:Key="UserManagement_DeleteRole">Delete Role</sys:String>
+    <sys:String x:Key="UserManagement_RoleName">Role Name</sys:String>
+    <sys:String x:Key="UserManagement_PermissionConfig">Permission Configuration</sys:String>
+    <sys:String x:Key="UserManagement_Msg_SelectRole">Please select a role</sys:String>
+    <sys:String x:Key="UserManagement_Msg_PasswordMismatch">Passwords do not match</sys:String>
+    <sys:String x:Key="UserManagement_Msg_ConfirmDeleteUser">Delete user '{0}'?</sys:String>
+    <sys:String x:Key="UserManagement_Msg_ConfirmDeleteTitle">Confirm Delete</sys:String>
+    <sys:String x:Key="UserManagement_Msg_LockReset">Account lock has been reset</sys:String>
+    <sys:String x:Key="UserManagement_Msg_ConfirmDeleteRole">Delete role '{0}'?</sys:String>
+
+    <!-- Permission groups -->
+    <sys:String x:Key="UserManagement_PermGroup_TestExecution">Test Execution</sys:String>
+    <sys:String x:Key="UserManagement_PermGroup_FlowEditor">Step Editor</sys:String>
+    <sys:String x:Key="UserManagement_PermGroup_DataQuery">Data Query</sys:String>
+    <sys:String x:Key="UserManagement_PermGroup_Statistics">Statistics</sys:String>
+    <sys:String x:Key="UserManagement_PermGroup_SystemSettings">System Settings</sys:String>
+
+    <!-- Permission items -->
+    <sys:String x:Key="UserManagement_Perm_TestExecution_View">View execution page</sys:String>
+    <sys:String x:Key="UserManagement_Perm_TestExecution_Start">Start test</sys:String>
+    <sys:String x:Key="UserManagement_Perm_TestExecution_Stop">Stop test</sys:String>
+    <sys:String x:Key="UserManagement_Perm_TestExecution_New">New/reset test</sys:String>
+    <sys:String x:Key="UserManagement_Perm_TestExecution_Pause">Pause</sys:String>
+    <sys:String x:Key="UserManagement_Perm_TestExecution_Resume">Resume</sys:String>
+    <sys:String x:Key="UserManagement_Perm_TestExecution_StartAll">Start all</sys:String>
+    <sys:String x:Key="UserManagement_Perm_TestExecution_StopAll">Stop all</sys:String>
+    <sys:String x:Key="UserManagement_Perm_TestExecution_SyncStart">Synchronized start</sys:String>
+    <sys:String x:Key="UserManagement_Perm_TestExecution_SkipStep">Skip step</sys:String>
+    <sys:String x:Key="UserManagement_Perm_TestExecution_ClearFault">Clear protection/fault</sys:String>
+    <sys:String x:Key="UserManagement_Perm_TestExecution_EmergencyStop">Emergency stop</sys:String>
+    <sys:String x:Key="UserManagement_Perm_TestExecution_ExportLive">Export live data</sys:String>
+    <sys:String x:Key="UserManagement_Perm_FlowEditor_View">View flows</sys:String>
+    <sys:String x:Key="UserManagement_Perm_FlowEditor_New">New flow</sys:String>
+    <sys:String x:Key="UserManagement_Perm_FlowEditor_Edit">Edit steps</sys:String>
+    <sys:String x:Key="UserManagement_Perm_FlowEditor_Save">Save flow</sys:String>
+    <sys:String x:Key="UserManagement_Perm_FlowEditor_Delete">Delete flow</sys:String>
+    <sys:String x:Key="UserManagement_Perm_FlowEditor_Clone">Clone flow</sys:String>
+    <sys:String x:Key="UserManagement_Perm_FlowEditor_Import">Import file</sys:String>
+    <sys:String x:Key="UserManagement_Perm_FlowEditor_Export">Export file</sys:String>
+    <sys:String x:Key="UserManagement_Perm_FlowEditor_Simulate">Simulate run</sys:String>
+    <sys:String x:Key="UserManagement_Perm_DataQuery_View">Query records</sys:String>
+    <sys:String x:Key="UserManagement_Perm_DataQuery_Export">Export data</sys:String>
+    <sys:String x:Key="UserManagement_Perm_DataQuery_Delete">Delete records</sys:String>
+    <sys:String x:Key="UserManagement_Perm_DataQuery_Report">Generate report</sys:String>
+    <sys:String x:Key="UserManagement_Perm_Statistics_View">View statistics</sys:String>
+    <sys:String x:Key="UserManagement_Perm_Statistics_Export">Export report</sys:String>
+    <sys:String x:Key="UserManagement_Perm_Settings_CommConfig">Cabinet/comm config</sys:String>
+    <sys:String x:Key="UserManagement_Perm_Settings_UserManagement">User management</sys:String>
+    <sys:String x:Key="UserManagement_Perm_Settings_RoleManagement">Role management</sys:String>
+    <sys:String x:Key="UserManagement_Perm_Settings_SystemConfig">System parameters</sys:String>
+
+</ResourceDictionary>

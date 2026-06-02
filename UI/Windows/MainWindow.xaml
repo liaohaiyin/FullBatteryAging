@@ -20,7 +20,8 @@
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="180"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="639*"/>
+                <ColumnDefinition Width="70*"/>
             </Grid.ColumnDefinitions>
 
             <!-- 侧边导航 -->
@@ -90,6 +91,13 @@
                             <TextBlock Text="机柜管理" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
                         </StackPanel>
                     </Button>
+                    <Button Style="{StaticResource VsFlatButton}" HorizontalContentAlignment="Left"
+                            Padding="16,8" Command="{Binding NavUserMgmtCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <ctrl:VsIcon Kind="{StaticResource Icon.ServerNetwork}" Width="18" Height="18" VerticalAlignment="Center"/>
+                            <TextBlock Text="用户管理" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
+                        </StackPanel>
+                    </Button>
 
                     <Border Height="1" Background="{StaticResource VsBorderBrush}" Margin="12,16"/>
 
@@ -111,7 +119,7 @@
 
             <!-- 内容区 -->
             <Frame Grid.Column="1" NavigationUIVisibility="Hidden" Content="{Binding CurrentPage}"
-                   Background="{StaticResource VsBgDeepBrush}"/>
+                   Background="{StaticResource VsBgDeepBrush}" Grid.ColumnSpan="2"/>
         </Grid>
 
         <!-- 状态栏 -->
@@ -122,14 +130,14 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                   
+
                 <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="12,0">
                     <Ellipse Width="8" Height="8" Fill="White" VerticalAlignment="Center"/>
                     <TextBlock Text="模拟模式 · 运行中"
                                Margin="8,0,0,0" VerticalAlignment="Center"
                                FontSize="11" Foreground="White"/>
                 </StackPanel>
-                
+
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,0,14,0">
                     <Border Width="1" Background="{StaticResource VsBorderBrush}" Margin="8,4"/>
                     <ctrl:VsIcon Kind="{StaticResource Icon.ClockOutline}"

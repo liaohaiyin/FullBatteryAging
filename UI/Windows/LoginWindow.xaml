@@ -1,0 +1,220 @@
+<Window x:Class="BatteryAging.UI.Windows.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ctrl="clr-namespace:BatteryAging.UI.Controls"
+        xmlns:ap="clr-namespace:BatteryAging.UI.AttachedProperties"
+        Title="{DynamicResource Login_WindowTitle}" Height="500" Width="820"
+        WindowStartupLocation="CenterScreen"
+        Style="{StaticResource VsWindowStyle}"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent">
+
+    <!-- 颜色全部取自 UI/Themes/Colors.xaml（通过 Theme.xaml 合并的 Vs* 笔刷），与其它界面统一 -->
+    <Window.Resources>
+        <!-- 深色表单输入框：仅设尺寸，颜色走主题笔刷 -->
+        <Style x:Key="LoginInput" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="Height"      Value="44"/>
+            <Setter Property="FontSize"    Value="14"/>
+            <Setter Property="Padding"     Value="12,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Background"  Value="{DynamicResource VsBgMidBrush}"/>
+            <Setter Property="Foreground"  Value="{DynamicResource VsTextPrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource VsBorderBrush}"/>
+            <Setter Property="CaretBrush"  Value="{DynamicResource VsAccentBrush}"/>
+        </Style>
+
+        <!-- 登录主按钮：使用主题强调色 -->
+        <Style x:Key="LoginButton" TargetType="Button">
+            <Setter Property="Height"          Value="46"/>
+            <Setter Property="Background"      Value="{DynamicResource VsAccentBrush}"/>
+            <Setter Property="Foreground"      Value="{DynamicResource VsTextPrimaryBrush}"/>
+            <Setter Property="FontSize"        Value="15"/>
+            <Setter Property="FontWeight"      Value="Medium"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor"          Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Opacity" Value="0.88"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Bd" Property="Opacity" Value="0.72"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Bd" Property="Opacity" Value="0.45"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Border CornerRadius="12" Background="{DynamicResource VsBgPanelBrush}"
+            BorderBrush="{DynamicResource VsBorderBrush}" BorderThickness="1">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="32" ShadowDepth="0" Color="#000000" Opacity="0.45"/>
+        </Border.Effect>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- 左侧品牌区（最深背景 + 强调色点缀） -->
+            <Border Grid.Column="0" CornerRadius="2,0,0,2"
+                    Background="{DynamicResource VsBgDeepBrush}" MouseDown="TitleBar_MouseDown">
+                <Grid>
+                    <Ellipse Width="180" Height="180" Opacity="0.08" Fill="{DynamicResource VsAccentBrush}"
+                             HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-60,-60,0"/>
+                    <Ellipse Width="120" Height="120" Opacity="0.08" Fill="{DynamicResource VsAccentBrush}"
+                             HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="-40,0,0,-40"/>
+
+                    <StackPanel Margin="32,40" VerticalAlignment="Center">
+                        <Border Width="56" Height="56" CornerRadius="16" Margin="0,0,0,20"
+                                HorizontalAlignment="Left" Background="{DynamicResource VsAccentBrush}">
+                            <ctrl:VsIcon Kind="{StaticResource Icon.BatteryChargingHigh}"
+                                         Width="28" Height="28" Foreground="{DynamicResource VsTextPrimaryBrush}"/>
+                        </Border>
+
+                        <TextBlock Text="{DynamicResource Login_BrandLine1}" FontSize="22" FontWeight="Medium"
+                                   Foreground="{DynamicResource VsTextPrimaryBrush}" LineHeight="28"/>
+                        <TextBlock Text="{DynamicResource Login_BrandLine2}" FontSize="22" FontWeight="Medium"
+                                   Foreground="{DynamicResource VsTextPrimaryBrush}" Margin="0,0,0,6"/>
+                        <TextBlock Text="{DynamicResource Login_BrandSubtitle}" FontSize="12"
+                                   Foreground="{DynamicResource VsTextMutedBrush}" Margin="0,0,0,36"/>
+
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
+                                <ctrl:VsIcon Kind="{StaticResource Icon.Play}" Width="14" Height="14"
+                                             Foreground="{DynamicResource VsAccentBrush}" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="{DynamicResource Login_Feature_MultiProtocol}"
+                                               FontSize="13" FontWeight="Medium" Foreground="{DynamicResource VsTextPrimaryBrush}"/>
+                                    <TextBlock Text="{DynamicResource Login_Feature_MultiProtocolDesc}"
+                                               FontSize="11" Foreground="{DynamicResource VsTextMutedBrush}"/>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
+                                <ctrl:VsIcon Kind="{StaticResource Icon.FileDocumentOutline}" Width="14" Height="14"
+                                             Foreground="{DynamicResource VsAccentBrush}" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="{DynamicResource Login_Feature_VisualFlow}"
+                                               FontSize="13" FontWeight="Medium" Foreground="{DynamicResource VsTextPrimaryBrush}"/>
+                                    <TextBlock Text="{DynamicResource Login_Feature_VisualFlowDesc}"
+                                               FontSize="11" Foreground="{DynamicResource VsTextMutedBrush}"/>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal">
+                                <ctrl:VsIcon Kind="{StaticResource Icon.CogOutline}" Width="14" Height="14"
+                                             Foreground="{DynamicResource VsAccentBrush}" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="{DynamicResource Login_Feature_RolePermission}"
+                                               FontSize="13" FontWeight="Medium" Foreground="{DynamicResource VsTextPrimaryBrush}"/>
+                                    <TextBlock Text="{DynamicResource Login_Feature_RolePermissionDesc}"
+                                               FontSize="11" Foreground="{DynamicResource VsTextMutedBrush}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <TextBlock FontSize="11" Margin="0,40,0,0" HorizontalAlignment="Left"
+                                   Foreground="{DynamicResource VsTextMutedBrush}">
+                            <Run Text="v"/><Run Text="{Binding Version}"/>
+                        </TextBlock>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- 右侧表单区 -->
+            <Border Grid.Column="1" CornerRadius="0,2,2,0"
+                    Background="{DynamicResource VsBgPanelBrush}" MouseDown="TitleBar_MouseDown">
+                <Grid>
+                    <!-- 语言选择 -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top"
+                                Margin="0,16,48,0">
+                        <ComboBox ItemsSource="{Binding AvailableLanguages}"
+                                  SelectedItem="{Binding SelectedLanguage}"
+                                  DisplayMemberPath="NativeName"
+                                  Width="110" Height="26" FontSize="11" VerticalContentAlignment="Center"/>
+                    </StackPanel>
+
+                    <StackPanel Margin="48,0" VerticalAlignment="Center">
+                        <TextBlock Text="{DynamicResource Login_WelcomeTitle}" FontSize="22" FontWeight="Medium"
+                                   Foreground="{DynamicResource VsTextPrimaryBrush}" Margin="0,0,0,6"/>
+                        <TextBlock Text="{DynamicResource Login_WelcomeSubtitle}" FontSize="13"
+                                   Foreground="{DynamicResource VsTextMutedBrush}" Margin="0,0,0,28"/>
+
+                        <!-- 错误提示 -->
+                        <Border x:Name="ErrorPanel" Background="{DynamicResource VsBgMidBrush}"
+                                BorderBrush="{DynamicResource VsErrorBrush}"
+                                BorderThickness="1" CornerRadius="6" Padding="12,10" Margin="0,0,0,16"
+                                Visibility="Collapsed">
+                            <TextBlock x:Name="ErrorText" FontSize="13" Foreground="{DynamicResource VsErrorBrush}" TextWrapping="Wrap"/>
+                        </Border>
+
+                        <!-- 用户名 -->
+                        <TextBlock Text="{DynamicResource Login_UsernameLabel}" FontSize="12" FontWeight="Medium"
+                                   Foreground="{DynamicResource VsTextMutedBrush}" Margin="0,0,0,6"/>
+                        <TextBox x:Name="UsernameBox" Style="{StaticResource LoginInput}" Margin="0,0,0,16"
+                                 Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
+                                 ap:PlaceholderProperty.PlaceholderText="{DynamicResource Login_UsernameHint}"
+                                 KeyDown="Input_KeyDown"/>
+
+                        <!-- 密码 -->
+                        <TextBlock Text="{DynamicResource Login_PasswordLabel}" FontSize="12" FontWeight="Medium"
+                                   Foreground="{DynamicResource VsTextMutedBrush}" Margin="0,0,0,6"/>
+                        <Grid Margin="0,0,0,10">
+                            <PasswordBox x:Name="PasswordBox" Height="44" FontSize="14"
+                                         Background="{DynamicResource VsBgMidBrush}"
+                                         Foreground="{DynamicResource VsTextPrimaryBrush}"
+                                         BorderBrush="{DynamicResource VsBorderBrush}"
+                                         CaretBrush="{DynamicResource VsAccentBrush}"
+                                         Padding="12,0,40,0" VerticalContentAlignment="Center"
+                                         KeyDown="Input_KeyDown"/>
+                            <TextBox x:Name="PasswordTextBox" Style="{StaticResource LoginInput}"
+                                     Padding="12,0,40,0" Visibility="Collapsed" KeyDown="Input_KeyDown"/>
+                            <Button x:Name="EyeButton" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                    Margin="0,0,8,0" Width="28" Height="28" Background="Transparent"
+                                    BorderThickness="0" Cursor="Hand" Click="EyeButton_Click"
+                                    ToolTip="{DynamicResource Login_TogglePasswordTooltip}">
+                                <TextBlock x:Name="EyeIcon" Text="👁" FontSize="14" Foreground="{DynamicResource VsTextMutedBrush}"/>
+                            </Button>
+                        </Grid>
+
+                        <CheckBox x:Name="RememberCheck" Content="{DynamicResource Login_RememberUsername}"
+                                  FontSize="12" Foreground="{DynamicResource VsTextMutedBrush}" Margin="0,0,0,22"/>
+
+                        <Button x:Name="LoginButton" Style="{StaticResource LoginButton}" Click="LoginButton_Click">
+                            <Grid>
+                                <StackPanel x:Name="BtnNormal" Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <TextBlock Text="{DynamicResource Login_SignInButton}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="  →" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <StackPanel x:Name="BtnLoading" Orientation="Horizontal"
+                                            HorizontalAlignment="Center" Visibility="Collapsed">
+                                    <ProgressBar IsIndeterminate="True" Width="120" Height="3"
+                                                 VerticalAlignment="Center"
+                                                 Foreground="{DynamicResource VsTextPrimaryBrush}"
+                                                 Background="Transparent"/>
+                                </StackPanel>
+                            </Grid>
+                        </Button>
+
+                        <TextBlock Text="{DynamicResource Login_DefaultAccountHint}" FontSize="11"
+                                   Foreground="{DynamicResource VsTextMutedBrush}" HorizontalAlignment="Center" Margin="0,18,0,0"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

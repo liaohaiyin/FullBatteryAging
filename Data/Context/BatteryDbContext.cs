@@ -15,6 +15,10 @@ namespace BatteryAging.Data.Context
         public DbSet<CycleData> CycleData { get; set; }
         public DbSet<DcirResult> DcirResults { get; set; }
 
+        // ── 鉴权（登录 / 权限）────────────────────────────────────────────
+        public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<TestRecipe>(e =>
@@ -59,13 +63,34 @@ namespace BatteryAging.Data.Context
                 e.HasIndex(c => new { c.TestRecordId, c.CycleIndex });
             });
 
-            modelBuilder.Entity<DcirResult>(e => {
+            modelBuilder.Entity<DcirResult>(e =>
+            {
                 e.HasKey(d => d.Id);
                 e.HasIndex(d => new { d.TestRecordId, d.ChannelIndex });
                 e.Ignore(d => d.ResistanceByTime);       // 字典不直接映射
                 e.Ignore(d => d.Resistance);
                 e.Property<string>("ResistanceJson");     // 用 JSON 列存字典
             });
+
+            // ── 用户 / 角色 ──
+            modelBuilder.Entity<Role>(e =>
+            {
+                e.HasKey(r => r.Id);
+                e.Property(r => r.Name).HasMaxLength(50).IsRequired();
+                e.HasIndex(r => r.Name).IsUnique();
+            });
+
+            modelBuilder.Entity<User>(e =>
+            {
+                e.HasKey(u => u.Id);
+                e.Property(u => u.Username).HasMaxLength(50).IsRequired();
+                e.HasIndex(u => u.Username).IsUnique();
+                e.HasOne(u => u.Role)
+                 .WithMany()
+                 .HasForeignKey(u => u.RoleId)
+                 .OnDelete(DeleteBehavior.Restrict);
+            });
+
             base.OnModelCreating(modelBuilder);
         }
     }
