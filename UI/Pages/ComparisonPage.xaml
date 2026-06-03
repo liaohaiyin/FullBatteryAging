@@ -1,9 +1,9 @@
-﻿<Page x:Class="BatteryAging.UI.Pages.ComparisonPage"
+<Page x:Class="BatteryAging.UI.Pages.ComparisonPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:oxy="clr-namespace:OxyPlot.SkiaSharp.Wpf;assembly=OxyPlot.SkiaSharp.Wpf"
       xmlns:ctrl="clr-namespace:BatteryAging.UI.Controls"
-      Title="对比分析"
+      Title="{DynamicResource Main_Nav_Compare}"
       Background="{StaticResource VsBgDeepBrush}">
     <Grid Margin="12">
         <Grid.RowDefinitions>
@@ -12,7 +12,6 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- 工具条 -->
         <Border Grid.Row="0" Style="{StaticResource VsCardStyle}" Padding="10,8">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -25,7 +24,7 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="条码前缀" VerticalAlignment="Center" Margin="0,0,8,0"
+                <TextBlock Text="{DynamicResource Compare_BarCodePrefix}" VerticalAlignment="Center" Margin="0,0,8,0"
                            Foreground="{StaticResource VsTextSecondaryBrush}"/>
                 <TextBox Grid.Column="1" Text="{Binding BarCodePrefix, UpdateSourceTrigger=PropertyChanged}"/>
 
@@ -33,11 +32,11 @@
                         Command="{Binding LoadCandidatesCommand}">
                     <StackPanel Orientation="Horizontal">
                         <ctrl:VsIcon Kind="{StaticResource Icon.Magnify}" Width="13" Height="13" Foreground="White"/>
-                        <TextBlock Text="查询候选" Margin="6,0,0,0"/>
+                        <TextBlock Text="{DynamicResource Compare_LoadCandidates}" Margin="6,0,0,0"/>
                     </StackPanel>
                 </Button>
 
-                <TextBlock Grid.Column="3" Text="对比维度" VerticalAlignment="Center" Margin="12,0,8,0"
+                <TextBlock Grid.Column="3" Text="{DynamicResource Compare_Mode}" VerticalAlignment="Center" Margin="12,0,8,0"
                            Foreground="{StaticResource VsTextSecondaryBrush}"/>
                 <ComboBox Grid.Column="4" x:Name="ModeCombo" SelectedItem="{Binding Mode}"/>
 
@@ -45,13 +44,12 @@
                         Command="{Binding BuildComparisonCommand}">
                     <StackPanel Orientation="Horizontal">
                         <ctrl:VsIcon Kind="{StaticResource Icon.ChartLine}" Width="14" Height="14" Foreground="White"/>
-                        <TextBlock Text="生成对比" Margin="6,0,0,0" FontWeight="Bold"/>
+                        <TextBlock Text="{DynamicResource Compare_Build}" Margin="6,0,0,0" FontWeight="Bold"/>
                     </StackPanel>
                 </Button>
             </Grid>
         </Border>
 
-        <!-- 主体：候选 | 已选 | 叠加曲线 -->
         <Grid Grid.Row="1" Margin="0,8,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1.3*"/>
@@ -59,7 +57,6 @@
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- 候选记录 -->
             <Border Grid.Column="0" Style="{StaticResource VsCardStyle}">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -67,15 +64,15 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Border Grid.Row="0" Background="{StaticResource VsBgHeaderBrush}" Padding="12,6">
-                        <TextBlock Text="候选记录（点 + 加入对比）" FontWeight="SemiBold"/>
+                        <TextBlock Text="{DynamicResource Compare_Candidates}" FontWeight="SemiBold"/>
                     </Border>
                     <DataGrid Grid.Row="1" ItemsSource="{Binding Candidates}"
                               AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True"
                               HeadersVisibility="Column" RowHeaderWidth="0">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="CH" Binding="{Binding ChannelIndex}" Width="40"/>
-                            <DataGridTextColumn Header="条码" Binding="{Binding BarCode}" Width="*"/>
-                            <DataGridTextColumn Header="放电(Ah)" Binding="{Binding TotalDischargeCapacity, StringFormat={}{0:F3}}" Width="80"/>
+                            <DataGridTextColumn Header="{DynamicResource Compare_Col_CH}" Binding="{Binding ChannelIndex}" Width="40"/>
+                            <DataGridTextColumn Header="{DynamicResource Compare_Col_BarCode}" Binding="{Binding BarCode}" Width="*"/>
+                            <DataGridTextColumn Header="{DynamicResource Compare_Col_DischargeAh}" Binding="{Binding TotalDischargeCapacity, StringFormat={}{0:F3}}" Width="80"/>
                             <DataGridTemplateColumn Header="" Width="44">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -93,7 +90,6 @@
                 </Grid>
             </Border>
 
-            <!-- 已选记录 -->
             <Border Grid.Column="1" Style="{StaticResource VsCardStyle}" Margin="8,0">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -101,14 +97,14 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Border Grid.Row="0" Background="{StaticResource VsBgHeaderBrush}" Padding="12,6">
-                        <TextBlock Text="已选对比项" FontWeight="SemiBold"/>
+                        <TextBlock Text="{DynamicResource Compare_Selected}" FontWeight="SemiBold"/>
                     </Border>
                     <DataGrid Grid.Row="1" ItemsSource="{Binding Selected}"
                               AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True"
                               HeadersVisibility="Column" RowHeaderWidth="0">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="CH" Binding="{Binding ChannelIndex}" Width="40"/>
-                            <DataGridTextColumn Header="条码" Binding="{Binding BarCode}" Width="*"/>
+                            <DataGridTextColumn Header="{DynamicResource Compare_Col_CH}" Binding="{Binding ChannelIndex}" Width="40"/>
+                            <DataGridTextColumn Header="{DynamicResource Compare_Col_BarCode}" Binding="{Binding BarCode}" Width="*"/>
                             <DataGridTemplateColumn Header="" Width="44">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -126,7 +122,6 @@
                 </Grid>
             </Border>
 
-            <!-- 叠加曲线 -->
             <Border Grid.Column="2" Style="{StaticResource VsCardStyle}">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -136,7 +131,7 @@
                     <Border Grid.Row="0" Background="{StaticResource VsBgHeaderBrush}" Padding="12,6">
                         <StackPanel Orientation="Horizontal">
                             <ctrl:VsIcon Kind="{StaticResource Icon.ChartLine}" Foreground="{StaticResource AccentCyanBrush}" VerticalAlignment="Center"/>
-                            <TextBlock Text="叠加对比曲线" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="{DynamicResource Compare_OverlayCurve}" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Border>
                     <oxy:PlotView Grid.Row="1" x:Name="ComparePlot" Background="Transparent" Margin="2,4,2,2"/>

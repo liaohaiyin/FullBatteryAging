@@ -177,6 +177,15 @@ namespace BatteryAging.ViewModels
                     (Permission.TestExecution_Start, "UserManagement_Perm_TestExecution_Start"),
                     (Permission.TestExecution_Stop,  "UserManagement_Perm_TestExecution_Stop"),
                     (Permission.TestExecution_New,   "UserManagement_Perm_TestExecution_New"),
+                    (Permission.TestExecution_Pause,         "UserManagement_Perm_TestExecution_Pause"),
+                    (Permission.TestExecution_Resume,        "UserManagement_Perm_TestExecution_Resume"),
+                    (Permission.TestExecution_StartAll,      "UserManagement_Perm_TestExecution_StartAll"),
+                    (Permission.TestExecution_StopAll,       "UserManagement_Perm_TestExecution_StopAll"),
+                    (Permission.TestExecution_SyncStart,     "UserManagement_Perm_TestExecution_SyncStart"),
+                    (Permission.TestExecution_SkipStep,      "UserManagement_Perm_TestExecution_SkipStep"),
+                    (Permission.TestExecution_ClearFault,    "UserManagement_Perm_TestExecution_ClearFault"),
+                    (Permission.TestExecution_EmergencyStop, "UserManagement_Perm_TestExecution_EmergencyStop"),
+                    (Permission.TestExecution_ExportLive,    "UserManagement_Perm_TestExecution_ExportLive"),
                 }),
                 ("UserManagement_PermGroup_FlowEditor", new[]
                 {

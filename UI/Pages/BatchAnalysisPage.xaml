@@ -4,7 +4,7 @@
       xmlns:ctrl="clr-namespace:BatteryAging.UI.Controls"
       xmlns:cv="clr-namespace:BatteryAging.UI.Converters"
       xmlns:ap="clr-namespace:BatteryAging.UI.AttachedProperties"
-      Title="批次分析"
+      Title="{DynamicResource Main_Nav_Batch}"
       Background="{StaticResource VsBgDeepBrush}">
     <Page.Resources>
         <Style x:Key="CellValueStyle" TargetType="TextBlock">
@@ -23,7 +23,6 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- 查询条件 -->
         <Border Grid.Row="0" Style="{StaticResource VsCardStyle}" Padding="14,10">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -34,13 +33,13 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="电池条码前缀" VerticalAlignment="Center"
+                <TextBlock Text="{DynamicResource Batch_BarCodePrefix}" VerticalAlignment="Center"
                            Foreground="{StaticResource VsTextSecondaryBrush}" Margin="0,0,10,0"/>
-                <TextBox Grid.Column="1" Text="{Binding BarCodePrefix, UpdateSourceTrigger=PropertyChanged}"                         
+                <TextBox Grid.Column="1" Text="{Binding BarCodePrefix, UpdateSourceTrigger=PropertyChanged}"
                          Style="{StaticResource MaterialDesignTextBox}"
-                         ap:PlaceholderProperty.PlaceholderText="例如：BATCH2024_"/>
+                         ap:PlaceholderProperty.PlaceholderText="{DynamicResource Batch_BarCodeHint}"/>
 
-                <TextBlock Grid.Column="2" Text="标称容量(Ah)" VerticalAlignment="Center"
+                <TextBlock Grid.Column="2" Text="{DynamicResource Batch_NominalCapacity}" VerticalAlignment="Center"
                            Foreground="{StaticResource VsTextSecondaryBrush}" Margin="20,0,10,0"/>
                 <TextBox Grid.Column="3" Text="{Binding NominalCapacity, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F3}}"
                          Style="{StaticResource MaterialDesignTextBox}"/>
@@ -50,13 +49,12 @@
                         Command="{Binding AnalyzeCommand}">
                     <StackPanel Orientation="Horizontal">
                         <ctrl:VsIcon Kind="{StaticResource Icon.ChartBellCurve}" Width="16" Height="16" VerticalAlignment="Center" Foreground="{StaticResource VsTextPrimaryBrush}"/>
-                        <TextBlock Text="开始分析" Margin="6,0,0,0" FontWeight="Bold"/>
+                        <TextBlock Text="{DynamicResource Batch_Analyze}" Margin="6,0,0,0" FontWeight="Bold"/>
                     </StackPanel>
                 </Button>
             </Grid>
         </Border>
 
-        <!-- 一致性概要 -->
         <Border Grid.Row="1" Style="{StaticResource VsCardStyle}" Margin="0,12,0,12">
             <Grid>
                 <Grid.RowDefinitions>
@@ -67,32 +65,32 @@
                         CornerRadius="3,3,0,0" Padding="14,8">
                     <StackPanel Orientation="Horizontal">
                         <ctrl:VsIcon Kind="{StaticResource Icon.GaugeFull}" Foreground="{StaticResource AccentCyanBrush}" VerticalAlignment="Center"/>
-                        <TextBlock Text="电芯一致性分析" FontWeight="Medium" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="{DynamicResource Batch_Consistency}" FontWeight="Medium" Margin="8,0,0,0" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Border>
                 <UniformGrid Grid.Row="1" Columns="7" Margin="14,12,14,14">
                     <StackPanel Margin="4,0">
-                        <TextBlock Text="样本数" Foreground="{StaticResource VsTextSecondaryBrush}"/>
+                        <TextBlock Text="{DynamicResource Batch_SampleCount}" Foreground="{StaticResource VsTextSecondaryBrush}"/>
                         <TextBlock Style="{StaticResource ValueNumberStyle}" FontSize="22"
                                    Text="{Binding SampleCount}" Foreground="{StaticResource AccentCyanBrush}"/>
                     </StackPanel>
                     <StackPanel Margin="4,0">
-                        <TextBlock Text="平均容量(Ah)" Foreground="{StaticResource VsTextSecondaryBrush}"/>
+                        <TextBlock Text="{DynamicResource Batch_MeanCap}" Foreground="{StaticResource VsTextSecondaryBrush}"/>
                         <TextBlock Style="{StaticResource ValueNumberStyle}" FontSize="18"
                                    Text="{Binding MeanCapacity, StringFormat={}{0:F4}}"/>
                     </StackPanel>
                     <StackPanel Margin="4,0">
-                        <TextBlock Text="标准差" Foreground="{StaticResource VsTextSecondaryBrush}"/>
+                        <TextBlock Text="{DynamicResource Batch_StdDev}" Foreground="{StaticResource VsTextSecondaryBrush}"/>
                         <TextBlock Style="{StaticResource ValueNumberStyle}" FontSize="18"
                                    Text="{Binding StdDevCapacity, StringFormat={}{0:F4}}"/>
                     </StackPanel>
                     <StackPanel Margin="4,0">
-                        <TextBlock Text="极差" Foreground="{StaticResource VsTextSecondaryBrush}"/>
+                        <TextBlock Text="{DynamicResource Batch_Range}" Foreground="{StaticResource VsTextSecondaryBrush}"/>
                         <TextBlock Style="{StaticResource ValueNumberStyle}" FontSize="18"
                                    Text="{Binding RangeCapacity, StringFormat={}{0:F4}}"/>
                     </StackPanel>
                     <StackPanel Margin="4,0">
-                        <TextBlock Text="最小/最大" Foreground="{StaticResource VsTextSecondaryBrush}"/>
+                        <TextBlock Text="{DynamicResource Batch_MinMax}" Foreground="{StaticResource VsTextSecondaryBrush}"/>
                         <TextBlock Style="{StaticResource CellValueStyle}" FontSize="13">
                             <Run Text="{Binding MinCapacity, StringFormat={}{0:F3}}"/>
                             <Run Text=" / "/>
@@ -100,13 +98,13 @@
                         </TextBlock>
                     </StackPanel>
                     <StackPanel Margin="4,0">
-                        <TextBlock Text="CV系数(%)" Foreground="{StaticResource VsTextSecondaryBrush}"/>
+                        <TextBlock Text="{DynamicResource Batch_CV}" Foreground="{StaticResource VsTextSecondaryBrush}"/>
                         <TextBlock Style="{StaticResource ValueNumberStyle}" FontSize="22"
                                    Text="{Binding CvPercent, StringFormat={}{0:F2}}"
                                    Foreground="{StaticResource AccentAmberBrush}"/>
                     </StackPanel>
                     <StackPanel Margin="4,0">
-                        <TextBlock Text="平均 SOH(%)" Foreground="{StaticResource VsTextSecondaryBrush}"/>
+                        <TextBlock Text="{DynamicResource Batch_AvgSoh}" Foreground="{StaticResource VsTextSecondaryBrush}"/>
                         <TextBlock Style="{StaticResource ValueNumberStyle}" FontSize="22"
                                    Foreground="{StaticResource AccentGreenBrush}">
                             <Run Text="{Binding AvgSoh, Converter={x:Static cv:SohPercentConverter.Instance}, FallbackValue=0}"/>
@@ -116,7 +114,6 @@
             </Grid>
         </Border>
 
-        <!-- 分档结果 + 容量直方图 + 记录列表 -->
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="280"/>
@@ -124,7 +121,6 @@
                 <ColumnDefinition Width="1.4*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- 分档桶 -->
             <Border Grid.Column="0" Style="{StaticResource DarkCardStyle}">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -135,7 +131,7 @@
                             CornerRadius="3,3,0,0" Padding="14,8">
                         <StackPanel Orientation="Horizontal">
                             <ctrl:VsIcon Kind="{StaticResource Icon.SortDescending}" Foreground="{StaticResource AccentCyanBrush}" VerticalAlignment="Center"/>
-                            <TextBlock Text="容量分档" FontWeight="Medium" Margin="8,0,0,0"/>
+                            <TextBlock Text="{DynamicResource Batch_GradeBucket}" FontWeight="Medium" Margin="8,0,0,0"/>
                         </StackPanel>
                     </Border>
                     <ItemsControl Grid.Row="1" ItemsSource="{Binding GradeBuckets}" Margin="8">
@@ -170,7 +166,6 @@
                 </Grid>
             </Border>
 
-            <!-- 直方图 -->
             <Border Grid.Column="1" Style="{StaticResource DarkCardStyle}" Margin="12,0">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -181,7 +176,7 @@
                             CornerRadius="3,3,0,0" Padding="14,8">
                         <StackPanel Orientation="Horizontal">
                             <ctrl:VsIcon Kind="{StaticResource Icon.ChartBar}" Foreground="{StaticResource AccentCyanBrush}" VerticalAlignment="Center"/>
-                            <TextBlock Text="容量分布直方图" FontWeight="Medium" Margin="8,0,0,0"/>
+                            <TextBlock Text="{DynamicResource Batch_Histogram}" FontWeight="Medium" Margin="8,0,0,0"/>
                         </StackPanel>
                     </Border>
                     <ItemsControl Grid.Row="1" ItemsSource="{Binding Histogram}" Margin="14">
@@ -223,7 +218,6 @@
                 </Grid>
             </Border>
 
-            <!-- 记录列表 -->
             <Border Grid.Column="2" Style="{StaticResource DarkCardStyle}">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -234,7 +228,7 @@
                             CornerRadius="3,3,0,0" Padding="14,8">
                         <StackPanel Orientation="Horizontal">
                             <ctrl:VsIcon Kind="{StaticResource Icon.FormatListBulleted}" Foreground="{StaticResource AccentCyanBrush}" VerticalAlignment="Center"/>
-                            <TextBlock Text="批次记录" FontWeight="Medium" Margin="8,0,0,0"/>
+                            <TextBlock Text="{DynamicResource Batch_Records}" FontWeight="Medium" Margin="8,0,0,0"/>
                         </StackPanel>
                     </Border>
                     <DataGrid Grid.Row="1" ItemsSource="{Binding Records}"
@@ -242,19 +236,18 @@
                               GridLinesVisibility="Horizontal" HeadersVisibility="Column"
                               RowHeaderWidth="0" Background="Transparent">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="通道" Binding="{Binding ChannelIndex}" Width="50"/>
-                            <DataGridTextColumn Header="条码" Binding="{Binding BarCode}" Width="*"/>
-                            <DataGridTextColumn Header="放电(Ah)" Binding="{Binding TotalDischargeCapacity, StringFormat={}{0:F4}}" Width="90"/>
-                            <DataGridTextColumn Header="SOH" Binding="{Binding SohEstimate, StringFormat={}{0:P1}}" Width="70"/>
-                            <DataGridTextColumn Header="档位" Binding="{Binding Grade}" Width="60"/>
-                            <DataGridTextColumn Header="结束时间" Binding="{Binding EndTime, StringFormat={}{0:MM-dd HH:mm}}" Width="100"/>
+                            <DataGridTextColumn Header="{DynamicResource Batch_Col_Channel}" Binding="{Binding ChannelIndex}" Width="50"/>
+                            <DataGridTextColumn Header="{DynamicResource Batch_Col_BarCode}" Binding="{Binding BarCode}" Width="*"/>
+                            <DataGridTextColumn Header="{DynamicResource Batch_Col_DischargeAh}" Binding="{Binding TotalDischargeCapacity, StringFormat={}{0:F4}}" Width="90"/>
+                            <DataGridTextColumn Header="{DynamicResource Batch_Col_Soh}" Binding="{Binding SohEstimate, StringFormat={}{0:P1}}" Width="70"/>
+                            <DataGridTextColumn Header="{DynamicResource Batch_Col_Grade}" Binding="{Binding Grade}" Width="60"/>
+                            <DataGridTextColumn Header="{DynamicResource Batch_Col_EndTime}" Binding="{Binding EndTime, StringFormat={}{0:MM-dd HH:mm}}" Width="100"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
             </Border>
         </Grid>
 
-        <!-- 状态栏 -->
         <Border Grid.Row="3" Padding="8,4" Margin="0,8,0,0">
             <TextBlock Text="{Binding StatusText}" Opacity="0.7" FontSize="12"
                        Foreground="{StaticResource TextSecondaryBrush}"/>

@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ctrl="clr-namespace:BatteryAging.UI.Controls"
         Style="{StaticResource VsWindowStyle}"
-        Title="锂电池充放电老化上位机"
+        Title="{DynamicResource Main_Title}"
         Height="900" Width="1600"
         MinHeight="700" MinWidth="1280"
         TextElement.Foreground="{StaticResource VsTextPrimaryBrush}"
@@ -32,70 +32,84 @@
                             Style="{StaticResource VsFlatButton}"
                             HorizontalContentAlignment="Left"
                             Padding="16,8"
-                            Command="{Binding NavExecutionCommand}">
+                            Command="{Binding NavExecutionCommand}"
+                            Visibility="{Binding CanExecution, Converter={StaticResource BoolVisCv}}">
                         <StackPanel Orientation="Horizontal">
                             <ctrl:VsIcon Kind="{StaticResource Icon.PlayCircleOutline}"
                                          Width="18" Height="18"
                                          VerticalAlignment="Center"/>
-                            <TextBlock Text="测试执行" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
+                            <TextBlock Text="{DynamicResource Main_Nav_Execution}" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
                         </StackPanel>
                     </Button>
                     <Button Style="{StaticResource VsFlatButton}"
                             HorizontalContentAlignment="Left"
                             Padding="16,8"
-                            Command="{Binding NavRecipeCommand}">
+                            Command="{Binding NavRecipeCommand}"
+                            Visibility="{Binding CanRecipe, Converter={StaticResource BoolVisCv}}">
                         <StackPanel Orientation="Horizontal">
                             <ctrl:VsIcon Kind="{StaticResource Icon.FormatListNumbered}"
-                                         Width="18" Height="18"                                        
+                                         Width="18" Height="18"
                                          VerticalAlignment="Center"/>
-                            <TextBlock Text="工步编辑" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
+                            <TextBlock Text="{DynamicResource Main_Nav_Recipe}" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
                         </StackPanel>
                     </Button>
                     <Button Style="{StaticResource VsFlatButton}"
                             HorizontalContentAlignment="Left"
                             Padding="16,8"
-                            Command="{Binding NavDataCommand}">
+                            Command="{Binding NavDataCommand}"
+                            Visibility="{Binding CanData,Converter={StaticResource BoolVisCv}}">
                         <StackPanel Orientation="Horizontal">
                             <ctrl:VsIcon Kind="{StaticResource Icon.DatabaseSearch}"
                                          Width="18" Height="18"
                                          VerticalAlignment="Center"/>
-                            <TextBlock Text="数据查询" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
+                            <TextBlock Text="{DynamicResource Main_Nav_Data}" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
                         </StackPanel>
                     </Button>
                     <Button Style="{StaticResource VsFlatButton}"
                             HorizontalContentAlignment="Left"
                             Padding="16,8"
-                            Command="{Binding NavBatchCommand}">
+                            Command="{Binding NavBatchCommand}"
+                            Visibility="{Binding CanStats,Converter={StaticResource BoolVisCv}}">
                         <StackPanel Orientation="Horizontal">
                             <ctrl:VsIcon Kind="{StaticResource Icon.BatchAnalysis}"
                                          Width="18" Height="18"
                                          VerticalAlignment="Center"/>
-                            <TextBlock Text="批次分析" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
+                            <TextBlock Text="{DynamicResource Main_Nav_Batch}" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
                         </StackPanel>
                     </Button>
                     <Button Style="{StaticResource VsFlatButton}" HorizontalContentAlignment="Left"
-                            Padding="16,8" Command="{Binding NavCompareCommand}">
+                            Padding="16,8" Command="{Binding NavCompareCommand}"
+                            Visibility="{Binding CanStats, Converter={StaticResource BoolVisCv}}">
                         <StackPanel Orientation="Horizontal">
                             <ctrl:VsIcon Kind="{StaticResource Icon.ChartLine}" Width="18" Height="18" VerticalAlignment="Center"/>
-                            <TextBlock Text="对比分析" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
+                            <TextBlock Text="{DynamicResource Main_Nav_Compare}" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
                         </StackPanel>
                     </Button>
                     <Button Style="{StaticResource VsFlatButton}"
                             HorizontalContentAlignment="Left"
                             Padding="16,8"
-                            Command="{Binding NavCabinetCommand}">
+                            Command="{Binding NavCabinetCommand}"
+                            Visibility="{Binding CanCabinet,Converter={StaticResource BoolVisCv}}">
                         <StackPanel Orientation="Horizontal">
                             <ctrl:VsIcon Kind="{StaticResource Icon.CabinetManager}"
                                          Width="18" Height="18"
                                          VerticalAlignment="Center"/>
-                            <TextBlock Text="机柜管理" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
+                            <TextBlock Text="{DynamicResource Main_Nav_Cabinet}" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
                         </StackPanel>
                     </Button>
                     <Button Style="{StaticResource VsFlatButton}" HorizontalContentAlignment="Left"
-                            Padding="16,8" Command="{Binding NavUserMgmtCommand}">
+                            Padding="16,8" Command="{Binding NavUserMgmtCommand}"
+                            Visibility="{Binding CanUserMgmt, Converter={StaticResource BoolVisCv}}">
                         <StackPanel Orientation="Horizontal">
                             <ctrl:VsIcon Kind="{StaticResource Icon.ServerNetwork}" Width="18" Height="18" VerticalAlignment="Center"/>
-                            <TextBlock Text="用户管理" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
+                            <TextBlock Text="{DynamicResource Main_Nav_UserMgmt}" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource VsFlatButton}" HorizontalContentAlignment="Left"
+                            Padding="16,8" Command="{Binding NavLogoutCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <ctrl:VsIcon Kind="{StaticResource Icon.Logout}" Width="18" Height="18" VerticalAlignment="Center"/>
+                            <TextBlock Text="{DynamicResource Main_Nav_Logout}" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
                         </StackPanel>
                     </Button>
 
@@ -111,7 +125,7 @@
                                          Width="18" Height="18"
                                          Foreground="{StaticResource VsTextMutedBrush}"
                                          VerticalAlignment="Center"/>
-                            <TextBlock Text="关于" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
+                            <TextBlock Text="{DynamicResource Main_Nav_About}" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -127,18 +141,24 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="12,0">
+                <TextBlock Grid.Column="0" VerticalAlignment="Center">
+                    <Run Text="{DynamicResource Login_UsernameLabel}"/>
+                    <Run Text="{Binding CurrentUser}"/>
+                </TextBlock>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="12,0">
                     <Ellipse Width="8" Height="8" Fill="White" VerticalAlignment="Center"/>
-                    <TextBlock Text="模拟模式 · 运行中"
+                    <TextBlock Text="{DynamicResource Main_Status_Sim}"
                                Margin="8,0,0,0" VerticalAlignment="Center"
                                FontSize="11" Foreground="White"/>
                 </StackPanel>
 
-                <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,0,14,0">
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="0,0,14,0">
                     <Border Width="1" Background="{StaticResource VsBorderBrush}" Margin="8,4"/>
                     <ctrl:VsIcon Kind="{StaticResource Icon.ClockOutline}"
                                  Width="14" Height="14"
@@ -150,7 +170,7 @@
                                FontSize="11"
                                VerticalAlignment="Center"/>
                 </StackPanel>
-                <TextBlock Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center"
+                <TextBlock Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Center"
                            Margin="0,0,12,0" FontSize="11"
                            Foreground="White">
                     <Run Text="BatteryAging"/>

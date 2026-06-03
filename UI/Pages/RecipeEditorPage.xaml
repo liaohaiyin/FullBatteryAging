@@ -1,10 +1,9 @@
 <Page x:Class="BatteryAging.UI.Pages.RecipeEditorPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:ctrl="clr-namespace:BatteryAging.UI.Controls"
       xmlns:ap="clr-namespace:BatteryAging.UI.AttachedProperties"
-      Title="工步编辑"
+      Title="{DynamicResource Main_Nav_Recipe}"
       Background="{StaticResource VsBgDeepBrush}">
     <Grid Margin="12">
         <Grid.ColumnDefinitions>
@@ -26,47 +25,37 @@
                         BorderBrush="{StaticResource VsBorderBrush}"
                         BorderThickness="0,0,0,1"
                         Padding="12,6">
-                    <TextBlock Text="测试方案" Foreground="{StaticResource VsTextPrimaryBrush}" FontWeight="SemiBold"/>
+                    <TextBlock Text="{DynamicResource Recipe_TestRecipe}" Foreground="{StaticResource VsTextPrimaryBrush}" FontWeight="SemiBold"/>
                 </Border>
                 <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="8">
-                    <Button Style="{StaticResource VsFlatButton}"
-                            Command="{Binding NewRecipeCommand}"
-                            ToolTip="新建方案"
-                            Padding="6">
+                    <Button Style="{StaticResource VsFlatButton}" Command="{Binding NewRecipeCommand}"
+                            ToolTip="{DynamicResource Recipe_NewTip}" Padding="6">
                         <ctrl:VsIcon Kind="{StaticResource Icon.Plus}" Width="14" Height="14"
                                      Foreground="{StaticResource VsSuccessBrush}"/>
                     </Button>
-                    <Button Style="{StaticResource VsFlatButton}"
-                            Command="{Binding SaveRecipeCommand}"
-                            ToolTip="保存"
-                            Padding="6">
+                    <Button Style="{StaticResource VsFlatButton}" Command="{Binding SaveRecipeCommand}"
+                            ToolTip="{DynamicResource Recipe_SaveTip}" Padding="6">
                         <ctrl:VsIcon Kind="{StaticResource Icon.ContentSave}" Width="14" Height="14"
                                      Foreground="{StaticResource VsAccentBrush}"/>
                     </Button>
-                    <Button Style="{StaticResource VsFlatButton}"
-                            Command="{Binding DeleteRecipeCommand}"
-                            ToolTip="删除"
-                            Padding="6">
+                    <Button Style="{StaticResource VsFlatButton}" Command="{Binding DeleteRecipeCommand}"
+                            ToolTip="{DynamicResource Recipe_DeleteTip}" Padding="6">
                         <ctrl:VsIcon Kind="{StaticResource Icon.DeleteOutline}" Width="14" Height="14"
                                      Foreground="{StaticResource VsErrorBrush}"/>
                     </Button>
-                    <Button Style="{StaticResource VsFlatButton}"
-                            Command="{Binding LoadSampleCommand}"
-                            ToolTip="加载示例方案"
-                            Padding="6">
+                    <Button Style="{StaticResource VsFlatButton}" Command="{Binding LoadSampleCommand}"
+                            ToolTip="{DynamicResource Recipe_LoadSampleTip}" Padding="6">
                         <ctrl:VsIcon Kind="{StaticResource Icon.FileDocumentOutline}" Width="14" Height="14"
                                      Foreground="{StaticResource VsWarningBrush}"/>
                     </Button>
-                    <Button Style="{StaticResource VsFlatButton}"
-                            Command="{Binding GenerateBuilderCommand}"
-                            ToolTip="用内置模板生成方案（日历/HPPC/最大能量）"
-                            Padding="6">
+                    <Button Style="{StaticResource VsFlatButton}" Command="{Binding GenerateBuilderCommand}"
+                            ToolTip="{DynamicResource Recipe_GenerateTip}" Padding="6">
                         <ctrl:VsIcon Kind="{StaticResource Icon.ChartBellCurve}" Width="14" Height="14"
                                      Foreground="{StaticResource VsSuccessBrush}"/>
                     </Button>
                 </StackPanel>
 
-                <ListBox Grid.Row="2"                        
+                <ListBox Grid.Row="2"
                          ItemsSource="{Binding Recipes}"
                          SelectedItem="{Binding SelectedRecipe}"
                          DisplayMemberPath="Name"
@@ -83,7 +72,6 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- 方案信息 -->
             <Border Grid.Row="0" Style="{StaticResource VsCardStyle}" Padding="12">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -98,73 +86,67 @@
                     </Grid.RowDefinitions>
 
                     <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,8,8">
-                        <TextBlock Text="方案名称" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                        <TextBlock Text="{DynamicResource Recipe_RecipeName}" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
                         <TextBox Text="{Binding RecipeName, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="1" Margin="8,0,8,8">
-                        <TextBlock Text="电池型号" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                        <TextBlock Text="{DynamicResource Recipe_BatteryType}" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
                         <TextBox Text="{Binding BatteryType, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="2" Margin="8,0,8,8">
-                        <TextBlock Text="标称容量 (Ah)" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                        <TextBlock Text="{DynamicResource Recipe_NominalCapacity}" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
                         <TextBox Text="{Binding NominalCapacity, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F3}}"/>
                     </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="3" Margin="8,0,0,8">
-                        <TextBlock Text="标称电压 (V)" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                        <TextBlock Text="{DynamicResource Recipe_NominalVoltage}" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
                         <TextBox Text="{Binding NominalVoltage, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F3}}"/>
                     </StackPanel>
 
                     <StackPanel Grid.Row="1" Grid.ColumnSpan="4">
-                        <TextBlock Text="描述" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                        <TextBlock Text="{DynamicResource Recipe_Description}" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
                         <TextBox Text="{Binding RecipeDescription, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
                 </Grid>
             </Border>
 
-            <!-- 工步操作按钮 -->
             <Border Grid.Row="1" Style="{StaticResource VsCardStyle}" Padding="6" Margin="0,8,0,8">
                 <StackPanel Orientation="Horizontal">
-                    <Button Style="{StaticResource VsFlatButton}"
-                            Command="{Binding AddStepCommand}"
-                            ToolTip="添加工步">
+                    <Button Style="{StaticResource VsFlatButton}" Command="{Binding AddStepCommand}"
+                            ToolTip="{DynamicResource Recipe_AddStepTip}">
                         <StackPanel Orientation="Horizontal">
                             <ctrl:VsIcon Kind="{StaticResource Icon.Plus}" Width="13" Height="13"
                                          Foreground="{StaticResource VsSuccessBrush}"/>
-                            <TextBlock Text="添加" Margin="4,0,0,0"/>
+                            <TextBlock Text="{DynamicResource Recipe_Add}" Margin="4,0,0,0"/>
                         </StackPanel>
                     </Button>
-                    <Button Style="{StaticResource VsFlatButton}"
-                            Command="{Binding RemoveStepCommand}"
-                            ToolTip="删除选中工步">
+                    <Button Style="{StaticResource VsFlatButton}" Command="{Binding RemoveStepCommand}"
+                            ToolTip="{DynamicResource Recipe_RemoveStepTip}">
                         <StackPanel Orientation="Horizontal">
                             <ctrl:VsIcon Kind="{StaticResource Icon.Minus}" Width="13" Height="13"
                                          Foreground="{StaticResource VsErrorBrush}"/>
-                            <TextBlock Text="删除" Margin="4,0,0,0"/>
+                            <TextBlock Text="{DynamicResource Recipe_Remove}" Margin="4,0,0,0"/>
                         </StackPanel>
                     </Button>
-                    <Button Style="{StaticResource VsFlatButton}"
-                            Command="{Binding MoveUpCommand}"
-                            ToolTip="上移">
+                    <Button Style="{StaticResource VsFlatButton}" Command="{Binding MoveUpCommand}"
+                            ToolTip="{DynamicResource Recipe_MoveUpTip}">
                         <ctrl:VsIcon Kind="{StaticResource Icon.ArrowUp}" Width="13" Height="13"
                                      Foreground="{StaticResource VsAccentBrush}"/>
                     </Button>
-                    <Button Style="{StaticResource VsFlatButton}"
-                            Command="{Binding MoveDownCommand}"
-                            ToolTip="下移">
+                    <Button Style="{StaticResource VsFlatButton}" Command="{Binding MoveDownCommand}"
+                            ToolTip="{DynamicResource Recipe_MoveDownTip}">
                         <ctrl:VsIcon Kind="{StaticResource Icon.ArrowDown}" Width="13" Height="13"
                                      Foreground="{StaticResource VsAccentBrush}"/>
                     </Button>
                     <Border Width="1" Background="{StaticResource VsBorderBrush}" Margin="8,4"/>
                     <TextBlock VerticalAlignment="Center" Margin="8,0"
                                Foreground="{StaticResource VsTextMutedBrush}">
-                        <Run Text="共"/>
+                        <Run Text="{DynamicResource Recipe_TotalPrefix}"/>
                         <Run Text="{Binding Steps.Count, Mode=OneWay}"/>
-                        <Run Text="个工步"/>
+                        <Run Text="{DynamicResource Recipe_TotalSuffix}"/>
                     </TextBlock>
                 </StackPanel>
             </Border>
 
-            <!-- 工步表格 -->
             <Border Grid.Row="2" Style="{StaticResource VsCardStyle}">
                 <DataGrid ItemsSource="{Binding Steps}"
                           SelectedItem="{Binding SelectedStep}"
@@ -175,9 +157,9 @@
                           HeadersVisibility="Column"
                           RowHeaderWidth="0">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="序号" Binding="{Binding Sequence}" Width="50" IsReadOnly="True"/>
-                        <DataGridTextColumn Header="名称" Binding="{Binding Name}" Width="120"/>
-                        <DataGridTemplateColumn Header="类型" Width="120">
+                        <DataGridTextColumn Header="{DynamicResource Recipe_Col_Seq}" Binding="{Binding Sequence}" Width="50" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="{DynamicResource Recipe_Col_Name}" Binding="{Binding Name}" Width="120"/>
+                        <DataGridTemplateColumn Header="{DynamicResource Recipe_Col_Type}" Width="120">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Type, Converter={StaticResource EnumDescCv}}"
@@ -193,13 +175,13 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellEditingTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTextColumn Header="电流(A)" Binding="{Binding Current, StringFormat={}{0:F3}}" Width="80"/>
-                        <DataGridTextColumn Header="电压(V)" Binding="{Binding Voltage, StringFormat={}{0:F3}}" Width="90"/>
-                        <DataGridTextColumn Header="截止电压(V)" Binding="{Binding CutoffVoltage, StringFormat={}{0:F3}}" Width="110"/>
-                        <DataGridTextColumn Header="截止电流(A)" Binding="{Binding CutoffCurrent, StringFormat={}{0:F3}}" Width="110"/>
-                        <DataGridTextColumn Header="时长(s)" Binding="{Binding DurationSeconds, StringFormat={}{0:F0}}" Width="80"/>
-                        <DataGridTextColumn Header="循环次数" Binding="{Binding LoopCount}" Width="90"/>
-                        <DataGridTextColumn Header="起始步" Binding="{Binding LoopStartIndex}" Width="90"/>
+                        <DataGridTextColumn Header="{DynamicResource Recipe_Col_Current}" Binding="{Binding Current, StringFormat={}{0:F3}}" Width="80"/>
+                        <DataGridTextColumn Header="{DynamicResource Recipe_Col_Voltage}" Binding="{Binding Voltage, StringFormat={}{0:F3}}" Width="90"/>
+                        <DataGridTextColumn Header="{DynamicResource Recipe_Col_CutoffV}" Binding="{Binding CutoffVoltage, StringFormat={}{0:F3}}" Width="110"/>
+                        <DataGridTextColumn Header="{DynamicResource Recipe_Col_CutoffI}" Binding="{Binding CutoffCurrent, StringFormat={}{0:F3}}" Width="110"/>
+                        <DataGridTextColumn Header="{DynamicResource Recipe_Col_Duration}" Binding="{Binding DurationSeconds, StringFormat={}{0:F0}}" Width="80"/>
+                        <DataGridTextColumn Header="{DynamicResource Recipe_Col_LoopCount}" Binding="{Binding LoopCount}" Width="90"/>
+                        <DataGridTextColumn Header="{DynamicResource Recipe_Col_LoopStart}" Binding="{Binding LoopStartIndex}" Width="90"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </Border>
@@ -217,12 +199,12 @@
                         BorderBrush="{StaticResource VsBorderBrush}"
                         BorderThickness="0,0,0,1"
                         Padding="12,6">
-                    <TextBlock Text="工步详细参数" Foreground="{StaticResource VsTextPrimaryBrush}" FontWeight="SemiBold"/>
+                    <TextBlock Text="{DynamicResource Recipe_StepDetail}" Foreground="{StaticResource VsTextPrimaryBrush}" FontWeight="SemiBold"/>
                 </Border>
 
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="12">
                     <StackPanel DataContext="{Binding SelectedStep}">
-                        <TextBlock Text="基本信息" FontWeight="SemiBold" Margin="0,0,0,6" FontSize="12"
+                        <TextBlock Text="{DynamicResource Recipe_BasicInfo}" FontWeight="SemiBold" Margin="0,0,0,6" FontSize="12"
                                    Foreground="{StaticResource VsSuccessBrush}"/>
                         <Grid Margin="0,0,0,12">
                             <Grid.ColumnDefinitions>
@@ -230,54 +212,50 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Margin="0,0,4,0">
-                                <TextBlock Text="名称" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                                <TextBlock Text="{DynamicResource Recipe_Name}" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
                                 <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
                             </StackPanel>
                             <StackPanel Grid.Column="1" Margin="4,0,0,0">
-                                <TextBlock Text="序号" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                                <TextBlock Text="{DynamicResource Recipe_Seq}" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
                                 <TextBox Text="{Binding Sequence}" IsReadOnly="True" IsEnabled="False"/>
                             </StackPanel>
                         </Grid>
 
                         <Separator Margin="0,0,0,8"/>
 
-                        <TextBlock Text="电气参数" FontWeight="SemiBold" Margin="0,0,0,6" FontSize="12"
+                        <TextBlock Text="{DynamicResource Recipe_ElecParams}" FontWeight="SemiBold" Margin="0,0,0,6" FontSize="12"
                                    Foreground="{StaticResource VsSuccessBrush}"/>
 
-                        <!-- 通用：电流 / 电压（CC/CV/CCCV 等用） -->
                         <Grid Margin="0,0,0,8">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Margin="0,0,4,0">
-                                <TextBlock Text="设定电流 (A)" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                                <TextBlock Text="{DynamicResource Recipe_SetCurrent}" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
                                 <TextBox Text="{Binding Current, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F3}}"/>
                             </StackPanel>
                             <StackPanel Grid.Column="1" Margin="4,0,0,0">
-                                <TextBlock Text="设定电压 (V)" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                                <TextBlock Text="{DynamicResource Recipe_SetVoltage}" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
                                 <TextBox Text="{Binding Voltage, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F3}}"/>
                             </StackPanel>
                         </Grid>
 
-                        <!-- 恒功率：CP_Charge / CP_Discharge -->
                         <StackPanel Margin="0,0,0,8"
                                     Visibility="{Binding Type, Converter={StaticResource StepTypeEqVisCv}, ConverterParameter='CP_Charge,CP_Discharge'}">
-                            <TextBlock Text="设定功率 (W)" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                            <TextBlock Text="{DynamicResource Recipe_SetPower}" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
                             <TextBox Text="{Binding Power, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F2}}"/>
                         </StackPanel>
 
-                        <!-- 恒阻：CR_Discharge -->
                         <StackPanel Margin="0,0,0,8"
                                     Visibility="{Binding Type, Converter={StaticResource StepTypeEqVisCv}, ConverterParameter=CR_Discharge}">
-                            <TextBlock Text="设定电阻 (Ω)" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                            <TextBlock Text="{DynamicResource Recipe_SetResistance}" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
                             <TextBox Text="{Binding Resistance, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F4}}"/>
                         </StackPanel>
 
-                        <!-- 脉冲：Pulse -->
                         <StackPanel Margin="0,0,0,12"
                                     Visibility="{Binding Type, Converter={StaticResource StepTypeEqVisCv}, ConverterParameter=Pulse}">
-                            <TextBlock Text="脉冲电流 (A，正充负放)" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                            <TextBlock Text="{DynamicResource Recipe_PulseCurrent}" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
                             <TextBox Text="{Binding PulseCurrent, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F3}}"/>
                             <Grid Margin="0,6,0,0">
                                 <Grid.ColumnDefinitions>
@@ -285,11 +263,11 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0" Margin="0,0,4,0">
-                                    <TextBlock Text="导通时长 (s)" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                                    <TextBlock Text="{DynamicResource Recipe_PulseOn}" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
                                     <TextBox Text="{Binding PulseOnSeconds, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F1}}"/>
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" Margin="4,0,0,0">
-                                    <TextBlock Text="间歇时长 (s)" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                                    <TextBlock Text="{DynamicResource Recipe_PulseOff}" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
                                     <TextBox Text="{Binding PulseOffSeconds, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F1}}"/>
                                 </StackPanel>
                             </Grid>
@@ -297,7 +275,7 @@
 
                         <Separator Margin="0,0,0,8"/>
 
-                        <TextBlock Text="截止条件" FontWeight="SemiBold" Margin="0,0,0,6" FontSize="12"
+                        <TextBlock Text="{DynamicResource Recipe_Cutoff}" FontWeight="SemiBold" Margin="0,0,0,6" FontSize="12"
                                    Foreground="{StaticResource VsSuccessBrush}"/>
                         <Grid Margin="0,0,0,12">
                             <Grid.ColumnDefinitions>
@@ -309,29 +287,29 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,4,8">
-                                <TextBlock Text="截止电压 (V)" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                                <TextBlock Text="{DynamicResource Recipe_CutoffVoltage}" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
                                 <TextBox Text="{Binding CutoffVoltage, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F3}}"/>
                             </StackPanel>
                             <StackPanel Grid.Row="0" Grid.Column="1" Margin="4,0,0,8">
-                                <TextBlock Text="截止电流 (A)" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                                <TextBlock Text="{DynamicResource Recipe_CutoffCurrent}" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
                                 <TextBox Text="{Binding CutoffCurrent, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F3}}"/>
                             </StackPanel>
                             <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,4,0">
-                                <TextBlock Text="容量上限 (Ah)" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                                <TextBlock Text="{DynamicResource Recipe_CapacityLimit}" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
                                 <TextBox Text="{Binding CapacityLimit, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F3}}"/>
                             </StackPanel>
                             <StackPanel Grid.Row="1" Grid.Column="1" Margin="4,0,0,0">
-                                <TextBlock Text="时长 (s)" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                                <TextBlock Text="{DynamicResource Recipe_Duration}" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
                                 <TextBox Text="{Binding DurationSeconds, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F0}}"/>
                             </StackPanel>
                         </Grid>
 
                         <Separator Margin="0,0,0,8"/>
 
-                        <TextBlock Text="触发跳转" FontWeight="SemiBold" Margin="0,0,0,6" FontSize="12"
+                        <TextBlock Text="{DynamicResource Recipe_Trigger}" FontWeight="SemiBold" Margin="0,0,0,6" FontSize="12"
                                    Foreground="{StaticResource VsSuccessBrush}"/>
                         <StackPanel Margin="0,0,0,12">
-                            <TextBlock Text="触发类型" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                            <TextBlock Text="{DynamicResource Recipe_TriggerType}" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
                             <ComboBox ItemsSource="{Binding DataContext.TriggerTypes, RelativeSource={RelativeSource AncestorType=Page}}"
                                       DisplayMemberPath="DisplayName"
                                       SelectedValuePath="Value"
@@ -345,21 +323,21 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0" Margin="0,0,4,0">
-                                    <TextBlock Text="比较" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                                    <TextBlock Text="{DynamicResource Recipe_Compare}" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
                                     <ComboBox ItemsSource="{Binding DataContext.CompareOperators, RelativeSource={RelativeSource AncestorType=Page}}"
                                               DisplayMemberPath="DisplayName"
                                               SelectedValuePath="Value"
                                               SelectedValue="{Binding TriggerOperator}"/>
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" Margin="4,0,0,0">
-                                    <TextBlock Text="阈值" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                                    <TextBlock Text="{DynamicResource Recipe_Threshold}" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
                                     <TextBox Text="{Binding TriggerValue, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F3}}" Height="30"/>
-                                </StackPanel>                                
+                                </StackPanel>
                             </Grid>
                             <TextBlock Foreground="{StaticResource VsTextMutedBrush}" FontSize="11" Margin="0,6,0,0" TextWrapping="Wrap">
-                                <Run Text="跳转目标工步" FontWeight="SemiBold"/>
+                                <Run Text="{DynamicResource Recipe_JumpTarget}" FontWeight="SemiBold"/>
                                 <LineBreak/>
-                                <Run Text="序号减1（跳到1填0，2填1…），-1=不跳转" Foreground="{StaticResource VsTextDisabledBrush}"/>
+                                <Run Text="{DynamicResource Recipe_JumpHint}" Foreground="{StaticResource VsTextDisabledBrush}"/>
                             </TextBlock>
                             <TextBox Text="{Binding JumpTargetIndex, UpdateSourceTrigger=PropertyChanged}"/>
                         </StackPanel>
@@ -367,7 +345,7 @@
                         <Separator Margin="0,0,0,8"/>
 
                         <StackPanel Visibility="{Binding Type, Converter={StaticResource StepTypeEqVisCv}, ConverterParameter=Loop}">
-                            <TextBlock Text="循环参数" FontWeight="SemiBold" Margin="0,0,0,6" FontSize="12"
+                            <TextBlock Text="{DynamicResource Recipe_LoopParams}" FontWeight="SemiBold" Margin="0,0,0,6" FontSize="12"
                                        Foreground="{StaticResource VsSuccessBrush}"/>
                             <Grid Margin="0,0,0,12">
                                 <Grid.ColumnDefinitions>
@@ -375,18 +353,18 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0" Margin="0,0,4,0">
-                                    <TextBlock Text="起始工步序号 (0-based)" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                                    <TextBlock Text="{DynamicResource Recipe_LoopStart0}" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
                                     <TextBox Text="{Binding LoopStartIndex, UpdateSourceTrigger=PropertyChanged}"/>
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" Margin="4,0,0,0">
-                                    <TextBlock Text="循环次数" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                                    <TextBlock Text="{DynamicResource Recipe_LoopCount}" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
                                     <TextBox Text="{Binding LoopCount, UpdateSourceTrigger=PropertyChanged}"/>
                                 </StackPanel>
                             </Grid>
                             <Separator Margin="0,0,0,8"/>
                         </StackPanel>
 
-                        <TextBlock Text="保护参数" FontWeight="SemiBold" Margin="0,0,0,6" FontSize="12"
+                        <TextBlock Text="{DynamicResource Recipe_Protection}" FontWeight="SemiBold" Margin="0,0,0,6" FontSize="12"
                                    Foreground="{StaticResource VsSuccessBrush}"/>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -399,30 +377,30 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,4,8">
-                                <TextBlock Text="过压保护 (V)" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                                <TextBlock Text="{DynamicResource Recipe_OverV}" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
                                 <TextBox Text="{Binding MaxVoltage, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F3}}"/>
                             </StackPanel>
                             <StackPanel Grid.Row="0" Grid.Column="1" Margin="4,0,0,8">
-                                <TextBlock Text="欠压保护 (V)" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                                <TextBlock Text="{DynamicResource Recipe_UnderV}" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
                                 <TextBox Text="{Binding MinVoltage, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F3}}"/>
                             </StackPanel>
                             <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,4,8">
-                                <TextBlock Text="过流保护 (A)" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                                <TextBlock Text="{DynamicResource Recipe_OverI}" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
                                 <TextBox Text="{Binding MaxCurrent, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F3}}"/>
                             </StackPanel>
                             <StackPanel Grid.Row="1" Grid.Column="1" Margin="4,0,0,8">
-                                <TextBlock Text="过温保护 (°C)" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                                <TextBlock Text="{DynamicResource Recipe_OverT}" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
                                 <TextBox Text="{Binding MaxTemperature, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F1}}"/>
                             </StackPanel>
                             <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,0,4,0">
-                                <TextBlock Text="保护时间 (s)" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                                <TextBlock Text="{DynamicResource Recipe_ProtTime}" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
                                 <TextBox Text="{Binding ProtectionTimeSeconds, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F0}}"/>
                             </StackPanel>
                         </Grid>
 
                         <Separator Margin="0,8,0,8"/>
 
-                        <TextBlock Text="环境仓联动" FontWeight="SemiBold" Margin="0,0,0,6" FontSize="12"
+                        <TextBlock Text="{DynamicResource Recipe_Chamber}" FontWeight="SemiBold" Margin="0,0,0,6" FontSize="12"
                                    Foreground="{StaticResource VsSuccessBrush}"/>
                         <Grid Margin="0,0,0,12">
                             <Grid.ColumnDefinitions>
@@ -430,11 +408,11 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Margin="0,0,4,0">
-                                <TextBlock Text="目标温度 (°C，空=不控温)" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                                <TextBlock Text="{DynamicResource Recipe_TargetTemp}" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
                                 <TextBox Text="{Binding TargetTemperature, UpdateSourceTrigger=PropertyChanged, TargetNullValue='', StringFormat={}{0:F1}}"/>
                             </StackPanel>
                             <StackPanel Grid.Column="1" Margin="4,0,0,0" VerticalAlignment="Bottom">
-                                <CheckBox IsChecked="{Binding WaitForTempStable}" Content="等温度稳定后开始"
+                                <CheckBox IsChecked="{Binding WaitForTempStable}" Content="{DynamicResource Recipe_WaitStable}"
                                           Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,4"/>
                             </StackPanel>
                         </Grid>

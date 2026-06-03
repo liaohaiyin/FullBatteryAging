@@ -22,11 +22,12 @@ namespace BatteryAging.UI.Windows
             _settings = LoginSettings.Load();
             DataContext = vm;
 
-            vm.LoginSucceeded += () => Dispatcher.Invoke(() =>
+            vm.LoginSucceeded += () => Dispatcher.BeginInvoke(new Action(() =>
             {
                 RestoreButton();
-                DialogResult = true;
-            });
+                try { DialogResult = true; }
+                catch (InvalidOperationException) { Close(); }
+            }));
 
             vm.PropertyChanged += (_, e) =>
             {

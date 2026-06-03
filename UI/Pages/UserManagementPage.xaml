@@ -6,7 +6,6 @@
       Background="{StaticResource VsBgDeepBrush}">
 
     <Page.Resources>
-        <!-- 选项卡：选中/悬停/常态全部使用主题色，修正选中态白底 -->
         <Style TargetType="TabItem">
             <Setter Property="Foreground" Value="{DynamicResource VsTextMutedBrush}"/>
             <Setter Property="FontSize" Value="13"/>
@@ -40,7 +39,7 @@
         </Style>
     </Page.Resources>
 
-    <TabControl Margin="8" Background="{StaticResource VsBgPanelBrush}" BorderThickness="0">
+    <TabControl Margin="8" Background="{StaticResource VsBgPanelBrush}">
         <!-- ════════════ 用户 ════════════ -->
         <TabItem Header="{DynamicResource UserManagement_UsersTab}">
             <Grid>
@@ -146,7 +145,7 @@
         </TabItem>
 
         <!-- ════════════ 角色 ════════════ -->
-        <TabItem Header="{DynamicResource UserManagement_RolesTab}" Background="{StaticResource VsBgPanelBrush}">
+        <TabItem Header="{DynamicResource UserManagement_RolesTab}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="240"/>

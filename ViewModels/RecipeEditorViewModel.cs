@@ -15,6 +15,7 @@ namespace BatteryAging.ViewModels
     {
         private readonly IDataService _dataService;
         private readonly IDialogService _dialogService;
+        private readonly IAuthService _auth;
 
         public ObservableCollection<TestRecipe> Recipes { get; } = new();
         public ObservableCollection<StepViewModel> Steps { get; } = new();
@@ -45,21 +46,31 @@ namespace BatteryAging.ViewModels
         public IRelayCommand LoadSampleCommand { get; }
         public IRelayCommand GenerateBuilderCommand { get; }
 
-        public RecipeEditorViewModel(IDataService dataService, IDialogService dialogService)
+        public RecipeEditorViewModel(IDataService dataService, IDialogService dialogService, IAuthService auth)
         {
             _dataService = dataService;
             _dialogService = dialogService;
+            _auth = auth;
 
             LoadCommand = new AsyncRelayCommand(LoadAsync);
-            NewRecipeCommand = new RelayCommand(NewRecipe);
-            SaveRecipeCommand = new AsyncRelayCommand(SaveRecipeAsync);
-            DeleteRecipeCommand = new AsyncRelayCommand(DeleteRecipeAsync);
-            AddStepCommand = new RelayCommand(AddStep);
-            RemoveStepCommand = new RelayCommand(RemoveStep, () => SelectedStep != null);
-            MoveUpCommand = new RelayCommand(MoveUp, () => SelectedStep != null && Steps.IndexOf(SelectedStep) > 0);
-            MoveDownCommand = new RelayCommand(MoveDown, () => SelectedStep != null && Steps.IndexOf(SelectedStep) < Steps.Count - 1);
-            LoadSampleCommand = new RelayCommand(LoadSampleRecipe);
-            GenerateBuilderCommand = new RelayCommand(GenerateFromBuilder);
+            NewRecipeCommand = new RelayCommand(NewRecipe,
+                () => _auth.HasPermission(Permission.FlowEditor_New));
+            SaveRecipeCommand = new AsyncRelayCommand(SaveRecipeAsync,
+                () => _auth.HasPermission(Permission.FlowEditor_Save));
+            DeleteRecipeCommand = new AsyncRelayCommand(DeleteRecipeAsync,
+                () => _auth.HasPermission(Permission.FlowEditor_Delete));
+            AddStepCommand = new RelayCommand(AddStep,
+                () => _auth.HasPermission(Permission.FlowEditor_Edit));
+            RemoveStepCommand = new RelayCommand(RemoveStep,
+                () => SelectedStep != null && _auth.HasPermission(Permission.FlowEditor_Edit));
+            MoveUpCommand = new RelayCommand(MoveUp,
+                () => SelectedStep != null && Steps.IndexOf(SelectedStep) > 0 && _auth.HasPermission(Permission.FlowEditor_Edit));
+            MoveDownCommand = new RelayCommand(MoveDown,
+                () => SelectedStep != null && Steps.IndexOf(SelectedStep) < Steps.Count - 1 && _auth.HasPermission(Permission.FlowEditor_Edit));
+            LoadSampleCommand = new RelayCommand(LoadSampleRecipe,
+                () => _auth.HasPermission(Permission.FlowEditor_New));
+            GenerateBuilderCommand = new RelayCommand(GenerateFromBuilder,
+                () => _auth.HasPermission(Permission.FlowEditor_New));
 
             _ = LoadAsync();
         }

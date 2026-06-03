@@ -3,9 +3,9 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:oxy="clr-namespace:OxyPlot.SkiaSharp.Wpf;assembly=OxyPlot.SkiaSharp.Wpf"
       xmlns:ctrl="clr-namespace:BatteryAging.UI.Controls"
-      Title="数据查询"
+      Title="{DynamicResource Main_Nav_Data}"
       Background="{StaticResource VsBgDeepBrush}">
-    
+
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -30,19 +30,19 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="起始日期:" VerticalAlignment="Center" Margin="0,0,6,0"
+                <TextBlock Text="{DynamicResource DataQuery_StartDate}" VerticalAlignment="Center" Margin="0,0,6,0"
                            Foreground="{StaticResource VsTextSecondaryBrush}"/>
                 <DatePicker Grid.Column="1" SelectedDate="{Binding StartDate}"/>
 
-                <TextBlock Grid.Column="2" Text="结束日期:" VerticalAlignment="Center" Margin="12,0,6,0"
+                <TextBlock Grid.Column="2" Text="{DynamicResource DataQuery_EndDate}" VerticalAlignment="Center" Margin="12,0,6,0"
                            Foreground="{StaticResource VsTextSecondaryBrush}"/>
                 <DatePicker Grid.Column="3" SelectedDate="{Binding EndDate}"/>
 
-                <TextBlock Grid.Column="4" Text="电池条码:" VerticalAlignment="Center" Margin="12,0,6,0"
+                <TextBlock Grid.Column="4" Text="{DynamicResource DataQuery_BarCode}" VerticalAlignment="Center" Margin="12,0,6,0"
                            Foreground="{StaticResource VsTextSecondaryBrush}"/>
                 <TextBox Grid.Column="5" Text="{Binding BarCode, UpdateSourceTrigger=PropertyChanged}"/>
 
-                <TextBlock Grid.Column="6" Text="通道:" VerticalAlignment="Center" Margin="12,0,6,0"
+                <TextBlock Grid.Column="6" Text="{DynamicResource DataQuery_Channel}" VerticalAlignment="Center" Margin="12,0,6,0"
                            Foreground="{StaticResource VsTextSecondaryBrush}"/>
                 <TextBox Grid.Column="7" Text="{Binding ChannelFilter, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}"/>
 
@@ -52,7 +52,7 @@
                             Margin="4,0">
                         <StackPanel Orientation="Horizontal">
                             <ctrl:VsIcon Kind="{StaticResource Icon.Magnify}" Width="13" Height="13" Foreground="White"/>
-                            <TextBlock Text="查询" Margin="6,0,0,0"/>
+                            <TextBlock Text="{DynamicResource DataQuery_Query}" Margin="6,0,0,0"/>
                         </StackPanel>
                     </Button>
                     <Button Style="{StaticResource VsOutlinedButton}"
@@ -61,7 +61,7 @@
                         <StackPanel Orientation="Horizontal">
                             <ctrl:VsIcon Kind="{StaticResource Icon.FileExportOutline}" Width="13" Height="13"
                                          Foreground="{StaticResource VsAccentBrush}"/>
-                            <TextBlock Text="导出 CSV" Margin="6,0,0,0"/>
+                            <TextBlock Text="{DynamicResource DataQuery_ExportCsv}" Margin="6,0,0,0"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -79,7 +79,7 @@
                         BorderBrush="{StaticResource VsBorderBrush}"
                         BorderThickness="0,0,0,1"
                         Padding="12,6">
-                    <TextBlock Text="测试记录" Foreground="{StaticResource VsTextPrimaryBrush}" FontWeight="SemiBold"/>
+                    <TextBlock Text="{DynamicResource DataQuery_Records}" Foreground="{StaticResource VsTextPrimaryBrush}" FontWeight="SemiBold"/>
                 </Border>
                 <DataGrid Grid.Row="1"
                           ItemsSource="{Binding Records}"
@@ -89,18 +89,18 @@
                           CanUserDeleteRows="False"
                           IsReadOnly="True">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="60"/>
-                        <DataGridTextColumn Header="通道" Binding="{Binding ChannelIndex}" Width="50"/>
-                        <DataGridTextColumn Header="条码" Binding="{Binding BarCode}" Width="120"/>
-                        <DataGridTextColumn Header="方案" Binding="{Binding RecipeName}" Width="160"/>
-                        <DataGridTextColumn Header="开始" Binding="{Binding StartTime, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" Width="140"/>
-                        <DataGridTextColumn Header="结束" Binding="{Binding EndTime, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" Width="140"/>
-                        <DataGridTextColumn Header="状态" Binding="{Binding Status}" Width="80"/>
-                        <DataGridTextColumn Header="保护触发" Binding="{Binding ProtectionTrigger}" Width="120"/>
-                        <DataGridTextColumn Header="充电(Ah)" Binding="{Binding TotalChargeCapacity, StringFormat={}{0:F4}}" Width="90"/>
-                        <DataGridTextColumn Header="放电(Ah)" Binding="{Binding TotalDischargeCapacity, StringFormat={}{0:F4}}" Width="90"/>
-                        <DataGridTextColumn Header="充能量(Wh)" Binding="{Binding TotalChargeEnergy, StringFormat={}{0:F4}}" Width="100"/>
-                        <DataGridTextColumn Header="放能量(Wh)" Binding="{Binding TotalDischargeEnergy, StringFormat={}{0:F4}}" Width="100"/>
+                        <DataGridTextColumn Header="{DynamicResource DataQuery_Col_ID}" Binding="{Binding Id}" Width="60"/>
+                        <DataGridTextColumn Header="{DynamicResource DataQuery_Col_Channel}" Binding="{Binding ChannelIndex}" Width="50"/>
+                        <DataGridTextColumn Header="{DynamicResource DataQuery_Col_BarCode}" Binding="{Binding BarCode}" Width="120"/>
+                        <DataGridTextColumn Header="{DynamicResource DataQuery_Col_Recipe}" Binding="{Binding RecipeName}" Width="160"/>
+                        <DataGridTextColumn Header="{DynamicResource DataQuery_Col_Start}" Binding="{Binding StartTime, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" Width="140"/>
+                        <DataGridTextColumn Header="{DynamicResource DataQuery_Col_End}" Binding="{Binding EndTime, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" Width="140"/>
+                        <DataGridTextColumn Header="{DynamicResource DataQuery_Col_Status}" Binding="{Binding Status}" Width="80"/>
+                        <DataGridTextColumn Header="{DynamicResource DataQuery_Col_Protection}" Binding="{Binding ProtectionTrigger}" Width="120"/>
+                        <DataGridTextColumn Header="{DynamicResource DataQuery_Col_ChargeAh}" Binding="{Binding TotalChargeCapacity, StringFormat={}{0:F4}}" Width="90"/>
+                        <DataGridTextColumn Header="{DynamicResource DataQuery_Col_DischargeAh}" Binding="{Binding TotalDischargeCapacity, StringFormat={}{0:F4}}" Width="90"/>
+                        <DataGridTextColumn Header="{DynamicResource DataQuery_Col_ChargeWh}" Binding="{Binding TotalChargeEnergy, StringFormat={}{0:F4}}" Width="100"/>
+                        <DataGridTextColumn Header="{DynamicResource DataQuery_Col_DischargeWh}" Binding="{Binding TotalDischargeEnergy, StringFormat={}{0:F4}}" Width="100"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
@@ -127,7 +127,7 @@
                         <StackPanel Orientation="Horizontal">
                             <ctrl:VsIcon Kind="{StaticResource Icon.ChartLine}" Width="14" Height="14"
                                          Foreground="{StaticResource VsAccentBrush}"/>
-                            <TextBlock Text="历史曲线" FontWeight="SemiBold" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="{DynamicResource DataQuery_HistoryCurve}" FontWeight="SemiBold" Margin="6,0,0,0" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Border>
                     <oxy:PlotView Grid.Row="1" x:Name="HistoryPlot" Background="Transparent" Margin="2,4,2,2"  />
@@ -145,7 +145,7 @@
                             BorderBrush="{StaticResource VsBorderBrush}"
                             BorderThickness="0,0,0,1"
                             Padding="12,6">
-                        <TextBlock Text="数据点" Foreground="{StaticResource VsTextPrimaryBrush}" FontWeight="SemiBold"/>
+                        <TextBlock Text="{DynamicResource DataQuery_DataPoints}" Foreground="{StaticResource VsTextPrimaryBrush}" FontWeight="SemiBold"/>
                     </Border>
                     <DataGrid Grid.Row="1"
                               ItemsSource="{Binding DataPoints}"
@@ -154,7 +154,7 @@
                               IsReadOnly="True"
                               EnableRowVirtualization="True">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="时间(s)" Binding="{Binding ElapsedSeconds, StringFormat={}{0:F1}}" Width="70"/>
+                            <DataGridTextColumn Header="{DynamicResource DataQuery_Col_TimeS}" Binding="{Binding ElapsedSeconds, StringFormat={}{0:F1}}" Width="70"/>
                             <DataGridTextColumn Header="V" Binding="{Binding Voltage, StringFormat={}{0:F4}}" Width="80"/>
                             <DataGridTextColumn Header="I" Binding="{Binding Current, StringFormat={}{0:F4}}" Width="80"/>
                             <DataGridTextColumn Header="Ah" Binding="{Binding Capacity, StringFormat={}{0:F4}}" Width="80"/>

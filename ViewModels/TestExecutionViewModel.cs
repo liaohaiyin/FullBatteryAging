@@ -19,6 +19,7 @@ namespace BatteryAging.ViewModels
         private readonly IDataService _dataService;
         private readonly IDialogService _dialogService;
         private readonly IBatteryAnalyticsService _analytics;
+        private readonly IAuthService _auth;
 
         private readonly ConcurrentDictionary<int, List<DataPoint>> _pendingPoints = new();
 
@@ -44,12 +45,14 @@ namespace BatteryAging.ViewModels
             ChannelManager channelManager,
             IDataService dataService,
             IDialogService dialogService,
-            IBatteryAnalyticsService analytics)
+            IBatteryAnalyticsService analytics,
+            IAuthService auth)
         {
             _channelManager = channelManager;
             _dataService = dataService;
             _dialogService = dialogService;
             _analytics = analytics;
+            _auth = auth;
 
             foreach (var executor in _channelManager.GetAll())
             {
@@ -65,7 +68,8 @@ namespace BatteryAging.ViewModels
                 executor.StepChanged += OnChannelStepChanged;
                 executor.CheckpointReached += OnCheckpointReached;
                 executor.CycleCompleted += OnCycleCompleted;
-                executor.DcirMeasured += async (s, e) => {
+                executor.DcirMeasured += async (s, e) =>
+                {
                     await _dataService.SaveDcirAsync(e.Result);
                     App.UIDispatch(() => AppendLog($"通道{e.ChannelIndex} DCIR={e.Result.Resistance * 1000:F2} mΩ @SOC{e.Result.Soc:F0}%"));
                 };
@@ -76,24 +80,34 @@ namespace BatteryAging.ViewModels
             if (Channels.Count > 0) SelectedChannel = Channels[0];
 
             LoadRecipesCommand = new AsyncRelayCommand(LoadRecipesAsync);
+
             StartChannelCommand = new AsyncRelayCommand(StartChannelAsync,
-                () => SelectedChannel?.Status == ChannelStatus.Idle
-                   || SelectedChannel?.Status == ChannelStatus.Completed
-                   || SelectedChannel?.Status == ChannelStatus.Stopped);
+                () => _auth.HasPermission(Permission.TestExecution_Start)
+                   && (SelectedChannel?.Status == ChannelStatus.Idle
+                    || SelectedChannel?.Status == ChannelStatus.Completed
+                    || SelectedChannel?.Status == ChannelStatus.Stopped));
             StopChannelCommand = new RelayCommand(StopChannel,
-                () => SelectedChannel?.Status == ChannelStatus.Running
-                   || SelectedChannel?.Status == ChannelStatus.Paused);
-            PauseChannelCommand = new RelayCommand(PauseChannel, () => SelectedChannel?.Status == ChannelStatus.Running);
-            ResumeChannelCommand = new RelayCommand(ResumeChannel, () => SelectedChannel?.Status == ChannelStatus.Paused);
-            StartAllCommand = new AsyncRelayCommand(StartAllAsync);
-            SyncStartAllCommand = new AsyncRelayCommand(SyncStartAllAsync);
-            StopAllCommand = new RelayCommand(StopAll);
+                () => _auth.HasPermission(Permission.TestExecution_Stop)
+                   && (SelectedChannel?.Status == ChannelStatus.Running
+                    || SelectedChannel?.Status == ChannelStatus.Paused));
+            PauseChannelCommand = new RelayCommand(PauseChannel,
+                () => _auth.HasPermission(Permission.TestExecution_Pause)
+                   && SelectedChannel?.Status == ChannelStatus.Running);
+            ResumeChannelCommand = new RelayCommand(ResumeChannel,
+                () => _auth.HasPermission(Permission.TestExecution_Resume)
+                   && SelectedChannel?.Status == ChannelStatus.Paused);
+            StartAllCommand = new AsyncRelayCommand(StartAllAsync,
+                () => _auth.HasPermission(Permission.TestExecution_StartAll));
+            SyncStartAllCommand = new AsyncRelayCommand(SyncStartAllAsync,
+                () => _auth.HasPermission(Permission.TestExecution_SyncStart));
+            StopAllCommand = new RelayCommand(StopAll,
+                () => _auth.HasPermission(Permission.TestExecution_StopAll));
             ClearLogCommand = new RelayCommand(() => LogText = "");
 
             _ = LoadRecipesAsync();
             _ = CheckInterruptedRecordsAsync();
 
-            StartBatchSaveTimer();
+            StartBatchSaveTimer();            
         }
 
         partial void OnSelectedChannelChanged(ChannelViewModel value) => RefreshCommands();
@@ -104,6 +118,9 @@ namespace BatteryAging.ViewModels
             ((RelayCommand)StopChannelCommand)?.NotifyCanExecuteChanged();
             ((RelayCommand)PauseChannelCommand)?.NotifyCanExecuteChanged();
             ((RelayCommand)ResumeChannelCommand)?.NotifyCanExecuteChanged();
+            ((AsyncRelayCommand)StartAllCommand)?.NotifyCanExecuteChanged();
+            ((AsyncRelayCommand)SyncStartAllCommand)?.NotifyCanExecuteChanged();
+            ((RelayCommand)StopAllCommand)?.NotifyCanExecuteChanged();
         }
 
         private async Task LoadRecipesAsync()

@@ -15,6 +15,7 @@ namespace BatteryAging.ViewModels
     {
         private readonly IDataService _dataService;
         private readonly IDialogService _dialogService;
+        private readonly IAuthService _auth;
 
         public ObservableCollection<TestRecord> Records { get; } = new();
         public ObservableCollection<DataPoint> DataPoints { get; } = new();
@@ -31,13 +32,14 @@ namespace BatteryAging.ViewModels
         public IAsyncRelayCommand ExportCommand { get; }
         public IAsyncRelayCommand LoadDataPointsCommand { get; }
 
-        public DataQueryViewModel(IDataService dataService, IDialogService dialogService)
+        public DataQueryViewModel(IDataService dataService, IDialogService dialogService, IAuthService auth)
         {
             _dataService = dataService;
             _dialogService = dialogService;
+            _auth = auth;
 
             QueryCommand = new AsyncRelayCommand(QueryAsync);
-            ExportCommand = new AsyncRelayCommand(ExportAsync);
+            ExportCommand = new AsyncRelayCommand(ExportAsync,() => _auth.HasPermission(Permission.DataQuery_Export));
             LoadDataPointsCommand = new AsyncRelayCommand(LoadDataPointsAsync);
 
             _ = QueryAsync();

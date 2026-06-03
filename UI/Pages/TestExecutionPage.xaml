@@ -5,10 +5,9 @@
       xmlns:ap="clr-namespace:BatteryAging.UI.AttachedProperties"
       xmlns:ctrl="clr-namespace:BatteryAging.UI.Controls"
       xmlns:cv="clr-namespace:BatteryAging.UI.Converters"
-      Title="测试执行"
+      Title="{DynamicResource Main_Nav_Execution}"
       Background="{StaticResource VsBgDeepBrush}">
     <Page.Resources>
-        <!-- 通道卡片内部小标签 -->
         <Style x:Key="CellLabelStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{StaticResource VsTextMutedBrush}"/>
             <Setter Property="FontSize" Value="10"/>
@@ -37,7 +36,6 @@
             <ColumnDefinition Width="1.2*" MinWidth="440"/>
         </Grid.ColumnDefinitions>
 
-        <!-- ═══ 左侧：控制条 + 通道矩阵 ═══ -->
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -58,22 +56,20 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Text="测试方案" VerticalAlignment="Center"
+                    <TextBlock Text="{DynamicResource TestExec_Recipe}" VerticalAlignment="Center"
                                Foreground="{StaticResource VsTextSecondaryBrush}"
                                FontSize="12" Margin="0,0,10,0"/>
-                    <ComboBox Grid.Column="1"
-                              Margin="0,5"
+                    <ComboBox Grid.Column="1" Margin="0,5"
                               ItemsSource="{Binding AvailableRecipes}"
                               SelectedItem="{Binding SelectedRecipe}"
                               DisplayMemberPath="Name"/>
 
-                    <TextBlock Grid.Column="2" Text="电池条码" VerticalAlignment="Center"
+                    <TextBlock Grid.Column="2" Text="{DynamicResource TestExec_BarCode}" VerticalAlignment="Center"
                                Foreground="{StaticResource VsTextSecondaryBrush}"
                                FontSize="12" Margin="18,0,10,0"/>
-                    <TextBox Grid.Column="3"
-                             Margin="0,5"
+                    <TextBox Grid.Column="3" Margin="0,5"
                              Text="{Binding BarCode, UpdateSourceTrigger=PropertyChanged}"
-                             ap:PlaceholderProperty.PlaceholderText="选中通道后输入"
+                             ap:PlaceholderProperty.PlaceholderText="{DynamicResource TestExec_BarCodeHint}"
                              Style="{StaticResource MaterialDesignTextBox}"
                              Foreground="{StaticResource TextPrimaryBrush}"
                              FontSize="16"/>
@@ -81,11 +77,11 @@
                     <StackPanel Grid.Column="5" Orientation="Horizontal">
                         <Button Style="{StaticResource VsAccentButton}"
                                 Command="{Binding StartChannelCommand}"
-                                ToolTip="启动当前通道"
+                                ToolTip="{DynamicResource TestExec_StartTip}"
                                 Margin="3,0" Padding="14,6">
                             <StackPanel Orientation="Horizontal">
                                 <ctrl:VsIcon Kind="{StaticResource Icon.Play}" Width="13" Height="13" Foreground="White"/>
-                                <TextBlock Text="启动" Margin="4,0,0,0"/>
+                                <TextBlock Text="{DynamicResource Common_Start}" Margin="4,0,0,0"/>
                             </StackPanel>
                         </Button>
                         <Button Style="{StaticResource VsOutlinedButton}"
@@ -94,7 +90,7 @@
                             <StackPanel Orientation="Horizontal">
                                 <ctrl:VsIcon Kind="{StaticResource Icon.Pause}" Width="13" Height="13"
                                              Foreground="{StaticResource VsWarningBrush}"/>
-                                <TextBlock Text="暂停" Margin="4,0,0,0"/>
+                                <TextBlock Text="{DynamicResource Common_Pause}" Margin="4,0,0,0"/>
                             </StackPanel>
                         </Button>
                         <Button Style="{StaticResource VsOutlinedButton}"
@@ -103,7 +99,7 @@
                             <StackPanel Orientation="Horizontal">
                                 <ctrl:VsIcon Kind="{StaticResource Icon.PlayCircle}" Width="13" Height="13"
                                              Foreground="{StaticResource VsAccentBrush}"/>
-                                <TextBlock Text="恢复" Margin="4,0,0,0"/>
+                                <TextBlock Text="{DynamicResource Common_Resume}" Margin="4,0,0,0"/>
                             </StackPanel>
                         </Button>
                         <Button Style="{StaticResource VsOutlinedButton}"
@@ -112,27 +108,27 @@
                             <StackPanel Orientation="Horizontal">
                                 <ctrl:VsIcon Kind="{StaticResource Icon.Stop}" Width="13" Height="13"
                                              Foreground="{StaticResource VsErrorBrush}"/>
-                                <TextBlock Text="停止" Margin="4,0,0,0"/>
+                                <TextBlock Text="{DynamicResource Common_Stop}" Margin="4,0,0,0"/>
                             </StackPanel>
                         </Button>
                         <Border Width="1" Margin="8,2" Background="{StaticResource VsBorderBrush}"/>
                         <Button Style="{StaticResource VsAccentButton}"
                                 Command="{Binding StartAllCommand}"
-                                ToolTip="启动所有空闲通道"
+                                ToolTip="{DynamicResource TestExec_StartAllTip}"
                                 Margin="2,0" Padding="10,4">
                             <StackPanel Orientation="Horizontal">
-                                <ctrl:VsIcon Kind="{StaticResource Icon.PlayBoxMultiple}" 
+                                <ctrl:VsIcon Kind="{StaticResource Icon.PlayBoxMultiple}"
                                              VerticalAlignment="Center" Foreground="White"/>
-                                <TextBlock Text="全部启动" Margin="4,0,0,0" FontWeight="Bold"/>
+                                <TextBlock Text="{DynamicResource Common_StartAll}" Margin="4,0,0,0" FontWeight="Bold"/>
                             </StackPanel>
                         </Button>
                         <Button Style="{StaticResource VsAccentButton}"
                                 Command="{Binding SyncStartAllCommand}"
-                                ToolTip="所有空闲通道同一时刻同步启动"
+                                ToolTip="{DynamicResource TestExec_SyncStartTip}"
                                 Margin="2,0" Padding="10,4">
                             <StackPanel Orientation="Horizontal">
                                 <ctrl:VsIcon Kind="{StaticResource Icon.PlayBoxMultiple}" VerticalAlignment="Center" Foreground="White"/>
-                                <TextBlock Text="同步启动" Margin="4,0,0,0" FontWeight="Bold"/>
+                                <TextBlock Text="{DynamicResource Common_SyncStart}" Margin="4,0,0,0" FontWeight="Bold"/>
                             </StackPanel>
                         </Button>
                         <Button Style="{StaticResource VsOutlinedButton}"
@@ -143,14 +139,14 @@
                             <StackPanel Orientation="Horizontal">
                                 <ctrl:VsIcon Kind="{StaticResource Icon.StopCircleOutline}" Width="13" Height="13"
                                              Foreground="{StaticResource VsTextSecondaryBrush}"/>
-                                <TextBlock Text="全部停止" Margin="4,0,0,0"/>
+                                <TextBlock Text="{DynamicResource Common_StopAll}" Margin="4,0,0,0"/>
                             </StackPanel>
                         </Button>
                     </StackPanel>
                 </Grid>
             </Border>
 
-            <!-- 通道矩阵：紧凑横向卡片 4 列 -->
+            <!-- 通道矩阵 -->
             <ListBox Grid.Row="1"
                      ItemsSource="{Binding Channels}"
                      SelectedItem="{Binding SelectedChannel}"
@@ -209,7 +205,6 @@
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
 
-                                <!-- 上侧编号条 -->
                                 <Border Grid.Column="0"
                                         Background="{Binding Status, Converter={StaticResource ChannelStatusBrushCv}}"
                                         CornerRadius="3,0,0,3">
@@ -235,7 +230,6 @@
                                     </Grid>
                                 </Border>
 
-                                <!-- 下侧数据区 -->
                                 <Grid Grid.Row="1" Margin="5,6">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
@@ -254,15 +248,13 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <!-- 时间 -->
-                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="时间" Style="{StaticResource CellLabelStyle}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="{DynamicResource TestExec_Time}" Style="{StaticResource CellLabelStyle}"/>
                                     <TextBlock Grid.Row="0" Grid.Column="1"
                                                 Text="{Binding TotalElapsed,StringFormat={}{0:hh\\:mm\\:ss\\.fff}}"
                                                 Style="{StaticResource CellValueStyle}"
                                                 HorizontalAlignment="Right"/>
 
-                                    <!-- 电流 -->
-                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="电流" Style="{StaticResource CellLabelStyle}"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="{DynamicResource TestExec_Current}" Style="{StaticResource CellLabelStyle}"/>
                                     <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                                         <TextBlock Text="{Binding Current, StringFormat={}{0:F4}, Mode=OneWay}"
                                                     Style="{StaticResource CellValueStyle}"
@@ -270,8 +262,7 @@
                                         <TextBlock Text="A" Style="{StaticResource CellUnitStyle}"/>
                                     </StackPanel>
 
-                                    <!-- 电压 -->
-                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="电压" Style="{StaticResource CellLabelStyle}"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="{DynamicResource TestExec_Voltage}" Style="{StaticResource CellLabelStyle}"/>
                                     <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                                         <TextBlock Text="{Binding Voltage, StringFormat={}{0:F4}, Mode=OneWay}"
                                                     Style="{StaticResource CellValueStyle}"
@@ -279,8 +270,7 @@
                                         <TextBlock Text="V" Style="{StaticResource CellUnitStyle}"/>
                                     </StackPanel>
 
-                                    <!-- 容量+温度 同一行 -->
-                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="容量" Style="{StaticResource CellLabelStyle}"/>
+                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="{DynamicResource TestExec_Capacity}" Style="{StaticResource CellLabelStyle}"/>
                                     <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                                         <TextBlock Text="{Binding Capacity, StringFormat={}{0:F3}, Mode=OneWay}"
                                                     Style="{StaticResource CellValueStyle}"
@@ -288,7 +278,7 @@
                                         <TextBlock Text="Ah" Style="{StaticResource CellUnitStyle}"/>
                                     </StackPanel>
 
-                                    <TextBlock Grid.Row="4" Grid.Column="0" Text="温度" Style="{StaticResource CellLabelStyle}"/>
+                                    <TextBlock Grid.Row="4" Grid.Column="0" Text="{DynamicResource TestExec_Temperature}" Style="{StaticResource CellLabelStyle}"/>
                                     <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                                         <TextBlock Text="{Binding Temperature, StringFormat={}{0:F1}, Mode=OneWay}"
                                                     Style="{StaticResource CellValueStyle}"
@@ -296,15 +286,13 @@
                                         <TextBlock Text="°C" Style="{StaticResource CellUnitStyle}"/>
                                     </StackPanel>
 
-                                    <!-- 功率 -->
-                                    <TextBlock Grid.Row="5" Grid.Column="0" Text="功率" Style="{StaticResource CellLabelStyle}"/>
+                                    <TextBlock Grid.Row="5" Grid.Column="0" Text="{DynamicResource TestExec_Power}" Style="{StaticResource CellLabelStyle}"/>
                                     <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                                         <TextBlock Text="{Binding Power, StringFormat={}{0:F2}, Mode=OneWay}" Style="{StaticResource CellValueStyle}" FontSize="11"/>
                                         <TextBlock Text="W" Style="{StaticResource CellUnitStyle}"/>
                                     </StackPanel>
 
-                                    <!-- 工步 -->
-                                    <TextBlock Grid.Row="6" Grid.Column="0" Text="工步" Style="{StaticResource CellLabelStyle}"/>
+                                    <TextBlock Grid.Row="6" Grid.Column="0" Text="{DynamicResource TestExec_Step}" Style="{StaticResource CellLabelStyle}"/>
                                     <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                                         <Border Background="{Binding CurrentStepType, Converter={StaticResource StepTypeBrushCv}}"
                                                 CornerRadius="2" Padding="4,0">
@@ -318,14 +306,13 @@
                                         </TextBlock>
                                     </StackPanel>
 
-                                    <TextBlock Grid.Row="7" Grid.Column="0" Text="条码" Style="{StaticResource CellLabelStyle}"/>
+                                    <TextBlock Grid.Row="7" Grid.Column="0" Text="{DynamicResource TestExec_BarCodeShort}" Style="{StaticResource CellLabelStyle}"/>
                                     <TextBlock Grid.Row="7" Grid.Column="1"
                                                 Text="{Binding BarCode, Mode=OneWay}"
                                                 Style="{StaticResource CellValueStyle}"
                                                 FontSize="11"
                                                 HorizontalAlignment="Right"/>
 
-                                    <!-- 状态条 -->
                                     <Border Grid.Row="8" Grid.ColumnSpan="3" Margin="0,6,0,0"
                                             Background="#33000000" CornerRadius="2" Padding="5,3">
                                         <Grid>
@@ -350,31 +337,25 @@
                                                         HorizontalAlignment="Right"/>
                                         </Grid>
                                     </Border>
-                                    <!-- 中部：电池图形 -->
                                     <StackPanel Grid.Row="0" Grid.RowSpan="8" Grid.Column="2" HorizontalAlignment="Stretch"
                                                 VerticalAlignment="Stretch" Margin="5,0,0,0">
-                                        <!-- 正极凸起 -->
                                         <Border Width="15" Height="5"
                                                 Background="{StaticResource VsBorderLightBrush}"
                                                 CornerRadius="1,1,0,0" HorizontalAlignment="Center"/>
-                                        <!-- 电池主体 -->
                                         <Border Width="40" Height="83"
                                                 BorderBrush="{StaticResource VsBorderLightBrush}"
                                                 BorderThickness="2" CornerRadius="3"
                                                 Background="#FF101820">
                                             <Grid Margin="2" ClipToBounds="True">
-                                                <!-- 液位（底部向上填充） Height="83" - 4 = 79-->
                                                 <Rectangle VerticalAlignment="Bottom"
                                                            Fill="{Binding Soc, Converter={x:Static cv:SocToBrushConverter.Instance}}"
                                                            Height="{Binding Soc, Converter={x:Static cv:SocToHeightConverter.Instance}, ConverterParameter=79}"
                                                            RadiusX="1" RadiusY="1" Opacity="0.8"/>
-                                                <!-- 液位刻度（横线） -->
                                                 <StackPanel VerticalAlignment="Stretch" Margin="0,4">
                                                     <Rectangle Height="1" Fill="#33FFFFFF" Margin="0,0,0,20"/>
                                                     <Rectangle Height="1" Fill="#33FFFFFF" Margin="0,0,0,20"/>
                                                     <Rectangle Height="1" Fill="#33FFFFFF" Margin="0,0,0,20"/>
                                                 </StackPanel>
-                                                <!-- SOC 百分比 -->
                                                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                                                     <TextBlock FontFamily="Consolas" FontWeight="Bold"
                                                                FontSize="18" Foreground="White"
@@ -388,15 +369,15 @@
                                             </Grid>
                                         </Border>
                                     </StackPanel>
-                                </Grid>                              
+                                </Grid>
                             </Grid>
                         </Border>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
-            </ListBox>            
+            </ListBox>
         </Grid>
 
-        <!-- ═══ 右侧：曲线 + 汇总 + 日志 ═══ -->
+        <!-- ═══ 右侧 ═══ -->
         <Grid Grid.Column="1" Margin="14,0,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
@@ -404,7 +385,6 @@
                 <RowDefinition Height="220"/>
             </Grid.RowDefinitions>
 
-            <!-- 实时曲线 -->
             <Border Grid.Row="0" Style="{StaticResource VsCardStyle}">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -418,7 +398,7 @@
                         <StackPanel Orientation="Horizontal">
                             <ctrl:VsIcon Kind="{StaticResource Icon.ChartLine}" VerticalAlignment="Center"
                                          Foreground="{StaticResource AccentCyanBrush}"/>
-                            <TextBlock Text="实时曲线" FontWeight="Medium" Margin="8,0,0,0"
+                            <TextBlock Text="{DynamicResource TestExec_LiveCurve}" FontWeight="Medium" Margin="8,0,0,0"
                                        VerticalAlignment="Center"
                                        Foreground="{StaticResource VsAccentBrush}"/>
                             <Border Background="Transparent"
@@ -437,7 +417,6 @@
                 </Grid>
             </Border>
 
-            <!-- 汇总统计 -->
             <Border Grid.Row="1" Style="{StaticResource VsCardStyle}" Margin="0,12,0,12">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -451,13 +430,13 @@
                         <StackPanel Orientation="Horizontal">
                             <ctrl:VsIcon Kind="{StaticResource Icon.ChartBoxOutline}" Width="14" Height="14"
                                          Foreground="{StaticResource VsAccentBrush}"/>
-                            <TextBlock Text="汇总统计" FontWeight="SemiBold" Margin="6,0,0,0"
+                            <TextBlock Text="{DynamicResource TestExec_Summary}" FontWeight="SemiBold" Margin="6,0,0,0"
                                        VerticalAlignment="Center"/>
                         </StackPanel>
                     </Border>
                     <UniformGrid Grid.Row="1" Columns="4" Margin="14,12,14,14">
                         <StackPanel Margin="4,0">
-                            <TextBlock Text="充电容量" Style="{StaticResource ValueLabelStyle}"/>
+                            <TextBlock Text="{DynamicResource TestExec_ChargeCapacity}" Style="{StaticResource ValueLabelStyle}"/>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Style="{StaticResource ValueNumberStyle}"
                                            Foreground="{StaticResource AccentGreenBrush}"
@@ -467,7 +446,7 @@
                             </StackPanel>
                         </StackPanel>
                         <StackPanel Margin="4,0">
-                            <TextBlock Text="放电容量" Style="{StaticResource ValueLabelStyle}"/>
+                            <TextBlock Text="{DynamicResource TestExec_DischargeCapacity}" Style="{StaticResource ValueLabelStyle}"/>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Style="{StaticResource ValueNumberStyle}"
                                            Foreground="{StaticResource VsSuccessBrush}"
@@ -477,7 +456,7 @@
                             </StackPanel>
                         </StackPanel>
                         <StackPanel Margin="4,0">
-                            <TextBlock Text="充电能量" Style="{StaticResource ValueLabelStyle}"/>
+                            <TextBlock Text="{DynamicResource TestExec_ChargeEnergy}" Style="{StaticResource ValueLabelStyle}"/>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Style="{StaticResource ValueNumberStyle}"
                                            Foreground="{StaticResource VsSuccessBrush}"
@@ -487,7 +466,7 @@
                             </StackPanel>
                         </StackPanel>
                         <StackPanel Margin="4,0">
-                            <TextBlock Text="放电能量" Style="{StaticResource ValueLabelStyle}"/>
+                            <TextBlock Text="{DynamicResource TestExec_DischargeEnergy}" Style="{StaticResource ValueLabelStyle}"/>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Style="{StaticResource ValueNumberStyle}"
                                            Foreground="{StaticResource VsWarningBrush}"
@@ -500,7 +479,6 @@
                 </Grid>
             </Border>
 
-            <!-- 日志 -->
             <Border Grid.Row="2" Style="{StaticResource VsCardStyle}">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -514,7 +492,7 @@
                             <StackPanel Orientation="Horizontal">
                                 <ctrl:VsIcon Kind="{StaticResource Icon.TextBoxOutline}" Width="14" Height="14"
                                              Foreground="{StaticResource VsAccentBrush}"/>
-                                <TextBlock Text="运行日志" FontWeight="SemiBold" Margin="6,0,0,0"
+                                <TextBlock Text="{DynamicResource TestExec_Log}" FontWeight="SemiBold" Margin="6,0,0,0"
                                            VerticalAlignment="Center"/>
                             </StackPanel>
                             <Button HorizontalAlignment="Right" Style="{StaticResource VsFlatButton}"
@@ -522,7 +500,7 @@
                                 <StackPanel Orientation="Horizontal">
                                     <ctrl:VsIcon Kind="{StaticResource Icon.DeleteSweep}" Width="13" Height="13"
                                                  Foreground="{StaticResource VsTextSecondaryBrush}"/>
-                                    <TextBlock Text="清空" Margin="4,0,0,0" FontSize="11"/>
+                                    <TextBlock Text="{DynamicResource TestExec_ClearLog}" Margin="4,0,0,0" FontSize="11"/>
                                 </StackPanel>
                             </Button>
                         </Grid>

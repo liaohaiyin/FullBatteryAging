@@ -4,8 +4,8 @@
         xmlns:ctrl="clr-namespace:BatteryAging.UI.Controls"
         xmlns:ap="clr-namespace:BatteryAging.UI.AttachedProperties"
         Title="{DynamicResource Login_WindowTitle}" Height="500" Width="820"
-        WindowStartupLocation="CenterScreen"
         Style="{StaticResource VsWindowStyle}"
+        WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         WindowStyle="None"
         AllowsTransparency="True"
@@ -70,7 +70,7 @@
             </Grid.ColumnDefinitions>
 
             <!-- 左侧品牌区（最深背景 + 强调色点缀） -->
-            <Border Grid.Column="0" CornerRadius="2,0,0,2"
+            <Border Grid.Column="0" CornerRadius="12,0,0,12"
                     Background="{DynamicResource VsBgDeepBrush}" MouseDown="TitleBar_MouseDown">
                 <Grid>
                     <Ellipse Width="180" Height="180" Opacity="0.08" Fill="{DynamicResource VsAccentBrush}"
@@ -136,7 +136,7 @@
             </Border>
 
             <!-- 右侧表单区 -->
-            <Border Grid.Column="1" CornerRadius="0,2,2,0"
+            <Border Grid.Column="1" CornerRadius="0,12,12,0"
                     Background="{DynamicResource VsBgPanelBrush}" MouseDown="TitleBar_MouseDown">
                 <Grid>
                     <!-- 语言选择 -->

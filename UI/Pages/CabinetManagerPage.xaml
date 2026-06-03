@@ -2,7 +2,7 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:ctrl="clr-namespace:BatteryAging.UI.Controls"
-      Title="机柜管理"
+      Title="{DynamicResource Main_Nav_Cabinet}"
       Background="{StaticResource BgDeepBrush}">
 
     <Page.Resources>
@@ -32,7 +32,7 @@
                         CornerRadius="3,3,0,0" Padding="14,8">
                     <StackPanel Orientation="Horizontal">
                         <ctrl:VsIcon Kind="{StaticResource Icon.ServerNetwork}" Foreground="{StaticResource AccentCyanBrush}" VerticalAlignment="Center"/>
-                        <TextBlock Text="机柜列表" FontWeight="Medium" Margin="8,0,0,0"/>
+                        <TextBlock Text="{DynamicResource Cabinet_List}" FontWeight="Medium" Margin="8,0,0,0"/>
                     </StackPanel>
                 </Border>
 
@@ -40,19 +40,19 @@
                     <Button Style="{StaticResource MaterialDesignFlatButton}"
                             Command="{Binding NewCabinetCommand}"
                             Foreground="{StaticResource AccentCyanBrush}"
-                            ToolTip="新建机柜" Padding="8,4">
+                            ToolTip="{DynamicResource Cabinet_NewTip}" Padding="8,4">
                         <StackPanel Orientation="Horizontal">
                             <ctrl:VsIcon Kind="{StaticResource Icon.Plus}" Width="14" Height="14" VerticalAlignment="Center"/>
-                            <TextBlock Text="新建" Margin="4,0,0,0"/>
+                            <TextBlock Text="{DynamicResource Cabinet_New}" Margin="4,0,0,0"/>
                         </StackPanel>
                     </Button>
                     <Button Style="{StaticResource MaterialDesignFlatButton}"
                             Command="{Binding DeleteCabinetCommand}"
                             Foreground="{StaticResource AccentRedBrush}"
-                            ToolTip="删除" Padding="8,4">
+                            ToolTip="{DynamicResource Cabinet_DeleteTip}" Padding="8,4">
                         <StackPanel Orientation="Horizontal">
                             <ctrl:VsIcon Kind="{StaticResource Icon.DeleteOutline}" Width="14" Height="14" VerticalAlignment="Center"/>
-                            <TextBlock Text="删除" Margin="4,0,0,0"/>
+                            <TextBlock Text="{DynamicResource Cabinet_Delete}" Margin="4,0,0,0"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -76,9 +76,10 @@
                                     <TextBlock FontSize="10"
                                                Foreground="{StaticResource TextMutedBrush}"
                                                Margin="0,4,0,0">
-                                        <Run Text="驱动:"/>
+                                        <Run Text="{DynamicResource Cabinet_DriverLabel}"/>
                                         <Run Text="{Binding DriverType, Mode=OneWay}"/>
-                                        <Run Text="  通道:"/>
+                                        <Run Text="  "/>
+                                        <Run Text="{DynamicResource Cabinet_ChannelLabel}"/>
                                         <Run Text="{Binding ChannelCount, Mode=OneWay}"/>
                                     </TextBlock>
                                 </StackPanel>
@@ -102,14 +103,14 @@
                         CornerRadius="3,3,0,0" Padding="14,8">
                     <StackPanel Orientation="Horizontal">
                         <ctrl:VsIcon Kind="{StaticResource Icon.CogOutline}" Foreground="{StaticResource AccentCyanBrush}" VerticalAlignment="Center"/>
-                        <TextBlock Text="机柜参数" FontWeight="Medium" Margin="8,0,0,0"/>
+                        <TextBlock Text="{DynamicResource Cabinet_Params}" FontWeight="Medium" Margin="8,0,0,0"/>
                     </StackPanel>
                 </Border>
 
                 <ScrollViewer Grid.Row="1" Padding="20" VerticalScrollBarVisibility="Auto">
                     <StackPanel DataContext="{Binding SelectedCabinet}">
 
-                        <TextBlock Text="基本信息" FontWeight="Medium" FontSize="14"
+                        <TextBlock Text="{DynamicResource Cabinet_BasicInfo}" FontWeight="Medium" FontSize="14"
                                    Foreground="{StaticResource AccentCyanBrush}" Margin="0,0,0,8"/>
                         <Grid Margin="0,0,0,12">
                             <Grid.ColumnDefinitions>
@@ -118,15 +119,15 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Margin="0,0,8,0">
-                                <TextBlock Text="机柜名称" Style="{StaticResource FieldLabel}"/>
+                                <TextBlock Text="{DynamicResource Cabinet_Name}" Style="{StaticResource FieldLabel}"/>
                                 <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
                             </StackPanel>
                             <StackPanel Grid.Column="1" Margin="8,0,0,0">
-                                <TextBlock Text="机柜编号" Style="{StaticResource FieldLabel}"/>
+                                <TextBlock Text="{DynamicResource Cabinet_Index}" Style="{StaticResource FieldLabel}"/>
                                 <TextBox Text="{Binding CabinetIndex, UpdateSourceTrigger=PropertyChanged}"/>
                             </StackPanel>
                             <StackPanel Grid.Column="2" Margin="8,0,0,0">
-                                <TextBlock Text="机柜类型" Style="{StaticResource FieldLabel}"/>
+                                <TextBlock Text="{DynamicResource Cabinet_Type}" Style="{StaticResource FieldLabel}"/>
                                 <ComboBox ItemsSource="{Binding DataContext.CabinetTypes, RelativeSource={RelativeSource AncestorType=Page}}"
                                           DisplayMemberPath="DisplayName" SelectedValuePath="Value"
                                           SelectedValue="{Binding CabinetType}"
@@ -136,7 +137,7 @@
 
                         <Border Height="1" Background="{StaticResource BorderDimBrush}" Margin="0,4,0,12"/>
 
-                        <TextBlock Text="驱动 / 通讯" FontWeight="Medium" FontSize="14"
+                        <TextBlock Text="{DynamicResource Cabinet_DriverComm}" FontWeight="Medium" FontSize="14"
                                    Foreground="{StaticResource AccentCyanBrush}" Margin="0,0,0,8"/>
                         <Grid Margin="0,0,0,12">
                             <Grid.ColumnDefinitions>
@@ -144,14 +145,14 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Margin="0,0,8,0">
-                                <TextBlock Text="设备厂商" Style="{StaticResource FieldLabel}"/>
+                                <TextBlock Text="{DynamicResource Cabinet_Vendor}" Style="{StaticResource FieldLabel}"/>
                                 <ComboBox ItemsSource="{Binding DataContext.DriverTypes, RelativeSource={RelativeSource AncestorType=Page}}"
                                           DisplayMemberPath="DisplayName"
                                           SelectedValuePath="Value"
                                           SelectedValue="{Binding DriverType}"/>
                             </StackPanel>
                             <StackPanel Grid.Column="1" Margin="8,0,0,0">
-                                <TextBlock Text="通讯方式" Style="{StaticResource FieldLabel}"/>
+                                <TextBlock Text="{DynamicResource Cabinet_ConnType}" Style="{StaticResource FieldLabel}"/>
                                 <ComboBox ItemsSource="{Binding DataContext.ConnectionTypes, RelativeSource={RelativeSource AncestorType=Page}}"
                                           DisplayMemberPath="DisplayName"
                                           SelectedValuePath="Value"
@@ -159,8 +160,7 @@
                             </StackPanel>
                         </Grid>
 
-                        <!-- TCP 参数 -->
-                        <TextBlock Text="TCP / IP 参数" Style="{StaticResource FieldLabel}"
+                        <TextBlock Text="{DynamicResource Cabinet_TcpParams}" Style="{StaticResource FieldLabel}"
                                    FontWeight="Medium"/>
                         <Grid Margin="0,0,0,12">
                             <Grid.ColumnDefinitions>
@@ -168,17 +168,16 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Margin="0,0,8,0">
-                                <TextBlock Text="IP 地址" Style="{StaticResource FieldLabel}"/>
+                                <TextBlock Text="{DynamicResource Cabinet_Ip}" Style="{StaticResource FieldLabel}"/>
                                 <TextBox Text="{Binding IpAddress, UpdateSourceTrigger=PropertyChanged}"/>
                             </StackPanel>
                             <StackPanel Grid.Column="1" Margin="8,0,0,0">
-                                <TextBlock Text="TCP 端口" Style="{StaticResource FieldLabel}"/>
+                                <TextBlock Text="{DynamicResource Cabinet_TcpPort}" Style="{StaticResource FieldLabel}"/>
                                 <TextBox Text="{Binding TcpPort, UpdateSourceTrigger=PropertyChanged}"/>
                             </StackPanel>
                         </Grid>
 
-                        <!-- 串口参数 -->
-                        <TextBlock Text="串口参数" Style="{StaticResource FieldLabel}"
+                        <TextBlock Text="{DynamicResource Cabinet_SerialParams}" Style="{StaticResource FieldLabel}"
                                    FontWeight="Medium"/>
                         <Grid Margin="0,0,0,12">
                             <Grid.ColumnDefinitions>
@@ -189,30 +188,30 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Margin="0,0,4,0">
-                                <TextBlock Text="串口" Style="{StaticResource FieldLabel}"/>
+                                <TextBlock Text="{DynamicResource Cabinet_SerialPort}" Style="{StaticResource FieldLabel}"/>
                                 <TextBox Text="{Binding SerialPort, UpdateSourceTrigger=PropertyChanged}"/>
                             </StackPanel>
                             <StackPanel Grid.Column="1" Margin="4,0">
-                                <TextBlock Text="波特率" Style="{StaticResource FieldLabel}"/>
+                                <TextBlock Text="{DynamicResource Cabinet_BaudRate}" Style="{StaticResource FieldLabel}"/>
                                 <TextBox Text="{Binding BaudRate, UpdateSourceTrigger=PropertyChanged}"/>
                             </StackPanel>
                             <StackPanel Grid.Column="2" Margin="4,0">
-                                <TextBlock Text="数据位" Style="{StaticResource FieldLabel}"/>
+                                <TextBlock Text="{DynamicResource Cabinet_DataBits}" Style="{StaticResource FieldLabel}"/>
                                 <TextBox Text="{Binding DataBits, UpdateSourceTrigger=PropertyChanged}"/>
                             </StackPanel>
                             <StackPanel Grid.Column="3" Margin="4,0">
-                                <TextBlock Text="停止位" Style="{StaticResource FieldLabel}"/>
+                                <TextBlock Text="{DynamicResource Cabinet_StopBits}" Style="{StaticResource FieldLabel}"/>
                                 <TextBox Text="{Binding StopBits, UpdateSourceTrigger=PropertyChanged}"/>
                             </StackPanel>
                             <StackPanel Grid.Column="4" Margin="4,0,0,0">
-                                <TextBlock Text="校验" Style="{StaticResource FieldLabel}"/>
+                                <TextBlock Text="{DynamicResource Cabinet_Parity}" Style="{StaticResource FieldLabel}"/>
                                 <TextBox Text="{Binding Parity, UpdateSourceTrigger=PropertyChanged}"/>
                             </StackPanel>
                         </Grid>
 
                         <Border Height="1" Background="{StaticResource BorderDimBrush}" Margin="0,4,0,12"/>
 
-                        <TextBlock Text="通道配置" FontWeight="Medium" FontSize="14"
+                        <TextBlock Text="{DynamicResource Cabinet_ChannelConfig}" FontWeight="Medium" FontSize="14"
                                    Foreground="{StaticResource AccentCyanBrush}" Margin="0,0,0,8"/>
                         <Grid Margin="0,0,0,12">
                             <Grid.ColumnDefinitions>
@@ -222,26 +221,26 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Margin="0,0,8,0">
-                                <TextBlock Text="起始通道号" Style="{StaticResource FieldLabel}"/>
+                                <TextBlock Text="{DynamicResource Cabinet_ChannelStart}" Style="{StaticResource FieldLabel}"/>
                                 <TextBox Text="{Binding ChannelStartIndex, UpdateSourceTrigger=PropertyChanged}"/>
                             </StackPanel>
                             <StackPanel Grid.Column="1" Margin="8,0">
-                                <TextBlock Text="通道数" Style="{StaticResource FieldLabel}"/>
+                                <TextBlock Text="{DynamicResource Cabinet_ChannelCount}" Style="{StaticResource FieldLabel}"/>
                                 <TextBox Text="{Binding ChannelCount, UpdateSourceTrigger=PropertyChanged}"/>
                             </StackPanel>
                             <StackPanel Grid.Column="2" Margin="8,0">
-                                <TextBlock Text="采样间隔 (ms)" Style="{StaticResource FieldLabel}"/>
+                                <TextBlock Text="{DynamicResource Cabinet_SampleInterval}" Style="{StaticResource FieldLabel}"/>
                                 <TextBox Text="{Binding SamplingIntervalMs, UpdateSourceTrigger=PropertyChanged}"/>
                             </StackPanel>
                             <StackPanel Grid.Column="3" Margin="8,0,0,0">
-                                <TextBlock Text="启用" Style="{StaticResource FieldLabel}"/>
-                                <CheckBox IsChecked="{Binding IsEnabled}" Content="启用此机柜"
+                                <TextBlock Text="{DynamicResource Cabinet_Enabled}" Style="{StaticResource FieldLabel}"/>
+                                <CheckBox IsChecked="{Binding IsEnabled}" Content="{DynamicResource Cabinet_EnableThis}"
                                           Foreground="{StaticResource TextPrimaryBrush}"/>
                             </StackPanel>
                         </Grid>
 
                         <StackPanel Margin="0,0,0,12">
-                            <TextBlock Text="备注" Style="{StaticResource FieldLabel}"/>
+                            <TextBlock Text="{DynamicResource Cabinet_Remark}" Style="{StaticResource FieldLabel}"/>
                             <TextBox Text="{Binding Remark, UpdateSourceTrigger=PropertyChanged}"
                                      TextWrapping="Wrap" AcceptsReturn="True" MinHeight="60"/>
                         </StackPanel>
@@ -255,7 +254,7 @@
                                              VerticalAlignment="Top" Margin="0,2,8,0"/>
                                 <TextBlock TextWrapping="Wrap"
                                            Foreground="{StaticResource TextSecondaryBrush}" FontSize="12">
-                                    机柜配置修改后需要<Run Foreground="{StaticResource AccentAmberBrush}" FontWeight="Bold">重启程序</Run>才能生效。新威/蓝电/致茂等真实驱动正在开发中，目前真实设备会回退到模拟器以避免阻塞。
+                                    <Run Text="{DynamicResource Cabinet_InfoPre}"/><Run Foreground="{StaticResource AccentAmberBrush}" FontWeight="Bold" Text="{DynamicResource Cabinet_InfoBold}"/><Run Text="{DynamicResource Cabinet_InfoPost}"/>
                                 </TextBlock>
                             </StackPanel>
                         </Border>
@@ -269,7 +268,7 @@
                                 Padding="8,6">
                             <StackPanel Orientation="Horizontal">
                                 <ctrl:VsIcon Kind="{StaticResource Icon.ContentSave}" Width="14" Height="14" VerticalAlignment="Center" Foreground="{StaticResource VsTextPrimaryBrush}"/>
-                                <TextBlock Text="保存机柜配置" Margin="6,0,0,0" FontWeight="Bold"/>
+                                <TextBlock Text="{DynamicResource Cabinet_Save}" Margin="6,0,0,0" FontWeight="Bold"/>
                             </StackPanel>
                         </Button>
                     </StackPanel>
