@@ -116,15 +116,13 @@ namespace BatteryAging
 
             services.AddSingleton<IDataService, DataService>();
             services.AddSingleton<IDialogService, DialogService>();
-            services.AddSingleton<IBatteryAnalyticsService, BatteryAnalyticsService>();
-            services.AddSingleton<ChannelManager>();
-
-            // ── 新增：鉴权 + 语言 ──
+            services.AddSingleton<IBatteryAnalyticsService, BatteryAnalyticsService>();                      
             services.AddSingleton<IAuthService, AuthService>();
             services.AddSingleton<ILanguageService, LanguageService>();
+            services.AddSingleton<ChannelManager>();
+
             services.AddSingleton<LoginWindowViewModel>();
             services.AddSingleton<UserManagementViewModel>();
-
             services.AddSingleton<MainWindowViewModel>();
             services.AddSingleton<TestExecutionViewModel>();
             services.AddSingleton<RecipeEditorViewModel>();
@@ -140,7 +138,7 @@ namespace BatteryAging
             services.AddTransient<BatchAnalysisPage>();
             services.AddTransient<CabinetManagerPage>();
             services.AddTransient<ComparisonPage>();
-            services.AddTransient<UserManagementPage>();   // 新增
+            services.AddTransient<UserManagementPage>();
         }
 
         public static void UIDispatch(Action action)

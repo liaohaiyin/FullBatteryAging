@@ -5,8 +5,7 @@
         xmlns:ap="clr-namespace:BatteryAging.UI.AttachedProperties"
         Title="{DynamicResource Login_WindowTitle}" Height="500" Width="820"
         Style="{StaticResource VsWindowStyle}"
-        WindowStartupLocation="CenterScreen"
-        ResizeMode="NoResize">
+        WindowStartupLocation="CenterScreen">
 
     <!-- 颜色全部取自 UI/Themes/Colors.xaml（通过 Theme.xaml 合并的 Vs* 笔刷），与其它界面统一 -->
     <Window.Resources>
