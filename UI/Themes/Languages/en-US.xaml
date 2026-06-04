@@ -31,7 +31,7 @@
     <sys:String x:Key="Common_Resume">Resume</sys:String>
     <sys:String x:Key="Common_StartAll">Start all</sys:String>
     <sys:String x:Key="Common_StopAll">Stop all</sys:String>
-    <sys:String x:Key="Common_SyncStart">Synchronized start</sys:String>
+    <sys:String x:Key="Common_SyncStart">Sync start</sys:String>
     <sys:String x:Key="Common_SkipStep">Skip step</sys:String>
     <sys:String x:Key="Common_ClearFault">Clear protection/fault</sys:String>
     <sys:String x:Key="Common_EmergencyStop">Emergency stop</sys:String>
@@ -334,4 +334,7 @@
     <sys:String x:Key="Compare_Col_BarCode">Barcode</sys:String>
     <sys:String x:Key="Compare_Col_DischargeAh">Discharge(Ah)</sys:String>
     <sys:String x:Key="Input_Title">Input</sys:String>
+
+    <sys:String x:Key="Logout_ConfirmationMessage">Are you sure you want to log out?</sys:String>
+    <sys:String x:Key="Logout_ConfirmationTitle">Logout Confirmation</sys:String>
 </ResourceDictionary>

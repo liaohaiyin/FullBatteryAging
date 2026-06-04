@@ -27,108 +27,116 @@
             <!-- 侧边导航 -->
             <Border Grid.Column="0" Background="{StaticResource VsBgMidBrush}"
                     BorderBrush="{StaticResource VsBorderBrush}" BorderThickness="0,0,1,0">
-                <StackPanel Margin="0,8,0,0">
-                    <Button x:Name="BtnNavExec"
-                            Style="{StaticResource VsFlatButton}"
-                            HorizontalContentAlignment="Left"
-                            Padding="16,8"
-                            Command="{Binding NavExecutionCommand}"
-                            Visibility="{Binding CanExecution, Converter={StaticResource BoolVisCv}}">
-                        <StackPanel Orientation="Horizontal">
-                            <ctrl:VsIcon Kind="{StaticResource Icon.PlayCircleOutline}"
-                                         Width="18" Height="18"
-                                         VerticalAlignment="Center"/>
-                            <TextBlock Text="{DynamicResource Main_Nav_Execution}" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
-                        </StackPanel>
-                    </Button>
-                    <Button Style="{StaticResource VsFlatButton}"
-                            HorizontalContentAlignment="Left"
-                            Padding="16,8"
-                            Command="{Binding NavRecipeCommand}"
-                            Visibility="{Binding CanRecipe, Converter={StaticResource BoolVisCv}}">
-                        <StackPanel Orientation="Horizontal">
-                            <ctrl:VsIcon Kind="{StaticResource Icon.FormatListNumbered}"
-                                         Width="18" Height="18"
-                                         VerticalAlignment="Center"/>
-                            <TextBlock Text="{DynamicResource Main_Nav_Recipe}" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
-                        </StackPanel>
-                    </Button>
-                    <Button Style="{StaticResource VsFlatButton}"
-                            HorizontalContentAlignment="Left"
-                            Padding="16,8"
-                            Command="{Binding NavDataCommand}"
-                            Visibility="{Binding CanData,Converter={StaticResource BoolVisCv}}">
-                        <StackPanel Orientation="Horizontal">
-                            <ctrl:VsIcon Kind="{StaticResource Icon.DatabaseSearch}"
-                                         Width="18" Height="18"
-                                         VerticalAlignment="Center"/>
-                            <TextBlock Text="{DynamicResource Main_Nav_Data}" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
-                        </StackPanel>
-                    </Button>
-                    <Button Style="{StaticResource VsFlatButton}"
-                            HorizontalContentAlignment="Left"
-                            Padding="16,8"
-                            Command="{Binding NavBatchCommand}"
-                            Visibility="{Binding CanStats,Converter={StaticResource BoolVisCv}}">
-                        <StackPanel Orientation="Horizontal">
-                            <ctrl:VsIcon Kind="{StaticResource Icon.BatchAnalysis}"
-                                         Width="18" Height="18"
-                                         VerticalAlignment="Center"/>
-                            <TextBlock Text="{DynamicResource Main_Nav_Batch}" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
-                        </StackPanel>
-                    </Button>
-                    <Button Style="{StaticResource VsFlatButton}" HorizontalContentAlignment="Left"
-                            Padding="16,8" Command="{Binding NavCompareCommand}"
-                            Visibility="{Binding CanStats, Converter={StaticResource BoolVisCv}}">
-                        <StackPanel Orientation="Horizontal">
-                            <ctrl:VsIcon Kind="{StaticResource Icon.ChartLine}" Width="18" Height="18" VerticalAlignment="Center"/>
-                            <TextBlock Text="{DynamicResource Main_Nav_Compare}" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
-                        </StackPanel>
-                    </Button>
-                    <Button Style="{StaticResource VsFlatButton}"
-                            HorizontalContentAlignment="Left"
-                            Padding="16,8"
-                            Command="{Binding NavCabinetCommand}"
-                            Visibility="{Binding CanCabinet,Converter={StaticResource BoolVisCv}}">
-                        <StackPanel Orientation="Horizontal">
-                            <ctrl:VsIcon Kind="{StaticResource Icon.CabinetManager}"
-                                         Width="18" Height="18"
-                                         VerticalAlignment="Center"/>
-                            <TextBlock Text="{DynamicResource Main_Nav_Cabinet}" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
-                        </StackPanel>
-                    </Button>
-                    <Button Style="{StaticResource VsFlatButton}" HorizontalContentAlignment="Left"
-                            Padding="16,8" Command="{Binding NavUserMgmtCommand}"
-                            Visibility="{Binding CanUserMgmt, Converter={StaticResource BoolVisCv}}">
-                        <StackPanel Orientation="Horizontal">
-                            <ctrl:VsIcon Kind="{StaticResource Icon.ServerNetwork}" Width="18" Height="18" VerticalAlignment="Center"/>
-                            <TextBlock Text="{DynamicResource Main_Nav_UserMgmt}" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
-                        </StackPanel>
-                    </Button>
-                    <Button Style="{StaticResource VsFlatButton}" HorizontalContentAlignment="Left"
-                            Padding="16,8" Command="{Binding NavLogoutCommand}">
-                        <StackPanel Orientation="Horizontal">
-                            <ctrl:VsIcon Kind="{StaticResource Icon.Logout}" Width="18" Height="18" VerticalAlignment="Center"/>
-                            <TextBlock Text="{DynamicResource Main_Nav_Logout}" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
-                        </StackPanel>
-                    </Button>
-
-                    <Border Height="1" Background="{StaticResource VsBorderBrush}" Margin="12,16"/>
-
-                    <Button Style="{StaticResource VsFlatButton}"
-                            HorizontalContentAlignment="Left"
-                            Padding="16,8"
-                            Foreground="{StaticResource VsTextSecondaryBrush}"
-                            Command="{Binding NavAboutCommand}">
-                        <StackPanel Orientation="Horizontal">
-                            <ctrl:VsIcon Kind="{StaticResource Icon.InformationOutline}"
-                                         Width="18" Height="18"
-                                         Foreground="{StaticResource VsTextMutedBrush}"
-                                         VerticalAlignment="Center"/>
-                            <TextBlock Text="{DynamicResource Main_Nav_About}" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
-                        </StackPanel>
-                    </Button>
-                </StackPanel>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>                       
+                
+                    <StackPanel Margin="0,8,0,0">
+                        <Button x:Name="BtnNavExec"
+                                Style="{StaticResource VsFlatButton}"
+                                HorizontalContentAlignment="Left"
+                                Padding="16,8"
+                                Command="{Binding NavExecutionCommand}"
+                                Visibility="{Binding CanExecution, Converter={StaticResource BoolVisCv}}">
+                            <StackPanel Orientation="Horizontal">
+                                <ctrl:VsIcon Kind="{StaticResource Icon.PlayCircleOutline}"
+                                             Width="18" Height="18"
+                                             VerticalAlignment="Center"/>
+                                <TextBlock Text="{DynamicResource Main_Nav_Execution}" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Style="{StaticResource VsFlatButton}"
+                                HorizontalContentAlignment="Left"
+                                Padding="16,8"
+                                Command="{Binding NavRecipeCommand}"
+                                Visibility="{Binding CanRecipe, Converter={StaticResource BoolVisCv}}">
+                            <StackPanel Orientation="Horizontal">
+                                <ctrl:VsIcon Kind="{StaticResource Icon.FormatListNumbered}"
+                                             Width="18" Height="18"
+                                             VerticalAlignment="Center"/>
+                                <TextBlock Text="{DynamicResource Main_Nav_Recipe}" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Style="{StaticResource VsFlatButton}"
+                                HorizontalContentAlignment="Left"
+                                Padding="16,8"
+                                Command="{Binding NavDataCommand}"
+                                Visibility="{Binding CanData,Converter={StaticResource BoolVisCv}}">
+                            <StackPanel Orientation="Horizontal">
+                                <ctrl:VsIcon Kind="{StaticResource Icon.DatabaseSearch}"
+                                             Width="18" Height="18"
+                                             VerticalAlignment="Center"/>
+                                <TextBlock Text="{DynamicResource Main_Nav_Data}" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Style="{StaticResource VsFlatButton}"
+                                HorizontalContentAlignment="Left"
+                                Padding="16,8"
+                                Command="{Binding NavBatchCommand}"
+                                Visibility="{Binding CanStats,Converter={StaticResource BoolVisCv}}">
+                            <StackPanel Orientation="Horizontal">
+                                <ctrl:VsIcon Kind="{StaticResource Icon.BatchAnalysis}"
+                                             Width="18" Height="18"
+                                             VerticalAlignment="Center"/>
+                                <TextBlock Text="{DynamicResource Main_Nav_Batch}" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Style="{StaticResource VsFlatButton}" HorizontalContentAlignment="Left"
+                                Padding="16,8" Command="{Binding NavCompareCommand}"
+                                Visibility="{Binding CanStats, Converter={StaticResource BoolVisCv}}">
+                            <StackPanel Orientation="Horizontal">
+                                <ctrl:VsIcon Kind="{StaticResource Icon.ChartLine}" Width="18" Height="18" VerticalAlignment="Center"/>
+                                <TextBlock Text="{DynamicResource Main_Nav_Compare}" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Style="{StaticResource VsFlatButton}"
+                                HorizontalContentAlignment="Left"
+                                Padding="16,8"
+                                Command="{Binding NavCabinetCommand}"
+                                Visibility="{Binding CanCabinet,Converter={StaticResource BoolVisCv}}">
+                            <StackPanel Orientation="Horizontal">
+                                <ctrl:VsIcon Kind="{StaticResource Icon.CabinetManager}"
+                                             Width="18" Height="18"
+                                             VerticalAlignment="Center"/>
+                                <TextBlock Text="{DynamicResource Main_Nav_Cabinet}" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Style="{StaticResource VsFlatButton}" HorizontalContentAlignment="Left"
+                                Padding="16,8" Command="{Binding NavUserMgmtCommand}"
+                                Visibility="{Binding CanUserMgmt, Converter={StaticResource BoolVisCv}}">
+                            <StackPanel Orientation="Horizontal">
+                                <ctrl:VsIcon Kind="{StaticResource Icon.ServerNetwork}" Width="18" Height="18" VerticalAlignment="Center"/>
+                                <TextBlock Text="{DynamicResource Main_Nav_UserMgmt}" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Style="{StaticResource VsFlatButton}" HorizontalContentAlignment="Left"
+                                Padding="16,8" Command="{Binding NavLogoutCommand}">
+                            <StackPanel Orientation="Horizontal">
+                                <ctrl:VsIcon Kind="{StaticResource Icon.Logout}" Width="18" Height="18" VerticalAlignment="Center"/>
+                                <TextBlock Text="{DynamicResource Main_Nav_Logout}" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
+                            </StackPanel>
+                        </Button>
+                        <Border Height="1" Background="{StaticResource VsBorderBrush}" Margin="12,16"/>
+                        <Button Style="{StaticResource VsFlatButton}"
+                                HorizontalContentAlignment="Left"
+                                Padding="16,8"
+                                Foreground="{StaticResource VsTextSecondaryBrush}"
+                                Command="{Binding NavAboutCommand}">
+                            <StackPanel Orientation="Horizontal">
+                                <ctrl:VsIcon Kind="{StaticResource Icon.InformationOutline}"
+                                             Width="18" Height="18"
+                                             Foreground="{StaticResource VsTextMutedBrush}"
+                                             VerticalAlignment="Center"/>
+                                <TextBlock Text="{DynamicResource Main_Nav_About}" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
+                            </StackPanel>
+                        </Button>                        
+                    </StackPanel>
+                    <Viewbox Grid.Row="1" Stretch="Uniform" VerticalAlignment="Bottom" Margin="0,8,0,8">
+                        <Image Source="pack://application:,,,/BatteryAging;component/Resouces/wx.png" Width="48" Height="48" Stretch="Uniform"/>
+                    </Viewbox>
+                </Grid>
             </Border>
 
             <!-- 内容区 -->

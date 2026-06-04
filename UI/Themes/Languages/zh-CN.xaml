@@ -333,4 +333,7 @@
     <sys:String x:Key="Compare_Col_BarCode">条码</sys:String>
     <sys:String x:Key="Compare_Col_DischargeAh">放电(Ah)</sys:String>
     <sys:String x:Key="Input_Title">输入</sys:String>
+
+    <sys:String x:Key="Logout_ConfirmationMessage">确定要退出登录吗？</sys:String>
+    <sys:String x:Key="Logout_ConfirmationTitle">退出确认</sys:String>
 </ResourceDictionary>

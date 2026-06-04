@@ -180,7 +180,7 @@
                     <DataTemplate>
                         <Border Margin="4" CornerRadius="4"
                                 Background="{StaticResource VsBgPanelBrush}"
-                                Height="170"
+                                Height="180"
                                 Cursor="Hand">
                             <Border.Style>
                                 <Style TargetType="Border">
@@ -243,7 +243,7 @@
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="28"/>
+                                        <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>

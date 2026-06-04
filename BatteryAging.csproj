@@ -13,11 +13,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resouces\wx.png" />
     <None Remove="UI\Windows\logo.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Resouces\logo.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resouces\wx.png" />
   </ItemGroup>
 
   <ItemGroup>
