@@ -40,6 +40,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.8" />
     <PackageReference Include="OxyPlot.SkiaSharp.Wpf" Version="2.2.0" />
     <PackageReference Include="System.IO.Ports" Version="9.0.8" />
+	<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
   </ItemGroup>
 
   <ItemGroup>

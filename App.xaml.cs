@@ -46,15 +46,18 @@ namespace BatteryAging
             {
                 var db = scope.ServiceProvider.GetRequiredService<BatteryDbContext>();
                 db.Database.Migrate();
-                try { db.Database.ExecuteSqlRaw("PRAGMA journal_mode=WAL;"); } catch { }
-                try { db.Database.ExecuteSqlRaw("PRAGMA synchronous=NORMAL;"); } catch { }
+                if (config.GetDbProvider() == DbProvider.Sqlite)
+                {
+                    try { db.Database.ExecuteSqlRaw("PRAGMA journal_mode=WAL;"); } catch { }
+                    try { db.Database.ExecuteSqlRaw("PRAGMA synchronous=NORMAL;"); } catch { }
+                }
             }
 
             // ── 语言服务（构造即加载资源字典；必须在显示任何窗口之前）──
             _ = Services.GetRequiredService<ILanguageService>();
 
             // ── 鉴权初始化（建内置角色 + 默认 admin）──
-            Services.GetRequiredService<IAuthService>().InitializeAsync().GetAwaiter().GetResult();
+            Task.Run(() => Services.GetRequiredService<IAuthService>().InitializeAsync()).GetAwaiter().GetResult();
 
             // ── 登录闸门 ──
             var loginVm = Services.GetRequiredService<LoginWindowViewModel>();
@@ -66,7 +69,7 @@ namespace BatteryAging
             }
 
             // ── 初始化机柜与通道 ──
-            InitializeChannelsAsync(config).GetAwaiter().GetResult();
+            Task.Run(() => InitializeChannelsAsync(config)).GetAwaiter().GetResult();
 
             var main = Services.GetRequiredService<MainWindow>();
             main.WindowState = WindowState.Maximized;
@@ -103,16 +106,11 @@ namespace BatteryAging
         {
             services.AddSingleton<IConfiguration>(config);
 
-            services.AddDbContextFactory<BatteryDbContext>(opts =>
-            {
-                var conn = config.GetConnectionString("BatteryDatabase");
-                opts.UseSqlite(conn);
-            });
-            services.AddDbContext<BatteryDbContext>(opts =>
-            {
-                var conn = config.GetConnectionString("BatteryDatabase");
-                opts.UseSqlite(conn);
-            }, ServiceLifetime.Scoped);
+            services.AddDbContextFactory<BatteryDbContext>(opts => opts.UseConfiguredDatabase(config));
+            services.AddDbContext<BatteryDbContext>(opts => opts.UseConfiguredDatabase(config), ServiceLifetime.Scoped);
+
+            services.AddLogging(b => { b.AddDebug(); b.SetMinimumLevel(LogLevel.Information); });
+
 
             services.AddLogging(b => { b.AddDebug(); b.SetMinimumLevel(LogLevel.Information); });
 
