@@ -6,10 +6,7 @@
         Title="{DynamicResource Login_WindowTitle}" Height="500" Width="820"
         Style="{StaticResource VsWindowStyle}"
         WindowStartupLocation="CenterScreen"
-        ResizeMode="NoResize"
-        WindowStyle="None"
-        AllowsTransparency="True"
-        Background="Transparent">
+        ResizeMode="NoResize">
 
     <!-- 颜色全部取自 UI/Themes/Colors.xaml（通过 Theme.xaml 合并的 Vs* 笔刷），与其它界面统一 -->
     <Window.Resources>
