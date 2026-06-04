@@ -133,9 +133,12 @@
                             </StackPanel>
                         </Button>                        
                     </StackPanel>
-                    <Viewbox Grid.Row="1" Stretch="Uniform" VerticalAlignment="Bottom" Margin="0,8,0,8">
-                        <Image Source="pack://application:,,,/BatteryAging;component/Resouces/wx.png" Width="48" Height="48" Stretch="Uniform"/>
-                    </Viewbox>
+                    <StackPanel Grid.Row="1" VerticalAlignment="Bottom">
+                        <TextBlock HorizontalAlignment="Center" FontSize="14" Foreground="{StaticResource VsTextPrimaryBrush}" Text="开发者微信"/>
+                        <Viewbox Grid.Row="1" Stretch="Uniform" Margin="10,5,10,20">
+                            <Image Source="pack://application:,,,/BatteryAging;component/Resouces/wx.png" Width="48" Height="48" Stretch="Uniform"/>
+                        </Viewbox>
+                    </StackPanel>
                 </Grid>
             </Border>
 
