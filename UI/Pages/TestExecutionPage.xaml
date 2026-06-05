@@ -37,13 +37,13 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="ToggleButton">
                         <Border x:Name="Bd" Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1"
-                        CornerRadius="3">
+                                BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1"
+                                CornerRadius="3">
                             <Path x:Name="Arrow" Width="8" Height="12"
-                          Data="M 6 0 L 0 6 L 6 12 Z"
-                          Fill="{StaticResource VsTextSecondaryBrush}"
-                          HorizontalAlignment="Center" VerticalAlignment="Center"
-                          RenderTransformOrigin="0.5,0.5"/>
+                                  Data="M 6 0 L 0 6 L 6 12 Z"
+                                  Fill="{StaticResource VsTextSecondaryBrush}"
+                                  HorizontalAlignment="Center" VerticalAlignment="Center"
+                                  RenderTransformOrigin="0.5,0.5"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <!-- IsChecked = 展开状态 → 箭头朝右表示"点此折叠" -->
@@ -415,12 +415,12 @@
 
         <!-- 折叠/展开手柄 -->
         <ToggleButton Grid.Column="1" x:Name="CollapseToggle"
-                  Width="12" Height="64" Margin="3,0"
-                  VerticalAlignment="Center" IsChecked="True"
-                  ToolTip="展开/折叠右侧面板"
-                  Style="{StaticResource PanelCollapseToggle}"
-                  Checked="CollapseToggle_Checked"
-                  Unchecked="CollapseToggle_Unchecked"/>
+                      Width="12" Height="64" Margin="1,0"
+                      VerticalAlignment="Center" IsChecked="True"
+                      ToolTip="展开/折叠右侧面板"
+                      Style="{StaticResource PanelCollapseToggle}"
+                      Checked="CollapseToggle_Checked"
+                      Unchecked="CollapseToggle_Unchecked"/>
 
         <!-- ═══ 右侧 ═══ -->
         <Grid Grid.Column="2" x:Name="RightPanel" Margin="2,0,0,0">

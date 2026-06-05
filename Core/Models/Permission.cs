@@ -108,6 +108,7 @@ namespace BatteryAging.Core.Models
         public string RoleName { get; init; } = string.Empty;
         public Permission Permissions { get; init; }
         public DateTime LoginTime { get; init; }
+        public bool IsDeveloper { get; init; }
 
         public bool HasPermission(Permission permission) =>
             IsAuthenticated && (Permissions & permission) == permission;

@@ -67,9 +67,6 @@ namespace BatteryAging
                     return;
                 }
             }
-            // 客户提供的机器码 + 你设定的到期日
-            var svc = new LicenseService();
-            Console.WriteLine(svc.GenerateLicense("1FD1-1A22-1FDC-986D-5610", new DateTime(2027, 12, 31)));
 
             // ── 鉴权初始化（建内置角色 + 默认 admin）──
             Task.Run(() => Services.GetRequiredService<IAuthService>().InitializeAsync()).GetAwaiter().GetResult();

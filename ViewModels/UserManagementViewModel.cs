@@ -14,6 +14,7 @@ namespace BatteryAging.ViewModels
         private readonly IAuthService _authService;
         private readonly IDialogService _dialogService;
         private readonly ILanguageService _languageService;
+        private readonly ILicenseService _license;
 
         public ObservableCollection<User> Users { get; } = new();
         public ObservableCollection<Role> Roles { get; } = new();
@@ -97,6 +98,27 @@ namespace BatteryAging.ViewModels
         public string EditRoleDescription { get => _editRoleDescription; set => SetProperty(ref _editRoleDescription, value); }
         public string RoleFormError { get => _roleFormError; set => SetProperty(ref _roleFormError, value); }
 
+        /// <summary>
+        /// 授权码生成相关（仅开发者可见）
+        /// </summary>
+        private bool _isDeveloper;
+        public bool IsDeveloper { get => _isDeveloper; set => SetProperty(ref _isDeveloper, value); }
+
+        private string _localMachineCode = string.Empty;
+        public string LocalMachineCode { get => _localMachineCode; set => SetProperty(ref _localMachineCode, value); }
+
+        private string _genMachineCode = string.Empty;
+        public string GenMachineCode { get => _genMachineCode; set => SetProperty(ref _genMachineCode, value); }
+
+        private DateTime _genExpiry = DateTime.Today.AddYears(1);
+        public DateTime GenExpiry { get => _genExpiry; set => SetProperty(ref _genExpiry, value); }
+
+        private string _generatedLicense = string.Empty;
+        public string GeneratedLicense { get => _generatedLicense; set => SetProperty(ref _generatedLicense, value); }
+
+        private string _genStatus = string.Empty;
+        public string GenStatus { get => _genStatus; set => SetProperty(ref _genStatus, value); }
+
         // ── 多语言派生属性 ───────────────────────────────────────────────
         public string EditorHeader => IsNewUser
             ? _languageService.GetString("UserManagement_NewUserHeader")
@@ -119,15 +141,20 @@ namespace BatteryAging.ViewModels
         public IAsyncRelayCommand SaveRoleCommand { get; }
         public IRelayCommand CancelRoleCommand { get; }
         public IAsyncRelayCommand DeleteRoleCommand { get; }
+        public IRelayCommand GenerateLicenseCommand { get; }
+        public IRelayCommand CopyLicenseCommand { get; }
+        public IRelayCommand UseLocalMachineCodeCommand { get; }
 
         public UserManagementViewModel(
             IAuthService authService,
             IDialogService dialogService,
-            ILanguageService languageService)
+            ILanguageService languageService,
+            ILicenseService license)
         {
             _authService = authService;
             _dialogService = dialogService;
             _languageService = languageService;
+            _license = license;
 
             LoadCommand = new AsyncRelayCommand(LoadAsync);
             NewUserCommand = new RelayCommand(NewUser);
@@ -143,6 +170,13 @@ namespace BatteryAging.ViewModels
             DeleteRoleCommand = new AsyncRelayCommand(DeleteRoleAsync, () => SelectedRole?.IsSystem == false);
 
             _languageService.LanguageChanged += OnLanguageChanged;
+            GenerateLicenseCommand = new RelayCommand(GenerateLicense);
+            CopyLicenseCommand = new RelayCommand(CopyLicense, () => !string.IsNullOrEmpty(GeneratedLicense));
+            UseLocalMachineCodeCommand = new RelayCommand(() => GenMachineCode = LocalMachineCode);
+
+            LocalMachineCode = _license.GetMachineCode();
+            IsDeveloper = _authService.CurrentSession.IsDeveloper;
+            _authService.SessionChanged += OnSessionChanged;
 
             InitPermissionItems();
             _ = LoadAsync();
@@ -410,10 +444,53 @@ namespace BatteryAging.ViewModels
             else await LoadAsync();
         }
 
+        /// <summary>
+        /// 生成授权码
+        /// </summary>
+        private void OnSessionChanged(object sender, UserSession session)
+        {
+            App.UIDispatch(() => IsDeveloper = session?.IsDeveloper ?? false);
+        }
+
+        private void GenerateLicense()
+        {
+            GenStatus = string.Empty;
+            GeneratedLicense = string.Empty;
+
+            // 双重保险：即使界面被绕过，也只允许开发者生成
+            if (!_authService.CurrentSession.IsDeveloper)
+            {
+                GenStatus = "无权限：仅开发者可生成授权码";
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(GenMachineCode))
+            {
+                GenStatus = "请输入机器码";
+                return;
+            }
+            try
+            {
+                GeneratedLicense = _license.GenerateLicense(GenMachineCode.Trim(), GenExpiry);
+                GenStatus = $"已生成授权码（有效期至 {GenExpiry:yyyy-MM-dd}）";
+                (CopyLicenseCommand as RelayCommand)?.NotifyCanExecuteChanged();
+            }
+            catch (Exception ex)
+            {
+                GenStatus = $"生成失败: {ex.Message}";
+            }
+        }
+
+        private void CopyLicense()
+        {
+            try { System.Windows.Clipboard.SetText(GeneratedLicense); GenStatus = "授权码已复制到剪贴板"; }
+            catch { }
+        }
         public void Dispose()
         {
             if (_languageService != null)
                 _languageService.LanguageChanged -= OnLanguageChanged;
+            if (_authService != null)
+                _authService.SessionChanged -= OnSessionChanged;
         }
     }
 

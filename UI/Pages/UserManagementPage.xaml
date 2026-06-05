@@ -243,5 +243,61 @@
                 </Border>
             </Grid>
         </TabItem>
+
+        <!-- ════════════ 授权管理（仅开发者可见）════════════ -->
+        <TabItem Header="授权管理" Visibility="{Binding IsDeveloper, Converter={StaticResource BoolVisCv}}">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="24" MaxWidth="640" HorizontalAlignment="Left">
+                    <TextBlock Text="授权码生成（开发者）" FontSize="18" FontWeight="Bold"
+                               Foreground="{StaticResource VsTextPrimaryBrush}" Margin="0,0,0,4"/>
+                    <TextBlock Text="输入客户机器码并设置有效期，生成授权码后发送给客户用于激活。"
+                               Foreground="{StaticResource VsTextMutedBrush}" Margin="0,0,0,18" TextWrapping="Wrap"/>
+
+                    <TextBlock Text="本机机器码" Foreground="{StaticResource VsTextMutedBrush}" Margin="0,0,0,6"/>
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" Text="{Binding LocalMachineCode, Mode=OneWay}"
+                                 IsReadOnly="True" FontFamily="Consolas" FontSize="14" Height="38"
+                                 VerticalContentAlignment="Center"/>
+                        <Button Grid.Column="1" Content="填入" Width="72" Margin="8,0,0,0"
+                                Style="{StaticResource VsOutlinedButton}"
+                                Command="{Binding UseLocalMachineCodeCommand}"/>
+                    </Grid>
+
+                    <TextBlock Text="客户机器码" Foreground="{StaticResource VsTextMutedBrush}" Margin="0,0,0,6"/>
+                    <TextBox Text="{Binding GenMachineCode, UpdateSourceTrigger=PropertyChanged}"
+                             FontFamily="Consolas" FontSize="14" Height="38"
+                             VerticalContentAlignment="Center" Margin="0,0,0,16"/>
+
+                    <TextBlock Text="有效期至" Foreground="{StaticResource VsTextMutedBrush}" Margin="0,0,0,6"/>
+                    <DatePicker SelectedDate="{Binding GenExpiry}" Width="200"
+                                HorizontalAlignment="Left" Margin="0,0,0,16"/>
+
+                    <Button Content="生成授权码" Width="120" HorizontalAlignment="Left"
+                            Style="{StaticResource VsAccentButton}"
+                            Command="{Binding GenerateLicenseCommand}" Margin="0,0,0,16"/>
+
+                    <TextBlock Text="授权码" Foreground="{StaticResource VsTextMutedBrush}" Margin="0,0,0,6"/>
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" Text="{Binding GeneratedLicense, Mode=OneWay}"
+                                 IsReadOnly="True" FontFamily="Consolas" FontSize="14" Height="38"
+                                 VerticalContentAlignment="Center"/>
+                                <Button Grid.Column="1" Content="复制" Width="72" Margin="8,0,0,0"
+                                        Style="{StaticResource VsOutlinedButton}"
+                                        Command="{Binding CopyLicenseCommand}"/>
+                    </Grid>
+
+                    <TextBlock Text="{Binding GenStatus}" Foreground="{StaticResource VsInfoBrush}"
+                       TextWrapping="Wrap"/>
+                </StackPanel>
+            </ScrollViewer>
+        </TabItem>
     </TabControl>
 </Page>
