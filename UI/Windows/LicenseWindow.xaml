@@ -1,0 +1,68 @@
+﻿<Window x:Class="BatteryAging.UI.Windows.LicenseWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Style="{StaticResource VsWindowStyle}"
+        Title="软件授权" Height="430" Width="560"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="软件授权激活" FontSize="20" FontWeight="Medium"
+                   Foreground="{StaticResource VsTextPrimaryBrush}" Margin="0,0,0,4"/>
+        <TextBlock Grid.Row="1" Text="请将下方机器码发送给供应商以获取授权码"
+                   Foreground="{StaticResource VsTextMutedBrush}" Margin="0,0,0,18"/>
+
+        <StackPanel Grid.Row="2" Margin="0,0,0,16">
+            <TextBlock Text="本机机器码" Foreground="{StaticResource VsTextMutedBrush}" Margin="0,0,0,6"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" Text="{Binding MachineCode, Mode=OneWay}"
+                         IsReadOnly="True" FontFamily="Consolas" FontSize="14" Height="38"
+                         VerticalContentAlignment="Center"/>
+                <Button Grid.Column="1" Content="复制" Width="72" Margin="8,0,0,0"
+                        Style="{StaticResource VsOutlinedButton}"
+                        Command="{Binding CopyMachineCodeCommand}"/>
+            </Grid>
+        </StackPanel>
+
+        <StackPanel Grid.Row="3" Margin="0,0,0,12">
+            <TextBlock Text="授权码" Foreground="{StaticResource VsTextMutedBrush}" Margin="0,0,0,6"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" Text="{Binding LicenseKey, UpdateSourceTrigger=PropertyChanged}"
+                         FontFamily="Consolas" FontSize="14" Height="38"
+                         VerticalContentAlignment="Center"/>
+                <Button Grid.Column="1" Content="激活" Width="72" Margin="8,0,0,0"
+                        Style="{StaticResource VsAccentButton}"
+                        Command="{Binding ActivateCommand}"/>
+            </Grid>
+        </StackPanel>
+
+        <TextBlock Grid.Row="4" Text="{Binding StatusText}" TextWrapping="Wrap"
+                   Foreground="{StaticResource VsInfoBrush}" Margin="0,0,0,4"/>
+
+        <TextBlock Grid.Row="6" Text="{Binding ExpiryText}"
+                   Foreground="{StaticResource VsSuccessBrush}" VerticalAlignment="Center"/>
+        <StackPanel Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button x:Name="EnterButton" Content="进入系统" Width="100" Margin="0,0,8,0"
+                    Style="{StaticResource VsAccentButton}"
+                    IsEnabled="{Binding IsActivated}" Click="EnterButton_Click"/>
+            <Button Content="退出" Width="80" Style="{StaticResource VsOutlinedButton}"
+                    Click="ExitButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

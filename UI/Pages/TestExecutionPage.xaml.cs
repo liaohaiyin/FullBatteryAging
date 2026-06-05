@@ -1,11 +1,12 @@
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Windows.Controls;
+using BatteryAging.ViewModels;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Legends;
 using OxyPlot.Series;
-using BatteryAging.ViewModels;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Windows;
+using System.Windows.Controls;
 using SamplePoint = BatteryAging.Core.Models.DataPoint;
 
 namespace BatteryAging.UI.Pages
@@ -20,6 +21,7 @@ namespace BatteryAging.UI.Pages
         private readonly LinearAxis _currentAxis;
         private readonly LinearAxis _timeAxis;
         private ChannelViewModel _currentChannel;
+        private GridLength _savedRightWidth = new GridLength(1.2, GridUnitType.Star);
 
         public TestExecutionPage(TestExecutionViewModel vm)
         {
@@ -194,6 +196,24 @@ namespace BatteryAging.UI.Pages
                 }
             }
             _plotModel.InvalidatePlot(true);
+        }
+        private void CollapseToggle_Checked(object sender, RoutedEventArgs e)
+        {
+            // 展开
+            if (RightPanel == null || RightColumn == null) return;
+            RightColumn.MinWidth = 440;
+            RightColumn.Width = _savedRightWidth;
+            RightPanel.Visibility = Visibility.Visible;
+        }
+
+        private void CollapseToggle_Unchecked(object sender, RoutedEventArgs e)
+        {
+            // 折叠
+            if (RightPanel == null || RightColumn == null) return;
+            if (RightColumn.Width.Value > 0) _savedRightWidth = RightColumn.Width;
+            RightPanel.Visibility = Visibility.Collapsed;
+            RightColumn.MinWidth = 0;
+            RightColumn.Width = new GridLength(0);
         }
         private void OnPageUnloaded(object sender, System.Windows.RoutedEventArgs e)
         {

@@ -55,6 +55,21 @@ namespace BatteryAging
 
             // ── 语言服务（构造即加载资源字典；必须在显示任何窗口之前）──
             _ = Services.GetRequiredService<ILanguageService>();
+            var license = Services.GetRequiredService<ILicenseService>();            
+            var licStatus = license.CheckCurrentLicense();
+            if (!licStatus.IsValid)
+            {
+                var licVm = Services.GetRequiredService<LicenseWindowViewModel>();
+                var licWin = new LicenseWindow(licVm);
+                if (licWin.ShowDialog() != true)
+                {
+                    Shutdown();
+                    return;
+                }
+            }
+            // 客户提供的机器码 + 你设定的到期日
+            var svc = new LicenseService();
+            Console.WriteLine(svc.GenerateLicense("1FD1-1A22-1FDC-986D-5610", new DateTime(2027, 12, 31)));
 
             // ── 鉴权初始化（建内置角色 + 默认 admin）──
             Task.Run(() => Services.GetRequiredService<IAuthService>().InitializeAsync()).GetAwaiter().GetResult();
@@ -119,6 +134,7 @@ namespace BatteryAging
             services.AddSingleton<IBatteryAnalyticsService, BatteryAnalyticsService>();                      
             services.AddSingleton<IAuthService, AuthService>();
             services.AddSingleton<ILanguageService, LanguageService>();
+            services.AddSingleton<ILicenseService, LicenseService>();
             services.AddSingleton<ChannelManager>();
 
             services.AddSingleton<LoginWindowViewModel>();
@@ -130,6 +146,7 @@ namespace BatteryAging
             services.AddSingleton<BatchAnalysisViewModel>();
             services.AddSingleton<CabinetManagerViewModel>();
             services.AddSingleton<ComparisonViewModel>();
+            services.AddTransient<LicenseWindowViewModel>();
 
             services.AddTransient<MainWindow>();
             services.AddTransient<TestExecutionPage>();

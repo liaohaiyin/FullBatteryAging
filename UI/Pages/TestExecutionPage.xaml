@@ -28,12 +28,47 @@
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Margin" Value="2,0,0,0"/>
         </Style>
+        <Style x:Key="PanelCollapseToggle" TargetType="ToggleButton">
+            <Setter Property="Background" Value="{StaticResource VsBgPanelBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource VsBorderBrush}"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1"
+                        CornerRadius="3">
+                            <Path x:Name="Arrow" Width="8" Height="12"
+                          Data="M 6 0 L 0 6 L 6 12 Z"
+                          Fill="{StaticResource VsTextSecondaryBrush}"
+                          HorizontalAlignment="Center" VerticalAlignment="Center"
+                          RenderTransformOrigin="0.5,0.5"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <!-- IsChecked = 展开状态 → 箭头朝右表示"点此折叠" -->
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Arrow" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="-1"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource VsBgHoverBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Page.Resources>
 
     <Grid Margin="14">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2.4*"/>
-            <ColumnDefinition Width="1.2*" MinWidth="440"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition x:Name="RightColumn" Width="1.2*" MinWidth="440"/>
         </Grid.ColumnDefinitions>
 
         <Grid Grid.Column="0">
@@ -152,12 +187,12 @@
                      SelectedItem="{Binding SelectedChannel}"
                      BorderThickness="0"
                      Background="Transparent"
-                     HorizontalContentAlignment="Stretch"
+                     ScrollViewer.CanContentScroll="False"
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                      ScrollViewer.VerticalScrollBarVisibility="Auto">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <UniformGrid Columns="5"/>
+                        <WrapPanel Orientation="Horizontal"/>
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
                 <ListBox.ItemContainerStyle>
@@ -180,6 +215,7 @@
                     <DataTemplate>
                         <Border Margin="4" CornerRadius="4"
                                 Background="{StaticResource VsBgPanelBrush}"
+                                Width="210"
                                 Height="180"
                                 Cursor="Hand">
                             <Border.Style>
@@ -377,8 +413,17 @@
             </ListBox>
         </Grid>
 
+        <!-- 折叠/展开手柄 -->
+        <ToggleButton Grid.Column="1" x:Name="CollapseToggle"
+                  Width="12" Height="64" Margin="3,0"
+                  VerticalAlignment="Center" IsChecked="True"
+                  ToolTip="展开/折叠右侧面板"
+                  Style="{StaticResource PanelCollapseToggle}"
+                  Checked="CollapseToggle_Checked"
+                  Unchecked="CollapseToggle_Unchecked"/>
+
         <!-- ═══ 右侧 ═══ -->
-        <Grid Grid.Column="1" Margin="14,0,0,0">
+        <Grid Grid.Column="2" x:Name="RightPanel" Margin="2,0,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
