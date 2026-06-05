@@ -215,7 +215,7 @@ namespace BatteryAging.UI.Pages
             RightColumn.MinWidth = 0;
             RightColumn.Width = new GridLength(0);
         }
-        private void OnPageUnloaded(object sender, System.Windows.RoutedEventArgs e)
+        private void OnPageUnloaded(object sender, RoutedEventArgs e)
         {
             _vm.PropertyChanged -= OnVmPropertyChanged;
             if (_currentChannel != null)

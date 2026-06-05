@@ -8,16 +8,16 @@ namespace BatteryAging.Core.Enums
     public enum StepType
     {
         [Description("恒流充电")]
-        CC_Charge,           // 恒流充电
+        CC_Charge,
 
         [Description("恒压充电")]
-        CV_Charge,           // 恒压充电
+        CV_Charge,
 
         [Description("恒流恒压充电")]
-        CCCV_Charge,         // 恒流恒压充电
+        CCCV_Charge,
 
         [Description("恒流放电")]
-        CC_Discharge,        // 恒流放电
+        CC_Discharge,
 
         [Description("恒功率充电")]
         CP_Charge,
@@ -32,10 +32,10 @@ namespace BatteryAging.Core.Enums
         Pulse,
 
         [Description("静置")]
-        Rest,                // 静置
+        Rest,
 
         [Description("循环")]
-        Loop,                // 循环
+        Loop,
 
         [Description("DCIR内阻")]
         DCIR,
@@ -44,7 +44,7 @@ namespace BatteryAging.Core.Enums
         SubCall,
 
         [Description("结束")]
-        End                  // 结束
+        End
     }
 
     /// <summary>

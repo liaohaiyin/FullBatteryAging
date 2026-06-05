@@ -118,7 +118,6 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Border Grid.Row="0" Background="{StaticResource VsBgHeaderBrush}"
                             BorderBrush="{StaticResource VsBorderBrush}"
@@ -130,8 +129,10 @@
                             <TextBlock Text="{DynamicResource DataQuery_HistoryCurve}" FontWeight="SemiBold" Margin="6,0,0,0" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Border>
-                    <oxy:PlotView Grid.Row="1" x:Name="HistoryPlot" Background="Transparent" Margin="2,4,2,2"  />
-                    <oxy:PlotView Grid.Row="2" x:Name="CyclePlot" Background="Transparent" Margin="2,4,2,2"/>
+                    <UniformGrid Grid.Row="1" Columns="2">
+                        <oxy:PlotView Grid.Column="0" x:Name="HistoryPlot" Background="Transparent" Margin="2,4,2,2"/>
+                        <oxy:PlotView Grid.Column="1" x:Name="CyclePlot" Background="Transparent" Margin="2,4,2,2"/>
+                    </UniformGrid>
                 </Grid>
             </Border>
 

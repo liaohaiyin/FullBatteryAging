@@ -25,7 +25,7 @@ namespace BatteryAging.Communication
         private int _jumpGuard = 0;                       // 防止死循环的跳转计数
         private const int MaxJumps = 100000;
         private double _cycBaseChgCap, _cycBaseDisCap, _cycBaseChgEng, _cycBaseDisEng;
-        private int _completedCycles = 0;        
+        private int _completedCycles = 0;
 
         // 用于多通道同步触发的屏障（外部传入）
         public Barrier SyncBarrier { get; set; }
