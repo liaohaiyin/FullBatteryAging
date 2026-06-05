@@ -14,11 +14,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="Resouces\logo.ico" />
+	<Content Include="Resouces\logo.ico" />
 	<Resource Include="Resouces\wx.png" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.8">
       <PrivateAssets>all</PrivateAssets>
@@ -34,12 +31,8 @@
     <PackageReference Include="OxyPlot.SkiaSharp.Wpf" Version="2.2.0" />
     <PackageReference Include="System.IO.Ports" Version="9.0.8" />
 	<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
+	<None Update="appsettings.json">
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
   </ItemGroup>
-
-  <ItemGroup>
-    <None Update="appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

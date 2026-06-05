@@ -329,7 +329,7 @@
     <sys:String x:Key="Compare_Candidates">候选记录（点 + 加入对比）</sys:String>
     <sys:String x:Key="Compare_Selected">已选对比项</sys:String>
     <sys:String x:Key="Compare_OverlayCurve">叠加对比曲线</sys:String>
-    <sys:String x:Key="Compare_Col_CH">CH</sys:String>
+    <sys:String x:Key="Compare_Col_CH">通道</sys:String>
     <sys:String x:Key="Compare_Col_BarCode">条码</sys:String>
     <sys:String x:Key="Compare_Col_DischargeAh">放电(Ah)</sys:String>
     <sys:String x:Key="Input_Title">输入</sys:String>

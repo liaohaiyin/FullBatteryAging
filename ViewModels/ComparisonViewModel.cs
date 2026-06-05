@@ -31,6 +31,7 @@ namespace BatteryAging.ViewModels
     public partial class ComparisonViewModel : ObservableObject
     {
         private readonly IDataService _data;
+        private readonly ILanguageService _languageService;
 
         public ObservableCollection<TestRecord> Candidates { get; } = new();   // 可选记录
         public ObservableCollection<TestRecord> Selected { get; } = new();     // 已选记录
@@ -47,13 +48,14 @@ namespace BatteryAging.ViewModels
 
         public event EventHandler SeriesChanged;
 
-        public ComparisonViewModel(IDataService data)
+        public ComparisonViewModel(IDataService data, ILanguageService languageService  )
         {
             _data = data;
+            _languageService = languageService;
             LoadCandidatesCommand = new AsyncRelayCommand(LoadCandidatesAsync);
             BuildComparisonCommand = new AsyncRelayCommand(BuildAsync);
             AddCommand = new RelayCommand<TestRecord>(r => { if (r != null && !Selected.Contains(r)) Selected.Add(r); });
-            RemoveCommand = new RelayCommand<TestRecord>(r => { if (r != null) Selected.Remove(r); });
+            RemoveCommand = new RelayCommand<TestRecord>(r => { if (r != null) Selected.Remove(r); });            
         }
 
         private async Task LoadCandidatesAsync()
@@ -70,7 +72,7 @@ namespace BatteryAging.ViewModels
             var palette = Selected.ToList();
             foreach (var rec in palette)
             {
-                var s = new ComparisonSeries { Name = $"CH{rec.ChannelIndex} {rec.BarCode}", RecordId = rec.Id };
+                var s = new ComparisonSeries { Name = $"{_languageService.GetString("Compare_Col_CH")}{rec.ChannelIndex} {rec.BarCode}", RecordId = rec.Id };
                 switch (Mode)
                 {
                     case CompareMode.CapacityFade:

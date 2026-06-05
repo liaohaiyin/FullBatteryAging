@@ -9,8 +9,8 @@
       Background="{StaticResource VsBgDeepBrush}">
     <Page.Resources>
         <Style x:Key="CellLabelStyle" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{StaticResource VsTextMutedBrush}"/>
-            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+            <Setter Property="FontSize" Value="12"/>
             <Setter Property="FontFamily" Value="Segoe UI, Microsoft YaHei"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
@@ -215,8 +215,8 @@
                     <DataTemplate>
                         <Border Margin="4" CornerRadius="4"
                                 Background="{StaticResource VsBgPanelBrush}"
-                                Width="210"
-                                Height="180"
+                                Width="200"
+                                Height="210"
                                 Cursor="Hand">
                             <Border.Style>
                                 <Style TargetType="Border">
@@ -378,16 +378,17 @@
                                         <Border Width="15" Height="5"
                                                 Background="{StaticResource VsBorderLightBrush}"
                                                 CornerRadius="1,1,0,0" HorizontalAlignment="Center"/>
-                                        <Border Width="40" Height="83"
+                                        <Border Width="40" Height="90"
                                                 BorderBrush="{StaticResource VsBorderLightBrush}"
                                                 BorderThickness="2" CornerRadius="3"
                                                 Background="#FF101820">
                                             <Grid Margin="2" ClipToBounds="True">
                                                 <Rectangle VerticalAlignment="Bottom"
                                                            Fill="{Binding Soc, Converter={x:Static cv:SocToBrushConverter.Instance}}"
-                                                           Height="{Binding Soc, Converter={x:Static cv:SocToHeightConverter.Instance}, ConverterParameter=79}"
+                                                           Height="{Binding Soc, Converter={x:Static cv:SocToHeightConverter.Instance}, ConverterParameter=86}"
                                                            RadiusX="1" RadiusY="1" Opacity="0.8"/>
                                                 <StackPanel VerticalAlignment="Stretch" Margin="0,4">
+                                                    <Rectangle Height="1" Fill="#33FFFFFF" Margin="0,0,0,20"/>
                                                     <Rectangle Height="1" Fill="#33FFFFFF" Margin="0,0,0,20"/>
                                                     <Rectangle Height="1" Fill="#33FFFFFF" Margin="0,0,0,20"/>
                                                     <Rectangle Height="1" Fill="#33FFFFFF" Margin="0,0,0,20"/>
