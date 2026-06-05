@@ -75,7 +75,7 @@ namespace BatteryAging.ViewModels
             _clockTimer.Tick += (_, _) => CurrentTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             _clockTimer.Start();
             CurrentTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            CurrentUser = _currentSession.DisplayName;
+            CurrentUser = $"{CurrentSession.DisplayName}  [{CurrentSession.RoleName}]";
         }
 
         private void NavigateToFirstAllowed()
