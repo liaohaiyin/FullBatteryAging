@@ -55,6 +55,8 @@ namespace BatteryAging
 
             // ── 语言服务（构造即加载资源字典；必须在显示任何窗口之前）──
             _ = Services.GetRequiredService<ILanguageService>();
+            // ── 主题服务（构造即套用持久化主题）──
+            _ = Services.GetRequiredService<IThemeService>();
             var license = Services.GetRequiredService<ILicenseService>();            
             var licStatus = license.CheckCurrentLicense();
             if (!licStatus.IsValid)
@@ -132,6 +134,7 @@ namespace BatteryAging
             services.AddSingleton<IAuthService, AuthService>();
             services.AddSingleton<ILanguageService, LanguageService>();
             services.AddSingleton<ILicenseService, LicenseService>();
+            services.AddSingleton<IThemeService, ThemeService>();
             services.AddSingleton<ChannelManager>();
 
             services.AddSingleton<LoginWindowViewModel>();

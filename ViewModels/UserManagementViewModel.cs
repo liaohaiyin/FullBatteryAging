@@ -110,7 +110,7 @@ namespace BatteryAging.ViewModels
         private string _genMachineCode = string.Empty;
         public string GenMachineCode { get => _genMachineCode; set => SetProperty(ref _genMachineCode, value); }
 
-        private DateTime _genExpiry = DateTime.Today.AddYears(1);
+        private DateTime _genExpiry = DateTime.Today.AddMonths(1);
         public DateTime GenExpiry { get => _genExpiry; set => SetProperty(ref _genExpiry, value); }
 
         private string _generatedLicense = string.Empty;
