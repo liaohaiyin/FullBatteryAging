@@ -15,6 +15,10 @@
 
   <ItemGroup>
     <Compile Remove="Drivers\SerialDriverBase.cs" />
+	<Compile Remove="Services\Mes\**" />
+	<EmbeddedResource Remove="Services\Mes\**" />
+	<None Remove="Services\Mes\**" />
+	<Page Remove="Services\Mes\**" />
   </ItemGroup>
 
   <ItemGroup>

@@ -136,8 +136,7 @@ namespace BatteryAging
             services.AddSingleton<ILicenseService, LicenseService>();
             services.AddSingleton<IThemeService, ThemeService>();
             services.AddSingleton<ChannelManager>();
-
-            services.AddSingleton<Services.Mes.IMesService,Services.Mes.RestMesService>();
+            //services.AddSingleton<Services.Mes.IMesService,Services.Mes.RestMesService>(); MES目前不启用，先不注册实现
 
             services.AddSingleton<LoginWindowViewModel>();
             services.AddSingleton<UserManagementViewModel>();
