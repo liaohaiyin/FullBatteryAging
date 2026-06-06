@@ -42,28 +42,6 @@ namespace BatteryAging.Services
             ["VsTextSecondaryBrush"] = "VsTextSecondaryColor",
             ["VsTextMutedBrush"] = "VsTextMutedColor",
             ["VsTextDisabledBrush"] = "VsTextDisabledColor",
-            // 兼容旧键
-            ["BgDeepBrush"] = "VsBgDeepColor",
-            ["BgMidBrush"] = "VsBgMidColor",
-            ["BgCardBrush"] = "VsBgPanelColor",
-            ["BgCardHeaderBrush"] = "VsBgHeaderColor",
-            ["AccentCyanBrush"] = "VsAccentColor",
-            ["AccentBlueBrush"] = "VsAccentHoverColor",
-            ["AccentAmberBrush"] = "VsWarningColor",
-            ["AccentGreenBrush"] = "VsSuccessColor",
-            ["AccentRedBrush"] = "VsErrorColor",
-            ["BorderDimBrush"] = "VsBorderColor",
-            ["TextPrimaryBrush"] = "VsTextPrimaryColor",
-            ["TextSecondaryBrush"] = "VsTextSecondaryColor",
-            ["TextMutedBrush"] = "VsTextMutedColor",
-            ["HeaderBgBrush"] = "VsBgHeaderColor",
-            ["CardHeaderBrush"] = "VsBgHeaderColor",
-            ["ChannelCardBrush"] = "VsBgPanelColor",
-            ["PrimaryHueMidBrush"] = "VsBgHeaderColor",
-            ["PrimaryHueDarkBrush"] = "VsBgHeaderColor",
-            ["PrimaryHueLightBrush"] = "VsAccentColor",
-            ["MaterialDesignPaper"] = "VsBgMidColor",
-            ["MaterialDesignBody"] = "VsTextPrimaryColor",
         };
 
         // ── 两套调色板（颜色键 → 十六进制）──
