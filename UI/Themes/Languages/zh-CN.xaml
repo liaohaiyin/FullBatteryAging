@@ -157,7 +157,7 @@
     <sys:String x:Key="Main_Status_Sim">模拟模式 · 运行中</sys:String>
     <sys:String x:Key="Main_About_Title">关于</sys:String>
     <sys:String x:Key="Main_Nav_Error">错误</sys:String>
-    <sys:String x:Key="Main_About_Content">锂电池充放电老化上位机&amp;#10;版本: v1.0.0&amp;#10;基于 .NET 9 + WPF</sys:String>
+    <sys:String x:Key="Main_About_Content">锂电池充放电老化上位机;版本: v1.0.0</sys:String>
     <sys:String x:Key="TestExec_Recipe">测试方案</sys:String>
     <sys:String x:Key="TestExec_BarCode">电池条码</sys:String>
     <sys:String x:Key="TestExec_BarCodeHint">选中通道后输入</sys:String>
