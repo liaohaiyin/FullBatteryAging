@@ -73,7 +73,7 @@ namespace BatteryAging.Communication
                 Name = "机柜1",
                 CabinetIndex = 1,
                 DriverType = DriverType.Simulator,
-                ConnectionType = ConnectionType.Simulation,
+                ConnectionType = ConnectionType.Tcp,
                 ChannelStartIndex = 1,
                 ChannelCount = channelCount,
                 SamplingIntervalMs = samplingIntervalMs,

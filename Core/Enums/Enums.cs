@@ -171,13 +171,11 @@ namespace BatteryAging.Core.Enums
     public enum DriverType
     {
         [Description("模拟器")]
-        Simulator,
-        [Description("新威")]
-        NeWare,
-        [Description("蓝电")]
-        Land,
-        [Description("鑫达能")]
-        XinDaNeng        
+        Simulator,           // =0
+        [Description("Modbus")]
+        Modbus,              // =1
+        [Description("Socket")]
+        GenericSocket        // =2
     }
 
     /// <summary>
@@ -185,10 +183,8 @@ namespace BatteryAging.Core.Enums
     /// </summary>
     public enum ConnectionType
     {
-        [Description("模拟")]
-        Simulation,
         [Description("TCP/IP")]
-        Tcp,
+        Tcp,  
         [Description("串口")]
         Serial
     }

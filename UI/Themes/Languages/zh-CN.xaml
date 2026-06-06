@@ -300,7 +300,7 @@
     <sys:String x:Key="Cabinet_Index">机柜编号</sys:String>
     <sys:String x:Key="Cabinet_Type">机柜类型</sys:String>
     <sys:String x:Key="Cabinet_DriverComm">驱动 / 通讯</sys:String>
-    <sys:String x:Key="Cabinet_Vendor">设备厂商</sys:String>
+    <sys:String x:Key="Cabinet_Vendor">通信类型</sys:String>
     <sys:String x:Key="Cabinet_ConnType">通讯方式</sys:String>
     <sys:String x:Key="Cabinet_TcpParams">TCP / IP 参数</sys:String>
     <sys:String x:Key="Cabinet_Ip">IP 地址</sys:String>

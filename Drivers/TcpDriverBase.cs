@@ -79,40 +79,4 @@ namespace BatteryAging.Drivers
             DisconnectAsync().GetAwaiter().GetResult();
         }
     }
-
-    /// <summary>新威驱动占位实现 - TODO 待对接 BTSDA 协议</summary>
-    public class NewareDriver : TcpDriverBase
-    {
-        public override DriverType DriverType => DriverType.NeWare;
-        public NewareDriver(string host, int port) : base(host, port) { }
-
-        public override Task ApplyStepAsync(int channelIndex, StepSetpoint setpoint, CancellationToken token = default)
-            => throw new NotImplementedException("NeWare 驱动待实现");
-
-        public override Task StopChannelAsync(int channelIndex, CancellationToken token = default)
-            => throw new NotImplementedException();
-
-        public override Task<DeviceMeasurement> ReadAsync(int channelIndex, CancellationToken token = default)
-            => throw new NotImplementedException();
-    }
-
-    /// <summary>蓝电驱动占位</summary>
-    public class LandDriver : TcpDriverBase
-    {
-        public override DriverType DriverType => DriverType.Land;
-        public LandDriver(string host, int port) : base(host, port) { }
-        public override Task ApplyStepAsync(int channelIndex, StepSetpoint setpoint, CancellationToken token = default) => throw new NotImplementedException();
-        public override Task StopChannelAsync(int channelIndex, CancellationToken token = default) => throw new NotImplementedException();
-        public override Task<DeviceMeasurement> ReadAsync(int channelIndex, CancellationToken token = default) => throw new NotImplementedException();
-    }
-
-    /// <summary>致茂驱动占位 - 通常用 SCPI</summary>
-    public class XinDaNengDriver : TcpDriverBase
-    {
-        public override DriverType DriverType => DriverType.XinDaNeng;
-        public XinDaNengDriver(string host, int port) : base(host, port) { }
-        public override Task ApplyStepAsync(int channelIndex, StepSetpoint setpoint, CancellationToken token = default) => throw new NotImplementedException();
-        public override Task StopChannelAsync(int channelIndex, CancellationToken token = default) => throw new NotImplementedException();
-        public override Task<DeviceMeasurement> ReadAsync(int channelIndex, CancellationToken token = default) => throw new NotImplementedException();
-    }
 }

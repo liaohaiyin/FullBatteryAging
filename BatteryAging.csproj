@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net9.0-windows7.0</TargetFramework>
+    <TargetFramework>net10.0-windows7.0</TargetFramework>
     <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
@@ -12,6 +12,10 @@
     <ApplicationIcon>Resouces\logo.ico</ApplicationIcon>
 	<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Drivers\SerialDriverBase.cs" />
+  </ItemGroup>
 
   <ItemGroup>
 	<Content Include="Resouces\logo.ico" />

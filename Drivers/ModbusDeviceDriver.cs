@@ -74,7 +74,7 @@ namespace BatteryAging.Drivers
         private readonly ModbusRegisterMap _map;
         private readonly object _lock = new();
 
-        public DriverType DriverType => DriverType.XinDaNeng;
+        public DriverType DriverType => DriverType.Modbus;
         public bool IsConnected { get; private set; }
         public event EventHandler<string> CommunicationError;
 

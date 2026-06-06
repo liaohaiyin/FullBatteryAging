@@ -139,49 +139,4 @@ namespace BatteryAging.Drivers
             try { DisconnectAsync().GetAwaiter().GetResult(); } catch { }
         }
     }
-
-    /// <summary>新威 RS485 驱动占位</summary>
-    public class NewareSerialDriver : SerialDriverBase
-    {
-        public override DriverType DriverType => DriverType.NeWare;
-        public NewareSerialDriver(string portName, int baudRate, int dataBits, int stopBits, string parity)
-            : base(portName, baudRate, dataBits, stopBits, parity) { }
-
-        public override Task ApplyStepAsync(int channelIndex, StepSetpoint setpoint, CancellationToken token = default)
-            => throw new NotImplementedException("NeWare 串口驱动待实现");
-        public override Task StopChannelAsync(int channelIndex, CancellationToken token = default)
-            => throw new NotImplementedException();
-        public override Task<DeviceMeasurement> ReadAsync(int channelIndex, CancellationToken token = default)
-            => throw new NotImplementedException();
-    }
-
-    /// <summary>蓝电 RS485 驱动占位</summary>
-    public class LandSerialDriver : SerialDriverBase
-    {
-        public override DriverType DriverType => DriverType.Land;
-        public LandSerialDriver(string portName, int baudRate, int dataBits, int stopBits, string parity)
-            : base(portName, baudRate, dataBits, stopBits, parity) { }
-
-        public override Task ApplyStepAsync(int channelIndex, StepSetpoint setpoint, CancellationToken token = default)
-            => throw new NotImplementedException();
-        public override Task StopChannelAsync(int channelIndex, CancellationToken token = default)
-            => throw new NotImplementedException();
-        public override Task<DeviceMeasurement> ReadAsync(int channelIndex, CancellationToken token = default)
-            => throw new NotImplementedException();
-    }
-
-    /// <summary>鑫达能 RS485 驱动占位 - 通常 Modbus RTU</summary>
-    public class XinDaNengSerialDriver : SerialDriverBase
-    {
-        public override DriverType DriverType => DriverType.XinDaNeng;
-        public XinDaNengSerialDriver(string portName, int baudRate, int dataBits, int stopBits, string parity)
-            : base(portName, baudRate, dataBits, stopBits, parity) { }
-
-        public override Task ApplyStepAsync(int channelIndex, StepSetpoint setpoint, CancellationToken token = default)
-            => throw new NotImplementedException();
-        public override Task StopChannelAsync(int channelIndex, CancellationToken token = default)
-            => throw new NotImplementedException();
-        public override Task<DeviceMeasurement> ReadAsync(int channelIndex, CancellationToken token = default)
-            => throw new NotImplementedException();
-    }
 }

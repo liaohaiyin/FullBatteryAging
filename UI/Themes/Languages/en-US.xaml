@@ -301,7 +301,7 @@
     <sys:String x:Key="Cabinet_Index">Cabinet No.</sys:String>
     <sys:String x:Key="Cabinet_Type">Cabinet Type</sys:String>
     <sys:String x:Key="Cabinet_DriverComm">Driver / Comm</sys:String>
-    <sys:String x:Key="Cabinet_Vendor">Vendor</sys:String>
+    <sys:String x:Key="Cabinet_Vendor">Comm Type</sys:String>
     <sys:String x:Key="Cabinet_ConnType">Connection</sys:String>
     <sys:String x:Key="Cabinet_TcpParams">TCP / IP Params</sys:String>
     <sys:String x:Key="Cabinet_Ip">IP Address</sys:String>

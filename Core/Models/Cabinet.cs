@@ -17,7 +17,7 @@ namespace BatteryAging.Core.Models
         public int CabinetIndex { get; set; }                // 机柜编号（1, 2, 3...）
 
         public DriverType DriverType { get; set; } = DriverType.Simulator;
-        public ConnectionType ConnectionType { get; set; } = ConnectionType.Simulation;
+        public ConnectionType ConnectionType { get; set; } = ConnectionType.Tcp;
 
         // ── TCP 连接参数 ──
         public string IpAddress { get; set; } = "127.0.0.1";

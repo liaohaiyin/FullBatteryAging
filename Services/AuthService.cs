@@ -462,12 +462,13 @@ namespace BatteryAging.Services
 
         private static string HashPassword(string password, string salt)
         {
-            using var pbkdf2 = new Rfc2898DeriveBytes(
+            var hash = Rfc2898DeriveBytes.Pbkdf2(
                 password,
                 Encoding.UTF8.GetBytes(salt),
                 PbkdfIterations,
-                HashAlgorithmName.SHA256);
-            return Convert.ToBase64String(pbkdf2.GetBytes(32));
+                HashAlgorithmName.SHA256,
+                32);
+            return Convert.ToBase64String(hash);
         }
     }
 }
