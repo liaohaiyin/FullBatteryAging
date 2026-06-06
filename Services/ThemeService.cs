@@ -42,6 +42,28 @@ namespace BatteryAging.Services
             ["VsTextSecondaryBrush"] = "VsTextSecondaryColor",
             ["VsTextMutedBrush"] = "VsTextMutedColor",
             ["VsTextDisabledBrush"] = "VsTextDisabledColor",
+            // 兼容旧键
+            ["BgDeepBrush"] = "VsBgDeepColor",
+            ["BgMidBrush"] = "VsBgMidColor",
+            ["BgCardBrush"] = "VsBgPanelColor",
+            ["BgCardHeaderBrush"] = "VsBgHeaderColor",
+            ["AccentCyanBrush"] = "VsAccentColor",
+            ["AccentBlueBrush"] = "VsAccentHoverColor",
+            ["AccentAmberBrush"] = "VsWarningColor",
+            ["AccentGreenBrush"] = "VsSuccessColor",
+            ["AccentRedBrush"] = "VsErrorColor",
+            ["BorderDimBrush"] = "VsBorderColor",
+            ["TextPrimaryBrush"] = "VsTextPrimaryColor",
+            ["TextSecondaryBrush"] = "VsTextSecondaryColor",
+            ["TextMutedBrush"] = "VsTextMutedColor",
+            ["HeaderBgBrush"] = "VsBgHeaderColor",
+            ["CardHeaderBrush"] = "VsBgHeaderColor",
+            ["ChannelCardBrush"] = "VsBgPanelColor",
+            ["PrimaryHueMidBrush"] = "VsBgHeaderColor",
+            ["PrimaryHueDarkBrush"] = "VsBgHeaderColor",
+            ["PrimaryHueLightBrush"] = "VsAccentColor",
+            ["MaterialDesignPaper"] = "VsBgMidColor",
+            ["MaterialDesignBody"] = "VsTextPrimaryColor",
         };
 
         // ── 两套调色板（颜色键 → 十六进制）──
@@ -75,29 +97,29 @@ namespace BatteryAging.Services
             },
             ["Light"] = new()
             {
-                ["VsBgDeepColor"] = "#FFFFFFFF",
-                ["VsBgMidColor"] = "#FFF5F5F5",
-                ["VsBgPanelColor"] = "#FFEEEEEE",
-                ["VsBgHeaderColor"] = "#FFE5E5E5",
-                ["VsBgHoverColor"] = "#FFDCDCDC",
-                ["VsBgActiveColor"] = "#FFCCE8FF",
-                ["VsBgInputColor"] = "#FFFFFFFF",
-                ["VsBorderColor"] = "#FFC8C8C8",
-                ["VsBorderActiveColor"] = "#FF007ACC",
-                ["VsBorderLightColor"] = "#FFB0B0B0",
-                ["VsAccentColor"] = "#FF007ACC",
-                ["VsAccentHoverColor"] = "#FF1C97EA",
-                ["VsAccentDarkColor"] = "#FF005A9E",
-                ["VsSuccessColor"] = "#FF0E8074",
-                ["VsWarningColor"] = "#FFB8860B",
-                ["VsErrorColor"] = "#FFD13438",
-                ["VsInfoColor"] = "#FF0067C0",
-                ["VsRunningColor"] = "#FF2E7D32",
-                ["VsAmberColor"] = "#FFB35900",
-                ["VsTextPrimaryColor"] = "#FF1E1E1E",
-                ["VsTextSecondaryColor"] = "#FF3C3C3C",
-                ["VsTextMutedColor"] = "#FF6E6E6E",
-                ["VsTextDisabledColor"] = "#FFA0A0A0",
+                ["VsBgDeepColor"] = "#FF3A3A3D",
+                ["VsBgMidColor"] = "#FF424245",
+                ["VsBgPanelColor"] = "#FF4A4A4D",
+                ["VsBgHeaderColor"] = "#FF515155",
+                ["VsBgHoverColor"] = "#FF5A5A5E",
+                ["VsBgActiveColor"] = "#FF155A8A",
+                ["VsBgInputColor"] = "#FF515155",
+                ["VsBorderColor"] = "#FF5E5E63",
+                ["VsBorderActiveColor"] = "#FF1C97EA",
+                ["VsBorderLightColor"] = "#FF6E6E73",
+                ["VsAccentColor"] = "#FF1C97EA",
+                ["VsAccentHoverColor"] = "#FF3AA8F0",
+                ["VsAccentDarkColor"] = "#FF0E6FB8",
+                ["VsSuccessColor"] = "#FF5FD4BB",
+                ["VsWarningColor"] = "#FFE0C68A",
+                ["VsErrorColor"] = "#FFF89580",
+                ["VsInfoColor"] = "#FFB0E0FF",
+                ["VsRunningColor"] = "#FF6F9E5E",
+                ["VsAmberColor"] = "#FFD89A82",
+                ["VsTextPrimaryColor"] = "#FFF5F5F5",
+                ["VsTextSecondaryColor"] = "#FFD8D8D8",
+                ["VsTextMutedColor"] = "#FFA8A8A8",
+                ["VsTextDisabledColor"] = "#FF707074",
             },
         };
 
@@ -106,7 +128,12 @@ namespace BatteryAging.Services
             _config = config;
             _currentTheme = _config["UI:Theme"] ?? "Dark";
             if (!Palettes.ContainsKey(_currentTheme)) _currentTheme = "Dark";
-            ApplyInternal(_currentTheme);   // 启动时套用持久化主题
+
+            // 关键:在任何窗口加载前,把冻结画刷换成可写克隆
+            var root = Application.Current?.Resources;
+            if (root != null) ThawBrushes(root);
+
+            ApplyInternal(_currentTheme);
         }
 
         public List<ThemeInfo> GetAvailableThemes() => new()
@@ -139,18 +166,19 @@ namespace BatteryAging.Services
 
         private static void UpdateRecursive(ResourceDictionary dict, Dictionary<string, Color> colors)
         {
-            // 1) 直接覆盖 Color 资源（供后续 DynamicResource / 新建画刷使用）
+            // 1) 覆盖 Color 资源(供 DynamicResource / 新建画刷使用)
             foreach (var colorKey in colors.Keys)
                 if (dict.Contains(colorKey) && dict[colorKey] is Color)
                     dict[colorKey] = colors[colorKey];
 
-            // 2) 原地修改画刷的 Color —— StaticResource 引用会立即重绘
+            // 2) 原地修改画刷 Color —— StaticResource 引用会立即重绘
             foreach (var pair in BrushToColor)
             {
                 if (dict.Contains(pair.Key) && dict[pair.Key] is SolidColorBrush b
-                    && !b.IsFrozen && colors.TryGetValue(pair.Value, out var c))
+                    && colors.TryGetValue(pair.Value, out var c))
                 {
-                    b.Color = c;
+                    if (!b.IsFrozen) b.Color = c;
+                    else dict[pair.Key] = new SolidColorBrush(c);  // 兜底:仍冻结则替换(仅影响后续加载的元素)
                 }
             }
 
@@ -172,6 +200,21 @@ namespace BatteryAging.Services
                     root.ToJsonString(new JsonSerializerOptions { WriteIndented = true }));
             }
             catch { /* 保存失败不影响切换 */ }
+        }
+        /// <summary>把字典(含合并字典)中所有冻结的 Vs* 画刷替换为未冻结克隆,
+        /// 使后续可原地修改 .Color,且 StaticResource 引用到的就是可写实例。</summary>
+        private static void ThawBrushes(ResourceDictionary dict)
+        {
+            foreach (var key in BrushToColor.Keys)
+            {
+                if (dict.Contains(key) && dict[key] is SolidColorBrush b && b.IsFrozen)
+                {
+                    try { dict[key] = b.Clone(); }   // Clone() 返回未冻结副本
+                    catch { /* 字典只读时忽略,该实例走不到这条路径 */ }
+                }
+            }
+            foreach (var md in dict.MergedDictionaries)
+                ThawBrushes(md);
         }
     }
 }
