@@ -14,7 +14,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Data\Context\BatteryDbContextFactory.cs" />
     <Compile Remove="Drivers\SerialDriverBase.cs" />
   </ItemGroup>
 

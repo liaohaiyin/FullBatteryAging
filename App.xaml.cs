@@ -137,6 +137,8 @@ namespace BatteryAging
             services.AddSingleton<IThemeService, ThemeService>();
             services.AddSingleton<ChannelManager>();
 
+            services.AddSingleton<Services.Mes.IMesService,Services.Mes.RestMesService>();
+
             services.AddSingleton<LoginWindowViewModel>();
             services.AddSingleton<UserManagementViewModel>();
             services.AddSingleton<MainWindowViewModel>();
