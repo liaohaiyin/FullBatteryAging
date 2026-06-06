@@ -20,7 +20,7 @@ namespace BatteryAging.Data.Context
 
             if (provider.Trim().Equals("mysql", StringComparison.OrdinalIgnoreCase))
             {
-                var conn = "Server=localhost;Port=3306;Database=battery_aging;Uid=root;Pwd=root;CharSet=utf8mb4;";
+                var conn = "Server=localhost;Port=3306;Database=battery_aging;Uid=root;Pwd=1234;CharSet=utf8mb4;";
                 builder.UseMySql(conn, ServerVersion.AutoDetect(conn),
                     o => o.MigrationsAssembly("BatteryAging")
                           .MigrationsHistoryTable("__ef_migrations_history"));
