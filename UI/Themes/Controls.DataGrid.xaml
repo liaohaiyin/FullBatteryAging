@@ -9,9 +9,9 @@
     <!-- DataGrid 列标题                                                     -->
     <!-- ════════════════════════════════════════════════════════════════ -->
     <Style TargetType="{x:Type DataGridColumnHeader}">
-        <Setter Property="Foreground" Value="{StaticResource VsTextPrimaryBrush}"/>
-        <Setter Property="Background" Value="{StaticResource VsBgHeaderBrush}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource VsBorderBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource VsTextPrimaryBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource VsBgHeaderBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource VsBorderBrush}"/>
         <Setter Property="BorderThickness" Value="0,0,1,1"/>
         <Setter Property="Padding" Value="8,6"/>
         <Setter Property="HorizontalContentAlignment" Value="Left"/>
@@ -33,7 +33,7 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource VsBgHoverBrush}"/>
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource VsBgHoverBrush}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -45,21 +45,21 @@
     <!-- DataGrid 行                                                         -->
     <!-- ════════════════════════════════════════════════════════════════ -->
     <Style TargetType="{x:Type DataGridRow}">
-        <Setter Property="Foreground" Value="{StaticResource VsTextPrimaryBrush}"/>
-        <Setter Property="Background" Value="{StaticResource VsBgMidBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource VsTextPrimaryBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource VsBgMidBrush}"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="FontFamily" Value="Segoe UI, Microsoft YaHei"/>
         <Setter Property="FontSize" Value="12"/>
         <Style.Triggers>
             <Trigger Property="AlternationIndex" Value="1">
-                <Setter Property="Background" Value="{StaticResource VsBgPanelBrush}"/>
+                <Setter Property="Background" Value="{DynamicResource VsBgPanelBrush}"/>
             </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{StaticResource VsBgHoverBrush}"/>
+                <Setter Property="Background" Value="{DynamicResource VsBgHoverBrush}"/>
             </Trigger>
             <Trigger Property="IsSelected" Value="True">
-                <Setter Property="Background" Value="{StaticResource VsBgActiveBrush}"/>
+                <Setter Property="Background" Value="{DynamicResource VsBgActiveBrush}"/>
                 <Setter Property="Foreground" Value="White"/>
             </Trigger>
         </Style.Triggers>
@@ -73,7 +73,7 @@
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Padding" Value="8,1"/>
-        <Setter Property="Foreground" Value="{StaticResource VsTextPrimaryBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource VsTextPrimaryBrush}"/>
         <Setter Property="FontFamily" Value="Segoe UI, Microsoft YaHei"/>
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="Template">
@@ -101,14 +101,14 @@
     <!-- DataGrid                                                           -->
     <!-- ════════════════════════════════════════════════════════════════ -->
     <Style TargetType="{x:Type DataGrid}">
-        <Setter Property="Foreground" Value="{StaticResource VsTextPrimaryBrush}"/>
-        <Setter Property="Background" Value="{StaticResource VsBgMidBrush}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource VsBorderBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource VsTextPrimaryBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource VsBgMidBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource VsBorderBrush}"/>
         <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="RowBackground" Value="{StaticResource VsBgMidBrush}"/>
-        <Setter Property="AlternatingRowBackground" Value="{StaticResource VsBgPanelBrush}"/>
-        <Setter Property="HorizontalGridLinesBrush" Value="{StaticResource VsBorderBrush}"/>
-        <Setter Property="VerticalGridLinesBrush" Value="{StaticResource VsBorderBrush}"/>
+        <Setter Property="RowBackground" Value="{DynamicResource VsBgMidBrush}"/>
+        <Setter Property="AlternatingRowBackground" Value="{DynamicResource VsBgPanelBrush}"/>
+        <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource VsBorderBrush}"/>
+        <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource VsBorderBrush}"/>
         <Setter Property="GridLinesVisibility" Value="Horizontal"/>
         <Setter Property="RowHeaderWidth" Value="0"/>
         <Setter Property="HeadersVisibility" Value="Column"/>

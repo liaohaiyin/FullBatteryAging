@@ -5,7 +5,7 @@
       xmlns:cv="clr-namespace:BatteryAging.UI.Converters"
       xmlns:ap="clr-namespace:BatteryAging.UI.AttachedProperties"
       Title="{DynamicResource Main_Nav_Batch}"
-      Background="{StaticResource VsBgDeepBrush}">
+      Background="{DynamicResource VsBgDeepBrush}">
     <Page.Resources>
         <Style x:Key="CellValueStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="#FFE8F4FF"/>
@@ -61,7 +61,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <Border Grid.Row="0" Background="{StaticResource VsBgHeaderBrush}"
+                <Border Grid.Row="0" Background="{DynamicResource VsBgHeaderBrush}"
                         CornerRadius="3,3,0,0" Padding="14,8">
                     <StackPanel Orientation="Horizontal">
                         <ctrl:VsIcon Kind="{StaticResource Icon.GaugeFull}" Foreground="{StaticResource AccentCyanBrush}" VerticalAlignment="Center"/>
@@ -127,7 +127,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Border Grid.Row="0" Background="{StaticResource CardHeaderBrush}"
+                    <Border Grid.Row="0" Background="{DynamicResource CardHeaderBrush}"
                             CornerRadius="3,3,0,0" Padding="14,8">
                         <StackPanel Orientation="Horizontal">
                             <ctrl:VsIcon Kind="{StaticResource Icon.SortDescending}" Foreground="{StaticResource AccentCyanBrush}" VerticalAlignment="Center"/>
@@ -138,7 +138,7 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border Margin="4" Padding="10,8" CornerRadius="3"
-                                        Background="{StaticResource BgMidBrush}"
+                                        Background="{DynamicResource BgMidBrush}"
                                         BorderBrush="{StaticResource BorderDimBrush}" BorderThickness="1">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
@@ -172,7 +172,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Border Grid.Row="0" Background="{StaticResource CardHeaderBrush}"
+                    <Border Grid.Row="0" Background="{DynamicResource CardHeaderBrush}"
                             CornerRadius="3,3,0,0" Padding="14,8">
                         <StackPanel Orientation="Horizontal">
                             <ctrl:VsIcon Kind="{StaticResource Icon.ChartBar}" Foreground="{StaticResource AccentCyanBrush}" VerticalAlignment="Center"/>
@@ -224,7 +224,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Border Grid.Row="0" Background="{StaticResource CardHeaderBrush}"
+                    <Border Grid.Row="0" Background="{DynamicResource CardHeaderBrush}"
                             CornerRadius="3,3,0,0" Padding="14,8">
                         <StackPanel Orientation="Horizontal">
                             <ctrl:VsIcon Kind="{StaticResource Icon.FormatListBulleted}" Foreground="{StaticResource AccentCyanBrush}" VerticalAlignment="Center"/>

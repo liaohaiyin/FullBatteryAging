@@ -11,8 +11,8 @@
 
     <!-- 普通面板卡片：扁平边框 -->
     <Style x:Key="VsCardStyle" TargetType="{x:Type Border}">
-        <Setter Property="Background" Value="{StaticResource VsBgPanelBrush}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource VsBorderBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource VsBgPanelBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource VsBorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="CornerRadius" Value="0"/>
         <Setter Property="SnapsToDevicePixels" Value="True"/>
@@ -23,8 +23,8 @@
 
     <!-- 通道卡片样式 -->
     <Style x:Key="VsChannelCardStyle" TargetType="{x:Type Border}">
-        <Setter Property="Background" Value="{StaticResource VsBgPanelBrush}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource VsBorderBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource VsBgPanelBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource VsBorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="CornerRadius" Value="0"/>
         <Setter Property="SnapsToDevicePixels" Value="True"/>
@@ -36,7 +36,7 @@
 
     <Style x:Key="ValueLabelStyle" TargetType="{x:Type TextBlock}">
         <Setter Property="FontSize" Value="11"/>
-        <Setter Property="Foreground" Value="{StaticResource VsTextMutedBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource VsTextMutedBrush}"/>
         <Setter Property="FontFamily" Value="Segoe UI, Microsoft YaHei"/>
     </Style>
 
@@ -44,12 +44,12 @@
         <Setter Property="FontSize" Value="20"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="FontFamily" Value="Consolas, Cascadia Code, Microsoft YaHei"/>
-        <Setter Property="Foreground" Value="{StaticResource VsAccentBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource VsAccentBrush}"/>
     </Style>
 
     <Style x:Key="ValueUnitStyle" TargetType="{x:Type TextBlock}">
         <Setter Property="FontSize" Value="11"/>
-        <Setter Property="Foreground" Value="{StaticResource VsTextMutedBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource VsTextMutedBrush}"/>
         <Setter Property="VerticalAlignment" Value="Bottom"/>
         <Setter Property="Margin" Value="2,0,0,3"/>
     </Style>
@@ -58,7 +58,7 @@
     <Style x:Key="VsSectionHeaderStyle" TargetType="{x:Type TextBlock}">
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
-        <Setter Property="Foreground" Value="{StaticResource VsTextPrimaryBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource VsTextPrimaryBrush}"/>
         <Setter Property="FontFamily" Value="Segoe UI, Microsoft YaHei"/>
     </Style>
 

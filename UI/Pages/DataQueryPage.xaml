@@ -4,7 +4,7 @@
       xmlns:oxy="clr-namespace:OxyPlot.SkiaSharp.Wpf;assembly=OxyPlot.SkiaSharp.Wpf"
       xmlns:ctrl="clr-namespace:BatteryAging.UI.Controls"
       Title="{DynamicResource Main_Nav_Data}"
-      Background="{StaticResource VsBgDeepBrush}">
+      Background="{DynamicResource VsBgDeepBrush}">
 
     <Grid Margin="10">
         <Grid.RowDefinitions>
@@ -75,7 +75,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Border Grid.Row="0" Background="{StaticResource VsBgHeaderBrush}"
+                <Border Grid.Row="0" Background="{DynamicResource VsBgHeaderBrush}"
                         BorderBrush="{StaticResource VsBorderBrush}"
                         BorderThickness="0,0,0,1"
                         Padding="12,6">
@@ -119,7 +119,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Border Grid.Row="0" Background="{StaticResource VsBgHeaderBrush}"
+                    <Border Grid.Row="0" Background="{DynamicResource VsBgHeaderBrush}"
                             BorderBrush="{StaticResource VsBorderBrush}"
                             BorderThickness="0,0,0,1"
                             Padding="12,6">
@@ -142,7 +142,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Border Grid.Row="0" Background="{StaticResource VsBgHeaderBrush}"
+                    <Border Grid.Row="0" Background="{DynamicResource VsBgHeaderBrush}"
                             BorderBrush="{StaticResource VsBorderBrush}"
                             BorderThickness="0,0,0,1"
                             Padding="12,6">

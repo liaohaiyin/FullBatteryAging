@@ -25,7 +25,7 @@
             </Grid.ColumnDefinitions>
 
             <!-- 侧边导航 -->
-            <Border Grid.Column="0" Background="{StaticResource VsBgMidBrush}"
+            <Border Grid.Column="0" Background="{DynamicResource VsBgMidBrush}"
                     BorderBrush="{StaticResource VsBorderBrush}" BorderThickness="0,0,1,0">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -118,7 +118,7 @@
                                 <TextBlock Text="{DynamicResource Main_Nav_Logout}" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
                             </StackPanel>
                         </Button>
-                        <Border Height="1" Background="{StaticResource VsBorderBrush}" Margin="12,8"/>
+                        <Border Height="1" Background="{DynamicResource VsBorderBrush}" Margin="12,8"/>
                         <StackPanel Margin="16,4,16,8">
                             <TextBlock Text="主题" Foreground="{StaticResource VsTextMutedBrush}"
                                        FontSize="11" Margin="0,0,0,4"/>
@@ -127,7 +127,7 @@
                                       SelectedValuePath="Code"
                                       SelectionChanged="ThemeCombo_SelectionChanged"/>
                         </StackPanel>
-                        <Border Height="1" Background="{StaticResource VsBorderBrush}" Margin="12,16"/>
+                        <Border Height="1" Background="{DynamicResource VsBorderBrush}" Margin="12,16"/>
                         <Button Style="{StaticResource VsFlatButton}"
                                 HorizontalContentAlignment="Left"
                                 Padding="16,8"
@@ -153,11 +153,11 @@
 
             <!-- 内容区 -->
             <Frame Grid.Column="1" NavigationUIVisibility="Hidden" Content="{Binding CurrentPage}"
-                   Background="{StaticResource VsBgDeepBrush}" Grid.ColumnSpan="2"/>
+                   Background="{DynamicResource VsBgDeepBrush}" Grid.ColumnSpan="2"/>
         </Grid>
 
         <!-- 状态栏 -->
-        <Border Grid.Row="1" Background="{StaticResource VsAccentBrush}">
+        <Border Grid.Row="1" Background="{DynamicResource VsAccentBrush}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -179,7 +179,7 @@
                 </StackPanel>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="0,0,14,0">
-                    <Border Width="1" Background="{StaticResource VsBorderBrush}" Margin="8,4"/>
+                    <Border Width="1" Background="{DynamicResource VsBorderBrush}" Margin="8,4"/>
                     <ctrl:VsIcon Kind="{StaticResource Icon.ClockOutline}"
                                  Width="14" Height="14"
                                  Foreground="White"

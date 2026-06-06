@@ -4,7 +4,7 @@
       xmlns:oxy="clr-namespace:OxyPlot.SkiaSharp.Wpf;assembly=OxyPlot.SkiaSharp.Wpf"
       xmlns:ctrl="clr-namespace:BatteryAging.UI.Controls"
       Title="{DynamicResource Main_Nav_Compare}"
-      Background="{StaticResource VsBgDeepBrush}">
+      Background="{DynamicResource VsBgDeepBrush}">
     <Grid Margin="12">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -63,7 +63,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Border Grid.Row="0" Background="{StaticResource VsBgHeaderBrush}" Padding="12,6">
+                    <Border Grid.Row="0" Background="{DynamicResource VsBgHeaderBrush}" Padding="12,6">
                         <TextBlock Text="{DynamicResource Compare_Candidates}" FontWeight="SemiBold"/>
                     </Border>
                     <DataGrid Grid.Row="1" ItemsSource="{Binding Candidates}"
@@ -96,7 +96,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Border Grid.Row="0" Background="{StaticResource VsBgHeaderBrush}" Padding="12,6">
+                    <Border Grid.Row="0" Background="{DynamicResource VsBgHeaderBrush}" Padding="12,6">
                         <TextBlock Text="{DynamicResource Compare_Selected}" FontWeight="SemiBold"/>
                     </Border>
                     <DataGrid Grid.Row="1" ItemsSource="{Binding Selected}"
@@ -128,7 +128,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Border Grid.Row="0" Background="{StaticResource VsBgHeaderBrush}" Padding="12,6">
+                    <Border Grid.Row="0" Background="{DynamicResource VsBgHeaderBrush}" Padding="12,6">
                         <StackPanel Orientation="Horizontal">
                             <ctrl:VsIcon Kind="{StaticResource Icon.ChartLine}" Foreground="{StaticResource AccentCyanBrush}" VerticalAlignment="Center"/>
                             <TextBlock Text="{DynamicResource Compare_OverlayCurve}" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>

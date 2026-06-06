@@ -4,7 +4,7 @@
       xmlns:ctrl="clr-namespace:BatteryAging.UI.Controls"
       xmlns:ap="clr-namespace:BatteryAging.UI.AttachedProperties"
       Title="{DynamicResource Main_Nav_Recipe}"
-      Background="{StaticResource VsBgDeepBrush}">
+      Background="{DynamicResource VsBgDeepBrush}">
     <Grid Margin="12">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="240"/>
@@ -21,7 +21,7 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <Border Grid.Row="0" Background="{StaticResource VsBgHeaderBrush}"
+                <Border Grid.Row="0" Background="{DynamicResource VsBgHeaderBrush}"
                         BorderBrush="{StaticResource VsBorderBrush}"
                         BorderThickness="0,0,0,1"
                         Padding="12,6">
@@ -137,7 +137,7 @@
                         <ctrl:VsIcon Kind="{StaticResource Icon.ArrowDown}" Width="13" Height="13"
                                      Foreground="{StaticResource VsAccentBrush}"/>
                     </Button>
-                    <Border Width="1" Background="{StaticResource VsBorderBrush}" Margin="8,4"/>
+                    <Border Width="1" Background="{DynamicResource VsBorderBrush}" Margin="8,4"/>
                     <TextBlock VerticalAlignment="Center" Margin="8,0"
                                Foreground="{StaticResource VsTextMutedBrush}">
                         <Run Text="{DynamicResource Recipe_TotalPrefix}"/>
@@ -195,7 +195,7 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <Border Grid.Row="0" Background="{StaticResource VsBgHeaderBrush}"
+                <Border Grid.Row="0" Background="{DynamicResource VsBgHeaderBrush}"
                         BorderBrush="{StaticResource VsBorderBrush}"
                         BorderThickness="0,0,0,1"
                         Padding="12,6">

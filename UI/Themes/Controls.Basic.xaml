@@ -12,7 +12,7 @@
     <!-- TextBlock                                                          -->
     <!-- ════════════════════════════════════════════════════════════════ -->
     <Style TargetType="{x:Type TextBlock}">
-        <Setter Property="Foreground" Value="{StaticResource VsTextPrimaryBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource VsTextPrimaryBrush}"/>
         <Setter Property="FontFamily" Value="Segoe UI, Microsoft YaHei"/>
         <Setter Property="FontSize" Value="12"/>
     </Style>
@@ -21,7 +21,7 @@
     <!-- 标签样式                                                            -->
     <!-- ════════════════════════════════════════════════════════════════ -->
     <Style TargetType="{x:Type Label}">
-        <Setter Property="Foreground" Value="{StaticResource VsTextPrimaryBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource VsTextPrimaryBrush}"/>
         <Setter Property="FontFamily" Value="Segoe UI, Microsoft YaHei"/>
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="Padding" Value="2"/>
@@ -31,9 +31,9 @@
     <!-- Button - VS 风格扁平按钮                                            -->
     <!-- ════════════════════════════════════════════════════════════════ -->
     <Style x:Key="VsButtonBase" TargetType="{x:Type Button}">
-        <Setter Property="Foreground" Value="{StaticResource VsTextPrimaryBrush}"/>
-        <Setter Property="Background" Value="{StaticResource VsBgHeaderBrush}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource VsBorderBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource VsTextPrimaryBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource VsBgHeaderBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource VsBorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Padding" Value="5"/>
         <Setter Property="FontFamily" Value="Segoe UI, Microsoft YaHei"/>
@@ -61,17 +61,17 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource VsBgHoverBrush}"/>
-                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource VsAccentBrush}"/>
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource VsBgHoverBrush}"/>
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource VsAccentBrush}"/>
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource VsAccentDarkBrush}"/>
-                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource VsAccentBrush}"/>
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource VsAccentDarkBrush}"/>
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource VsAccentBrush}"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Foreground" Value="{StaticResource VsTextDisabledBrush}"/>
-                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource VsBgPanelBrush}"/>
-                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource VsBorderBrush}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource VsTextDisabledBrush}"/>
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource VsBgPanelBrush}"/>
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource VsBorderBrush}"/>
                             <Setter Property="Cursor" Value="Arrow"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
@@ -85,8 +85,8 @@
 
     <!-- 主要按钮（强调色） -->
     <Style x:Key="VsAccentButton" TargetType="{x:Type Button}" BasedOn="{StaticResource VsButtonBase}">
-        <Setter Property="Background" Value="{StaticResource VsAccentBrush}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource VsAccentBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource VsAccentBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource VsAccentBrush}"/>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="Template">
@@ -104,15 +104,15 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource VsAccentHoverBrush}"/>
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource VsAccentHoverBrush}"/>
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource VsAccentDarkBrush}"/>
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource VsAccentDarkBrush}"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Foreground" Value="{StaticResource VsTextDisabledBrush}"/>
-                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource VsBgPanelBrush}"/>
-                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource VsBorderBrush}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource VsTextDisabledBrush}"/>
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource VsBgPanelBrush}"/>
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource VsBorderBrush}"/>
                             <Setter Property="Cursor" Value="Arrow"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
@@ -122,8 +122,8 @@
     </Style>
 
     <Style x:Key="VsOutlinedButton" TargetType="{x:Type Button}" BasedOn="{StaticResource VsButtonBase}">
-        <Setter Property="Background" Value="{StaticResource VsRunningBrush}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource VsBorderLightBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource VsRunningBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource VsBorderLightBrush}"/>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Padding" Value="8,4"/>
@@ -148,7 +148,7 @@
                                     <SolidColorBrush Color="{StaticResource VsRunningColor}" Opacity="0.92"/>
                                 </Setter.Value>
                             </Setter>
-                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource VsBorderBrush}"/>
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource VsBorderBrush}"/>
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="Bd" Property="Background">
@@ -156,12 +156,12 @@
                                     <SolidColorBrush Color="{StaticResource VsRunningColor}" Opacity="0.75"/>
                                 </Setter.Value>
                             </Setter>
-                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource VsBorderBrush}"/>
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource VsBorderBrush}"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Foreground" Value="{StaticResource VsTextDisabledBrush}"/>
-                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource VsBgPanelBrush}"/>
-                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource VsBorderBrush}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource VsTextDisabledBrush}"/>
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource VsBgPanelBrush}"/>
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource VsBorderBrush}"/>
                             <Setter Property="Cursor" Value="Arrow"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
@@ -172,7 +172,7 @@
 
     <!-- 扁平按钮（工具栏按钮风） -->
     <Style x:Key="VsFlatButton" TargetType="{x:Type Button}">
-        <Setter Property="Foreground" Value="{StaticResource VsTextPrimaryBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource VsTextPrimaryBrush}"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="1"/>
@@ -197,14 +197,14 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource VsBgHoverBrush}"/>
-                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource VsBorderBrush}"/>
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource VsBgHoverBrush}"/>
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource VsBorderBrush}"/>
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource VsAccentDarkBrush}"/>
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource VsAccentDarkBrush}"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Foreground" Value="{StaticResource VsTextDisabledBrush}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource VsTextDisabledBrush}"/>
                             <Setter Property="Cursor" Value="Arrow"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
@@ -222,12 +222,12 @@
     <!-- TextBox                                                            -->
     <!-- ════════════════════════════════════════════════════════════════ -->
     <Style TargetType="{x:Type TextBox}">
-        <Setter Property="Foreground" Value="{StaticResource VsTextPrimaryBrush}"/>
-        <Setter Property="Background" Value="{StaticResource VsBgInputBrush}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource VsBorderBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource VsTextPrimaryBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource VsBgInputBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource VsBorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="CaretBrush" Value="{StaticResource VsTextPrimaryBrush}"/>
-        <Setter Property="SelectionBrush" Value="{StaticResource VsAccentBrush}"/>
+        <Setter Property="CaretBrush" Value="{DynamicResource VsTextPrimaryBrush}"/>
+        <Setter Property="SelectionBrush" Value="{DynamicResource VsAccentBrush}"/>
         <Setter Property="SelectionOpacity" Value="0.5"/>
         <Setter Property="Padding" Value="2,4"/>
         <Setter Property="FontFamily" Value="Segoe UI, Microsoft YaHei"/>
@@ -254,17 +254,17 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource VsBorderLightBrush}"/>
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource VsBorderLightBrush}"/>
                         </Trigger>
                         <Trigger Property="IsKeyboardFocused" Value="True">
-                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource VsAccentBrush}"/>
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource VsAccentBrush}"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource VsBgPanelBrush}"/>
-                            <Setter Property="Foreground" Value="{StaticResource VsTextDisabledBrush}"/>
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource VsBgPanelBrush}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource VsTextDisabledBrush}"/>
                         </Trigger>
                         <Trigger Property="IsReadOnly" Value="True">
-                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource VsBgPanelBrush}"/>
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource VsBgPanelBrush}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -282,50 +282,50 @@
     <Style x:Key="VsCalendarDayButtonStyle" TargetType="{x:Type CalendarDayButton}">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
-        <Setter Property="Foreground" Value="{StaticResource VsTextPrimaryBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource VsTextPrimaryBrush}"/>
         <Setter Property="Padding" Value="2"/>
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{StaticResource VsBgHoverBrush}"/>
+                <Setter Property="Background" Value="{DynamicResource VsBgHoverBrush}"/>
                 <Setter Property="BorderBrush" Value="Transparent"/>
             </Trigger>
             <Trigger Property="IsSelected" Value="True">
-                <Setter Property="Background" Value="{StaticResource VsAccentBrush}"/>
+                <Setter Property="Background" Value="{DynamicResource VsAccentBrush}"/>
                 <Setter Property="Foreground" Value="White"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Foreground" Value="{StaticResource VsTextDisabledBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource VsTextDisabledBrush}"/>
                 <Setter Property="Background" Value="Transparent"/>
             </Trigger>
         </Style.Triggers>
     </Style>
     <!-- Calendar: 整体日历背景/边框/文字 -->
     <Style x:Key="VsCalendarStyle" TargetType="{x:Type Calendar}">
-        <Setter Property="Background" Value="{StaticResource VsTextMutedBrush}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource VsBorderBrush}"/>
-        <Setter Property="Foreground" Value="{StaticResource VsTextPrimaryBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource VsTextMutedBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource VsBorderBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource VsTextPrimaryBrush}"/>
         <Setter Property="Padding" Value="6"/>
-        <Setter Property="CalendarDayButtonStyle" Value="{StaticResource VsCalendarDayButtonStyle}"/>
+        <Setter Property="CalendarDayButtonStyle" Value="{DynamicResource VsCalendarDayButtonStyle}"/>
     </Style>
 
     <!-- DatePicker: 使用上面定义的 CalendarStyle，使下拉日历颜色与主题一致 -->
     <Style TargetType="{x:Type DatePicker}">
-        <Setter Property="Foreground" Value="{StaticResource VsBorderBrush}"/>
-        <Setter Property="Background" Value="{StaticResource VsBgInputBrush}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource VsBorderBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource VsBorderBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource VsBgInputBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource VsBorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Padding" Value="4,2"/>
         <Setter Property="MinHeight" Value="26"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="CalendarStyle" Value="{StaticResource VsCalendarStyle}"/>
+        <Setter Property="CalendarStyle" Value="{DynamicResource VsCalendarStyle}"/>
     </Style>
 
     <Style TargetType="ToolTip">
-        <Setter Property="Background" Value="{StaticResource VsBgHeaderBrush}"/>
-        <Setter Property="Foreground" Value="{StaticResource VsTextPrimaryBrush}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource VsBorderBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource VsBgHeaderBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource VsTextPrimaryBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource VsBorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Padding" Value="6"/>
         <Setter Property="FontFamily" Value="Segoe UI, Microsoft YaHei"/>
@@ -333,8 +333,8 @@
     </Style>
 
     <Style TargetType="{x:Type oxy:TrackerControl}" xmlns:oxy="http://oxyplot.org/wpf">
-        <Setter Property="Background" Value="{StaticResource VsBgHeaderBrush}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource VsAccentBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource VsBgHeaderBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource VsAccentBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
     </Style>
 </ResourceDictionary>

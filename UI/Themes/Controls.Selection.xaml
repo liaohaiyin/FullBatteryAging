@@ -47,7 +47,7 @@
     </Style>
 
     <Style TargetType="{x:Type ScrollBar}">
-        <Setter Property="Background" Value="{StaticResource VsBgMidBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource VsBgMidBrush}"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="Width" Value="12"/>
         <Setter Property="MinWidth" Value="12"/>
@@ -114,7 +114,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ToggleButton}">
                     <Border x:Name="Bd"
-                            Background="{StaticResource VsBgInputBrush}"
+                            Background="{DynamicResource VsBgInputBrush}"
                             BorderBrush="{StaticResource VsBorderBrush}"
                             BorderThickness="1"
                             CornerRadius="2">
@@ -133,11 +133,11 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource VsBorderLightBrush}"/>
-                            <Setter TargetName="Arrow" Property="Fill" Value="{StaticResource VsTextPrimaryBrush}"/>
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource VsBorderLightBrush}"/>
+                            <Setter TargetName="Arrow" Property="Fill" Value="{DynamicResource VsTextPrimaryBrush}"/>
                         </Trigger>
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource VsAccentBrush}"/>
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource VsAccentBrush}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -149,7 +149,7 @@
     <!-- ComboBox                                                           -->
     <!-- ════════════════════════════════════════════════════════════════ -->
     <Style TargetType="{x:Type ComboBoxItem}">
-        <Setter Property="Foreground" Value="{StaticResource VsTextPrimaryBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource VsTextPrimaryBrush}"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Padding" Value="8,4"/>
         <Setter Property="FontFamily" Value="Segoe UI, Microsoft YaHei"/>
@@ -168,10 +168,10 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource VsBgHoverBrush}"/>
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource VsBgHoverBrush}"/>
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource VsBgActiveBrush}"/>
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource VsBgActiveBrush}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -180,9 +180,9 @@
     </Style>
 
     <Style TargetType="{x:Type ComboBox}">
-        <Setter Property="Foreground" Value="{StaticResource VsTextPrimaryBrush}"/>
-        <Setter Property="Background" Value="{StaticResource VsBgInputBrush}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource VsBorderBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource VsTextPrimaryBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource VsBgInputBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource VsBorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Padding" Value="6,4"/>
         <Setter Property="FontFamily" Value="Segoe UI, Microsoft YaHei"/>
@@ -230,7 +230,7 @@
                                   MaxHeight="{TemplateBinding MaxDropDownHeight}"
                                   SnapsToDevicePixels="True">
                                 <Border x:Name="DropDownBorder"
-                                        Background="{StaticResource VsBgPanelBrush}"
+                                        Background="{DynamicResource VsBgPanelBrush}"
                                         BorderBrush="{StaticResource VsBorderLightBrush}"
                                         BorderThickness="1"/>
                                 <ScrollViewer Margin="2" SnapsToDevicePixels="True">
@@ -256,7 +256,7 @@
     <!-- ListBox / ListBoxItem                                              -->
     <!-- ════════════════════════════════════════════════════════════════ -->
     <Style TargetType="{x:Type ListBoxItem}">
-        <Setter Property="Foreground" Value="{StaticResource VsTextPrimaryBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource VsTextPrimaryBrush}"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Padding" Value="5,2"/>
         <Setter Property="FontFamily" Value="Segoe UI, Microsoft YaHei"/>
@@ -276,10 +276,10 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource VsBgHoverBrush}"/>
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource VsBgHoverBrush}"/>
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource VsBgActiveBrush}"/>
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource VsBgActiveBrush}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -288,9 +288,9 @@
     </Style>
 
     <Style TargetType="{x:Type ListBox}">
-        <Setter Property="Foreground" Value="{StaticResource VsTextPrimaryBrush}"/>
-        <Setter Property="Background" Value="{StaticResource VsBgMidBrush}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource VsBorderBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource VsTextPrimaryBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource VsBgMidBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource VsBorderBrush}"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
@@ -314,7 +314,7 @@
     <!-- Separator (用于工具栏垂直分隔条)                                    -->
     <!-- ════════════════════════════════════════════════════════════════ -->
     <Style TargetType="{x:Type Separator}">
-        <Setter Property="Background" Value="{StaticResource VsBorderBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource VsBorderBrush}"/>
         <Setter Property="Margin" Value="0,4"/>
         <Setter Property="Template">
             <Setter.Value>

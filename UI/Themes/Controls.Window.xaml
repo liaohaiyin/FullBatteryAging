@@ -12,7 +12,7 @@
     <Style x:Key="VsCaptionButton" TargetType="Button">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Foreground" Value="{StaticResource VsTextPrimaryBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource VsTextPrimaryBrush}"/>
         <Setter Property="Width" Value="46"/>
         <Setter Property="Height" Value="32"/>
         <Setter Property="Focusable" Value="False"/>
@@ -25,10 +25,10 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource VsBgHoverBrush}"/>
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource VsBgHoverBrush}"/>
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource VsBgActiveBrush}"/>
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource VsBgActiveBrush}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -50,9 +50,9 @@
     <Style x:Key="VsWindowStyle" TargetType="Window">
         <Setter Property="FontFamily" Value="Segoe UI, Microsoft YaHei"/>
         <Setter Property="FontSize" Value="12"/>
-        <Setter Property="Background" Value="{StaticResource VsBgDeepBrush}"/>
-        <Setter Property="Foreground" Value="{StaticResource VsTextPrimaryBrush}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource VsAccentBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource VsBgDeepBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource VsTextPrimaryBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource VsAccentBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="WindowChrome.WindowChrome">
             <Setter.Value>
@@ -78,7 +78,7 @@
                             </Grid.RowDefinitions>
 
                             <!-- 标题栏 -->
-                            <Border Grid.Row="0" Background="{StaticResource VsBgHeaderBrush}">
+                            <Border Grid.Row="0" Background="{DynamicResource VsBgHeaderBrush}">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
@@ -86,7 +86,7 @@
                                     </Grid.ColumnDefinitions>
 
                                     <!-- 图标 + 标题 -->
-                                    <StackPanel Orientation="Horizontal" Margin="10,5,0,0"
+                                    <StackPanel Orientation="Horizontal" Margin="10,1,0,0"
                                                 VerticalAlignment="Center">
                                         <ctrl:VsIcon Kind="{StaticResource Icon.BatteryChargingHigh}"
                                                      Width="20" Height="20"
@@ -104,7 +104,7 @@
                                         <Button x:Name="PART_MinButton"
                                                 Style="{StaticResource VsCaptionButton}"
                                                 ToolTip="最小化"
-                                                Margin="0,5,0,0">
+                                                Margin="0,1,0,0">
                                             <!-- 一横 -->
                                             <Path Data="M0,5 L10,5"
                                                   Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
@@ -114,7 +114,7 @@
                                         <Button x:Name="PART_MaxButton"
                                                 Style="{StaticResource VsCaptionButton}"
                                                 ToolTip="最大化"
-                                                Margin="0,5,0,0">
+                                                Margin="0,1,0,0">
                                             <Grid Width="10" Height="10">
                                                 <!-- 普通: 单方框 -->
                                                 <Rectangle x:Name="MaxIcon"
@@ -142,7 +142,7 @@
                                         <Button x:Name="PART_CloseButton"
                                                 Style="{StaticResource VsCloseButton}"
                                                 ToolTip="关闭"
-                                                Margin="0,5,5,0">
+                                                Margin="0,1,5,0">
                                             <!-- 叉 -->
                                             <Path Data="M0,0 L10,10 M10,0 L0,10"
                                                   Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"

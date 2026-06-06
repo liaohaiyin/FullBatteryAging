@@ -6,7 +6,7 @@
       xmlns:ctrl="clr-namespace:BatteryAging.UI.Controls"
       xmlns:cv="clr-namespace:BatteryAging.UI.Converters"
       Title="{DynamicResource Main_Nav_Execution}"
-      Background="{StaticResource VsBgDeepBrush}">
+      Background="{DynamicResource VsBgDeepBrush}">
     <Page.Resources>
         <Style x:Key="CellLabelStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
@@ -144,7 +144,7 @@
                                 <TextBlock Text="{DynamicResource Common_Stop}" Margin="4,0,0,0"/>
                             </StackPanel>
                         </Button>
-                        <Border Width="1" Margin="8,2" Background="{StaticResource VsBorderBrush}"/>
+                        <Border Width="1" Margin="8,2" Background="{DynamicResource VsBorderBrush}"/>
                         <Button Style="{StaticResource VsAccentButton}"
                                 Command="{Binding StartAllCommand}"
                                 ToolTip="{DynamicResource TestExec_StartAllTip}"
@@ -212,7 +212,7 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Border Margin="4" CornerRadius="4"
-                                Background="{StaticResource VsBgPanelBrush}"
+                                Background="{DynamicResource VsBgPanelBrush}"
                                 Width="200"
                                 Height="210"
                                 Cursor="Hand">
@@ -374,7 +374,7 @@
                                     <StackPanel Grid.Row="0" Grid.RowSpan="8" Grid.Column="2" HorizontalAlignment="Stretch"
                                                 VerticalAlignment="Stretch" Margin="5,0,0,0">
                                         <Border Width="15" Height="5"
-                                                Background="{StaticResource VsBorderLightBrush}"
+                                                Background="{DynamicResource VsBorderLightBrush}"
                                                 CornerRadius="1,1,0,0" HorizontalAlignment="Center"/>
                                         <Border Width="40" Height="90"
                                                 BorderBrush="{StaticResource VsBorderLightBrush}"
@@ -435,7 +435,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Border Grid.Row="0" Background="{StaticResource VsBgHeaderBrush}"
+                    <Border Grid.Row="0" Background="{DynamicResource VsBgHeaderBrush}"
                             BorderBrush="{StaticResource VsBorderBrush}"
                             BorderThickness="0,0,0,1"
                             Padding="12,6">
@@ -447,7 +447,7 @@
                                        Foreground="{StaticResource VsAccentBrush}"/>
                             <Border Background="Transparent"
                                     CornerRadius="2" Padding="6,1" Margin="12,0,0,0">
-                                <Border Background="{StaticResource VsBgActiveBrush}"
+                                <Border Background="{DynamicResource VsBgActiveBrush}"
                                         CornerRadius="2" Padding="6,1" Margin="10,0,0,0">
                                     <TextBlock Text="{Binding SelectedChannel.ChannelName}"
                                                FontSize="11"
@@ -467,7 +467,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <Border Grid.Row="0" Background="{StaticResource VsBgHeaderBrush}"
+                    <Border Grid.Row="0" Background="{DynamicResource VsBgHeaderBrush}"
                             BorderBrush="{StaticResource VsBorderBrush}"
                             BorderThickness="0,0,0,1"
                             Padding="12,6">
@@ -529,7 +529,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Border Grid.Row="0" Background="{StaticResource VsBgHeaderBrush}"
+                    <Border Grid.Row="0" Background="{DynamicResource VsBgHeaderBrush}"
                             BorderBrush="{StaticResource VsBorderBrush}"
                             CornerRadius="3,3,0,0" Padding="14,8">
                         <Grid>
