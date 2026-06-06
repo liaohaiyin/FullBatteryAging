@@ -74,9 +74,7 @@
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <!-- 控制条 -->
@@ -250,18 +248,18 @@
                                             <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
                                         <TextBlock Grid.Row="0"
-                                                    Text="{Binding ShortLabel}"
-                                                    Foreground="White"
-                                                    FontSize="22"
-                                                    FontWeight="Bold"
-                                                    HorizontalAlignment="Center"
-                                                    VerticalAlignment="Center"/>
+                                                   Text="{Binding ShortLabel}"
+                                                   Foreground="White"
+                                                   FontSize="22"
+                                                   FontWeight="Bold"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
                                         <Border Grid.Row="1" Background="#44000000" Padding="2,3">
                                             <TextBlock Text="{Binding ChannelName}"
-                                                        Foreground="White"
-                                                        FontSize="11"
-                                                        HorizontalAlignment="Center"
-                                                        Opacity="0.9"/>
+                                                       Foreground="White"
+                                                       FontSize="11"
+                                                       HorizontalAlignment="Center"
+                                                       Opacity="0.9"/>
                                         </Border>
                                     </Grid>
                                 </Border>

@@ -85,7 +85,7 @@ namespace BatteryAging.ViewModels
         {
             var cab = new Cabinet
             {
-                Name = $"机柜 {Cabinets.Count + 1}",
+                Name = $"机柜{Cabinets.Count + 1}",
                 CabinetIndex = Cabinets.Count + 1,
                 ChannelStartIndex = Cabinets.Sum(c => c.ChannelCount) + 1,
                 ChannelCount = 8
