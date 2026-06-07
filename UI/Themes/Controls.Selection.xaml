@@ -115,7 +115,7 @@
                 <ControlTemplate TargetType="{x:Type ToggleButton}">
                     <Border x:Name="Bd"
                             Background="{DynamicResource VsBgInputBrush}"
-                            BorderBrush="{StaticResource VsBorderBrush}"
+                            BorderBrush="{DynamicResource VsBorderBrush}"
                             BorderThickness="1"
                             CornerRadius="2">
                         <Grid>
