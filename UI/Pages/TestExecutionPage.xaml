@@ -29,7 +29,7 @@
             <Setter Property="Margin" Value="2,0,0,0"/>
         </Style>
         <Style x:Key="PanelCollapseToggle" TargetType="ToggleButton">
-            <Setter Property="Background" Value="{StaticResource VsBgPanelBrush}"/>
+            <Setter Property="Background" Value="{DynamicResource VsBgPanelBrush}"/>
             <Setter Property="BorderBrush" Value="{StaticResource VsBorderBrush}"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Focusable" Value="False"/>
@@ -55,7 +55,7 @@
                                 </Setter>
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource VsBgHoverBrush}"/>
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource VsBgHoverBrush}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
