@@ -146,6 +146,7 @@ namespace BatteryAging.ViewModels
                 recipe.BatteryType = BatteryType;
                 recipe.NominalCapacity = NominalCapacity;
                 recipe.NominalVoltage = NominalVoltage;
+                recipe.Creator = _auth.CurrentSession.Username;
 
                 recipe.Steps.Clear();
                 int seq = 1;

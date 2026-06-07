@@ -142,14 +142,16 @@ namespace BatteryAging.Services
         {
             try
             {
-                var nic = NetworkInterface.GetAllNetworkInterfaces()
+                var macList = NetworkInterface.GetAllNetworkInterfaces()
                     .Where(n => n.OperationalStatus == OperationalStatus.Up
-                                && n.NetworkInterfaceType != NetworkInterfaceType.Loopback
-                                && n.NetworkInterfaceType != NetworkInterfaceType.Tunnel)
-                    .OrderBy(n => n.Id)
-                    .FirstOrDefault();
-                var mac = nic?.GetPhysicalAddress()?.ToString();
-                return string.IsNullOrEmpty(mac) ? "NO-MAC" : mac;
+                                && n.NetworkInterfaceType is NetworkInterfaceType.Ethernet or NetworkInterfaceType.Wireless80211
+                                && !n.Description.Contains("Virtual"))
+                    .Select(n => n.GetPhysicalAddress()?.ToString())
+                    .Where(m => !string.IsNullOrEmpty(m))
+                    .OrderBy(m => m)
+                    .ToList();
+
+                return macList.FirstOrDefault() ?? "NO-MAC";
             }
             catch { return "NO-MAC"; }
         }
