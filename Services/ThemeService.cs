@@ -121,6 +121,32 @@ namespace BatteryAging.Services
                 ["VsTextMutedColor"] = "#FFA8A8A8",
                 ["VsTextDisabledColor"] = "#FF707074",
             },
+            ["Navy"] = new()
+            {
+                ["VsBgDeepColor"] = "#FF12203A",
+                ["VsBgMidColor"] = "#FF182943",
+                ["VsBgPanelColor"] = "#FF1E314F",
+                ["VsBgHeaderColor"] = "#FF243A5C",
+                ["VsBgHoverColor"] = "#FF2C456B",
+                ["VsBgActiveColor"] = "#FF1565C0",
+                ["VsBgInputColor"] = "#FF1E314F",
+                ["VsBorderColor"] = "#FF34507A",
+                ["VsBorderActiveColor"] = "#FF409EFF",
+                ["VsBorderLightColor"] = "#FF456596",
+                ["VsAccentColor"] = "#FF409EFF",
+                ["VsAccentHoverColor"] = "#FF5CADFF",
+                ["VsAccentDarkColor"] = "#FF1976D2",
+                ["VsSuccessColor"] = "#FF4EC9B0",
+                ["VsWarningColor"] = "#FFE2B964",
+                ["VsErrorColor"] = "#FFF47B6E",
+                ["VsInfoColor"] = "#FF8FD0FF",
+                ["VsRunningColor"] = "#FF5FB87A",
+                ["VsAmberColor"] = "#FFE0915F",
+                ["VsTextPrimaryColor"] = "#FFEAF2FF",
+                ["VsTextSecondaryColor"] = "#FFC2D4EC",
+                ["VsTextMutedColor"] = "#FF8AA3C4",
+                ["VsTextDisabledColor"] = "#FF5A7196",
+            },
         };
 
         public ThemeService(IConfiguration config)
@@ -140,6 +166,7 @@ namespace BatteryAging.Services
         {
             new ThemeInfo { Code = "Dark",  DisplayName = "深色" },
             new ThemeInfo { Code = "Light", DisplayName = "浅色" },
+            new ThemeInfo { Code = "Navy",  DisplayName = "深蓝" },
         };
 
         public void ApplyTheme(string themeCode)
