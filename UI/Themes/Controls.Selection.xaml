@@ -231,7 +231,7 @@
                                   SnapsToDevicePixels="True">
                                 <Border x:Name="DropDownBorder"
                                         Background="{DynamicResource VsBgPanelBrush}"
-                                        BorderBrush="{StaticResource VsBorderLightBrush}"
+                                        BorderBrush="{DynamicResource VsBorderLightBrush}"
                                         BorderThickness="1"/>
                                 <ScrollViewer Margin="2" SnapsToDevicePixels="True">
                                     <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained"/>
