@@ -120,7 +120,7 @@
                         </Button>
                         <Border Height="1" Background="{DynamicResource VsBorderBrush}" Margin="12,8"/>
                         <StackPanel Margin="16,4,16,8">
-                            <TextBlock Text="主题" Foreground="{StaticResource VsTextMutedBrush}"
+                            <TextBlock Text="{DynamicResource Main_Theme_Title}" Foreground="{StaticResource VsTextMutedBrush}"
                                        FontSize="11" Margin="0,0,0,4"/>
                             <ComboBox x:Name="ThemeCombo"
                                       DisplayMemberPath="DisplayName"

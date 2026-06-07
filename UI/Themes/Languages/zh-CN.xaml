@@ -336,4 +336,9 @@
 
     <sys:String x:Key="Logout_ConfirmationMessage">确定要退出登录吗？</sys:String>
     <sys:String x:Key="Logout_ConfirmationTitle">退出确认</sys:String>
+
+    <sys:String x:Key="Main_Theme_Title">主题</sys:String>
+    <sys:String x:Key="Main_Theme_Dark">深色</sys:String>
+    <sys:String x:Key="Main_Theme_Light">浅色</sys:String>
+    <sys:String x:Key="Main_Theme_Navy">深蓝</sys:String>
 </ResourceDictionary>

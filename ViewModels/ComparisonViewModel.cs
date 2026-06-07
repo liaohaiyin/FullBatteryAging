@@ -48,7 +48,7 @@ namespace BatteryAging.ViewModels
 
         public event EventHandler SeriesChanged;
 
-        public ComparisonViewModel(IDataService data, ILanguageService languageService  )
+        public ComparisonViewModel(IDataService data, ILanguageService languageService)
         {
             _data = data;
             _languageService = languageService;

@@ -11,6 +11,7 @@ namespace BatteryAging.Services
     public class ThemeService : IThemeService
     {
         private readonly IConfiguration _config;
+        private readonly ILanguageService _language;
         private string _currentTheme;
 
         public string CurrentTheme => _currentTheme;
@@ -149,9 +150,10 @@ namespace BatteryAging.Services
             },
         };
 
-        public ThemeService(IConfiguration config)
+        public ThemeService(IConfiguration config, ILanguageService language)
         {
             _config = config;
+            _language = language;
             _currentTheme = _config["UI:Theme"] ?? "Dark";
             if (!Palettes.ContainsKey(_currentTheme)) _currentTheme = "Dark";
 
@@ -159,14 +161,14 @@ namespace BatteryAging.Services
             var root = Application.Current?.Resources;
             if (root != null) ThawBrushes(root);
 
-            ApplyInternal(_currentTheme);
+            ApplyInternal(_currentTheme);            
         }
 
         public List<ThemeInfo> GetAvailableThemes() => new()
         {
-            new ThemeInfo { Code = "Dark",  DisplayName = "深色" },
-            new ThemeInfo { Code = "Light", DisplayName = "浅色" },
-            new ThemeInfo { Code = "Navy",  DisplayName = "深蓝" },
+            new ThemeInfo { Code = "Dark",  DisplayName = _language.GetString("Main_Theme_Dark") },
+            new ThemeInfo { Code = "Light", DisplayName = _language.GetString("Main_Theme_Light") },
+            new ThemeInfo { Code = "Navy",  DisplayName = _language.GetString("Main_Theme_Navy") },
         };
 
         public void ApplyTheme(string themeCode)

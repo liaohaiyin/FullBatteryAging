@@ -337,4 +337,9 @@
 
     <sys:String x:Key="Logout_ConfirmationMessage">Are you sure you want to log out?</sys:String>
     <sys:String x:Key="Logout_ConfirmationTitle">Logout Confirmation</sys:String>
+
+    <sys:String x:Key="Main_Theme_Title">Theme</sys:String>
+    <sys:String x:Key="Main_Theme_Dark">Dark</sys:String>
+    <sys:String x:Key="Main_Theme_Light">Light</sys:String>
+    <sys:String x:Key="Main_Theme_Navy">Navy</sys:String>
 </ResourceDictionary>
