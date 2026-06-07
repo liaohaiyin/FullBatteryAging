@@ -17,8 +17,11 @@ namespace BatteryAging.Core
 
     public static class EnumHelper
     {
+        public static Func<bool> IsEnglish { get; set; } = () => false;
         public static string GetDescription(Enum value)
         {
+            if (IsEnglish())
+                return value.ToString();
             var field = value.GetType().GetField(value.ToString());
             var attr = field?.GetCustomAttribute<DescriptionAttribute>();
             return attr?.Description ?? value.ToString();

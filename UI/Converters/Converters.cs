@@ -15,11 +15,7 @@ namespace BatteryAging.UI.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is Enum e)
-            {
-                var field = e.GetType().GetField(e.ToString());
-                var attr = field?.GetCustomAttribute<DescriptionAttribute>();
-                return attr?.Description ?? e.ToString();
-            }
+                return Core.EnumHelper.GetDescription(e);
             return value?.ToString();
         }
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

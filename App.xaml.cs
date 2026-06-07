@@ -54,7 +54,9 @@ namespace BatteryAging
             }
 
             // ── 语言服务（构造即加载资源字典；必须在显示任何窗口之前）──
-            _ = Services.GetRequiredService<ILanguageService>();
+            var language = Services.GetRequiredService<ILanguageService>();
+            Core.EnumHelper.IsEnglish = () => language.CurrentLanguage?.
+                StartsWith("en", StringComparison.OrdinalIgnoreCase) == true;
             // ── 主题服务（构造即套用持久化主题）──
             _ = Services.GetRequiredService<IThemeService>();
             var license = Services.GetRequiredService<ILicenseService>();            
