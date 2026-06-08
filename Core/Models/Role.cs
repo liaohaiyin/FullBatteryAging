@@ -82,11 +82,8 @@ namespace BatteryAging.Core.Models
                 if (app == null) return fallback;
 
                 string result = fallback;
-                App.UIDispatch(() =>
-                {
-                    if (app.Resources[key] is string s && !string.IsNullOrEmpty(s))
-                        result = s;
-                });
+                if (app.Resources[key] is string s && !string.IsNullOrEmpty(s))
+                    result = s;
                 return result;
             }
             catch

@@ -377,7 +377,7 @@
                                                 Background="{DynamicResource VsBorderLightBrush}"
                                                 CornerRadius="1,1,0,0" HorizontalAlignment="Center"/>
                                         <Border Width="40" Height="90"
-                                                BorderBrush="{StaticResource VsBorderLightBrush}"
+                                                BorderBrush="{DynamicResource VsBorderLightBrush}"
                                                 BorderThickness="2" CornerRadius="3"
                                                 Background="#FF101820">
                                             <Grid Margin="2" ClipToBounds="True">
