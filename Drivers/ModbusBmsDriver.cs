@@ -92,6 +92,9 @@ namespace BatteryAging.Drivers
                     CellCount = cab.CellCount,
                     TempCount = cab.TempPointCount
                 }),
+            Core.Enums.BmsDriverType.Simulator =>
+                new SimulatorBmsDriver(cab.CellCount, cab.TempPointCount),
+            _ => new SimulatorBmsDriver(cab.CellCount, cab.TempPointCount),
         };
     }
 }
