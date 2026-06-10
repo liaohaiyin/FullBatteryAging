@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -52,6 +53,10 @@ namespace BatteryAging.Drivers.Can
 
         public ZlgBmsDriver(ZlgBmsCanMap map = null)
         {
+            var bits = IntPtr.Size == 8 ? "x64" : "x86";
+            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ZLG", bits);
+            Environment.CurrentDirectory = path;
+
             _map = map ?? new ZlgBmsCanMap();
             _cells = new double[_map.CellCount];
             _temps = new double[_map.TempCount];
