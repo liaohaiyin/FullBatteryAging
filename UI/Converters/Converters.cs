@@ -204,4 +204,17 @@ namespace BatteryAging.UI.Converters
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
             => Binding.DoNothing;
     }
+
+    /// <summary>数值 > 0 → Visible，否则 Collapsed（用于"有 BMS 数据才显示"）</summary>
+    public class PositiveToVisibilityConverter : IValueConverter
+    {
+        public static readonly PositiveToVisibilityConverter Instance = new();
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            double d = value switch { double v => v, int i => i, _ => 0 };
+            return d > 0 ? Visibility.Visible : Visibility.Collapsed;
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            => Binding.DoNothing;
+    }
 }

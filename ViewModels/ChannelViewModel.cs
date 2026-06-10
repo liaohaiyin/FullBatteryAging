@@ -52,6 +52,16 @@ namespace BatteryAging.ViewModels
         [ObservableProperty] private double _power;              // 实时功率 W = V*I
         [ObservableProperty] private double _internalResistance; // 最近一次 DCIR 内阻 Ω
 
+        // ── PACK / BMS ──
+        [ObservableProperty] private double _maxCellVoltage;
+        [ObservableProperty] private double _minCellVoltage;
+        [ObservableProperty] private double _cellVoltageDelta;
+        [ObservableProperty] private double _maxPackTemperature;
+        [ObservableProperty] private double _tempDelta;
+        [ObservableProperty] private double _bmsSoh;
+        [ObservableProperty] private int _faultCode;
+        public ObservableCollection<CellVoltageItem> Cells { get; } = new();
+
         // 历史采样点 - 用于绘图
         public ObservableCollection<DataPoint> RecentSamples { get; } = new();
 
@@ -87,6 +97,30 @@ namespace BatteryAging.ViewModels
                 TotalDischargeEnergy = _executor.TotalDischargeEnergy;
                 Power = Math.Round(d.Voltage * d.Current, 3);
 
+                // ── PACK 单体 / 多温度 ──
+                MaxCellVoltage = d.MaxCellVoltage;
+                MinCellVoltage = d.MinCellVoltage;
+                CellVoltageDelta = d.CellVoltageDelta;
+                MaxPackTemperature = d.MaxTempPoint;
+                TempDelta = d.TempDelta;
+                BmsSoh = d.BmsSoh;
+                FaultCode = d.FaultCode;
+
+                var cv = d.CellVoltages;
+                if (cv != null && cv.Length > 0)
+                {
+                    if (Cells.Count != cv.Length)
+                    {
+                        Cells.Clear();
+                        for (int i = 0; i < cv.Length; i++) Cells.Add(new CellVoltageItem { Index = i + 1 });
+                    }
+                    for (int i = 0; i < cv.Length; i++)
+                    {
+                        Cells[i].Voltage = cv[i];
+                        Cells[i].IsMax = (i + 1) == d.MaxCellIndex;
+                        Cells[i].IsMin = (i + 1) == d.MinCellIndex;
+                    }
+                }
                 // 保留近 600 个点用于绘图（约 10 分钟 @1Hz）
                 RecentSamples.Add(d);
                 while (RecentSamples.Count > 600) RecentSamples.RemoveAt(0);
@@ -144,5 +178,12 @@ namespace BatteryAging.ViewModels
             TotalDischargeEnergy = 0;
             RecentSamples.Clear();
         }
+    }
+    public partial class CellVoltageItem : ObservableObject
+    {
+        public int Index { get; set; }
+        [ObservableProperty] private double _voltage;
+        [ObservableProperty] private bool _isMax;
+        [ObservableProperty] private bool _isMin;
     }
 }

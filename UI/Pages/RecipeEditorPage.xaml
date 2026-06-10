@@ -399,6 +399,35 @@
 
                         <Separator Margin="0,8,0,8"/>
 
+                        <TextBlock Text="PACK 单体保护（0=不检测）" FontWeight="SemiBold" Margin="0,0,0,6" FontSize="12"
+                                   Foreground="{StaticResource VsSuccessBrush}"/>
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,4,8">
+                                <TextBlock Text="单体过压 (V)" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                                <TextBox Text="{Binding CellMaxVoltage, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F3}}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Row="0" Grid.Column="1" Margin="4,0,0,8">
+                                <TextBlock Text="单体欠压 (V)" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                                <TextBox Text="{Binding CellMinVoltage, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F3}}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,4,0">
+                                <TextBlock Text="压差上限 ΔV (V)" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                                <TextBox Text="{Binding MaxCellVoltageDelta, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F3}}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Row="1" Grid.Column="1" Margin="4,0,0,0">
+                                <TextBlock Text="温差上限 ΔT (°C)" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                                <TextBox Text="{Binding MaxTempDelta, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F1}}"/>
+                            </StackPanel>
+                        </Grid>
+
                         <TextBlock Text="{DynamicResource Recipe_Chamber}" FontWeight="SemiBold" Margin="0,0,0,6" FontSize="12"
                                    Foreground="{StaticResource VsSuccessBrush}"/>
                         <Grid Margin="0,0,0,12">

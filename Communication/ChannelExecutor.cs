@@ -56,6 +56,20 @@ namespace BatteryAging.Communication
         public double TotalDischargeEnergy { get; private set; }
         public IClimateChamber Chamber { get; set; }
 
+        // ── BMS（PACK 单体/多温度采集）──
+        public IBmsDriver Bms { get; set; }
+        public int CellCount { get; set; }
+        public int TempPointCount { get; set; }
+        private int _bmsConsecErrors = 0;
+        private const int MaxBmsErrors = 5;
+
+        // BMS 实时派生（供 UI 直读）
+        public double MaxCellVoltage { get; private set; }
+        public double MinCellVoltage { get; private set; }
+        public double CellVoltageDelta { get; private set; }
+        public double MaxPackTemperature { get; private set; }
+        public double TempDelta { get; private set; }
+
         // ── dV/dt 检测 ──
         private double _lastVoltage = double.NaN;
         private DateTime _lastVoltageTime;
@@ -372,6 +386,28 @@ namespace BatteryAging.Communication
                 Current = m.Current;
                 Temperature = m.Temperature;
 
+                // ── BMS 采集（PACK 单体电压 / 多路温度）──
+                BmsReading bms = null;
+                if (Bms != null)
+                {
+                    try
+                    {
+                        bms = await Bms.ReadAsync(LocalChannelIndex, token);
+                        _bmsConsecErrors = 0;
+                        MaxCellVoltage = bms.MaxCellVoltage;
+                        MinCellVoltage = bms.MinCellVoltage;
+                        CellVoltageDelta = bms.CellVoltageDelta;
+                        MaxPackTemperature = bms.MaxTemperature;
+                        TempDelta = bms.TempDelta;
+                    }
+                    catch (OperationCanceledException) { break; }
+                    catch
+                    {
+                        if (++_bmsConsecErrors >= MaxBmsErrors)
+                            return ProtectionType.BmsCommunicationLost;
+                    }
+                }
+
                 // ── 累计 ──
                 var dAh = Math.Abs(m.Current) * dtSec / 3600.0;
                 var dWh = Math.Abs(m.Current) * m.Voltage * dtSec / 3600.0;
@@ -413,7 +449,20 @@ namespace BatteryAging.Communication
                     Capacity = Math.Round(Capacity, 5),
                     Energy = Math.Round(Energy, 5),
                     Temperature = Math.Round(Temperature, 2),
-                    Soc = EstimateSoc()
+                    Soc = EstimateSoc(),
+                    // ── PACK / BMS ──
+                    CellVoltages = bms?.CellVoltages ?? Array.Empty<double>(),
+                    Temperatures = bms?.Temperatures ?? Array.Empty<double>(),
+                    MaxCellVoltage = bms != null ? Math.Round(bms.MaxCellVoltage, 4) : 0,
+                    MinCellVoltage = bms != null ? Math.Round(bms.MinCellVoltage, 4) : 0,
+                    CellVoltageDelta = bms != null ? Math.Round(bms.CellVoltageDelta, 4) : 0,
+                    MaxCellIndex = bms?.MaxCellIndex ?? 0,
+                    MinCellIndex = bms?.MinCellIndex ?? 0,
+                    MaxTempPoint = bms != null ? Math.Round(bms.MaxTemperature, 2) : 0,
+                    TempDelta = bms != null ? Math.Round(bms.TempDelta, 2) : 0,
+                    BmsSoc = bms?.Soc ?? 0,
+                    BmsSoh = bms?.Soh ?? 0,
+                    FaultCode = bms?.FaultCode ?? 0
                 };
                 DataSampled?.Invoke(this, new DataSampleEventArgs
                 {
@@ -440,6 +489,12 @@ namespace BatteryAging.Communication
                 // ── 保护检查 ──
                 var prot = CheckProtection(step, m);
                 if (prot != ProtectionType.None) return prot;
+                // ── PACK 单体 / 温差 / BMS 故障保护 ──
+                if (bms != null)
+                {
+                    var cellProt = CheckCellProtection(step, bms);
+                    if (cellProt != ProtectionType.None) return cellProt;
+                }
 
                 if (IsStepFinished(step)) break;
 
@@ -562,6 +617,25 @@ namespace BatteryAging.Communication
             return Math.Round(Math.Clamp(net / CurrentRecipe.NominalCapacity * 100, 0, 100), 2);
         }
 
+        /// <summary>PACK 单体过压/欠压、压差、温差、BMS 故障保护</summary>
+        private ProtectionType CheckCellProtection(TestStep step, BmsReading bms)
+        {
+            if (bms.FaultCode != 0) return ProtectionType.BmsFault;
+
+            if (bms.HasCells)
+            {
+                if (step.CellMaxVoltage > 0 && bms.MaxCellVoltage > step.CellMaxVoltage)
+                    return ProtectionType.CellOverVoltage;
+                if (step.CellMinVoltage > 0 && bms.MinCellVoltage < step.CellMinVoltage)
+                    return ProtectionType.CellUnderVoltage;
+                if (step.MaxCellVoltageDelta > 0 && bms.CellVoltageDelta > step.MaxCellVoltageDelta)
+                    return ProtectionType.CellVoltageDeltaHigh;
+            }
+            if (bms.HasTemps && step.MaxTempDelta > 0 && bms.TempDelta > step.MaxTempDelta)
+                return ProtectionType.TempDeltaHigh;
+
+            return ProtectionType.None;
+        }
         private void ChangeStatus(ChannelStatus newStatus, string message,
             ProtectionType protection = ProtectionType.None)
         {

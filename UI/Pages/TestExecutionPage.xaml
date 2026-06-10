@@ -347,30 +347,54 @@
                                                 FontSize="11"
                                                 HorizontalAlignment="Right"/>
 
-                                    <Border Grid.Row="8" Grid.ColumnSpan="3" Margin="0,6,0,0"
-                                            Background="#33000000" CornerRadius="2" Padding="5,3">
-                                        <Grid>
+                                    <StackPanel Grid.Row="8" Grid.ColumnSpan="3" Margin="0,4,0,0">
+                                        <!-- PACK：压差 / 温差（仅有 BMS 数据时显示）-->
+                                        <Grid Margin="0,0,0,3"
+                                              Visibility="{Binding CellVoltageDelta, Converter={x:Static cv:PositiveToVisibilityConverter.Instance}}">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
                                             <StackPanel Orientation="Horizontal">
-                                                <Ellipse Width="7" Height="7"
-                                                            Fill="{Binding Status, Converter={StaticResource ChannelStatusBrushCv}}"
-                                                            VerticalAlignment="Center"/>
-                                                <TextBlock Text="{Binding StatusText}"
-                                                            Style="{StaticResource CellValueStyle}"
-                                                            FontSize="11"
-                                                            Margin="5,0,0,0"/>
+                                                <TextBlock Text="ΔV" Style="{StaticResource CellLabelStyle}"/>
+                                                <TextBlock Text="{Binding CellVoltageDelta, StringFormat={}{0:F3}, Mode=OneWay}"
+                                                           Style="{StaticResource CellValueStyle}" FontSize="11"
+                                                           Foreground="{StaticResource AccentAmberBrush}" Margin="4,0,0,0"/>
+                                                <TextBlock Text="V" Style="{StaticResource CellUnitStyle}"/>
                                             </StackPanel>
-                                            <TextBlock Grid.Column="1"
-                                                        Text="{Binding RecipeName}"
-                                                        Style="{StaticResource CellLabelStyle}"
-                                                        TextTrimming="CharacterEllipsis"
-                                                        MaxWidth="120"
-                                                        HorizontalAlignment="Right"/>
+                                            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                                                <TextBlock Text="ΔT" Style="{StaticResource CellLabelStyle}"/>
+                                                <TextBlock Text="{Binding TempDelta, StringFormat={}{0:F1}, Mode=OneWay}"
+                                                           Style="{StaticResource CellValueStyle}" FontSize="11"
+                                                           Foreground="{StaticResource VsErrorBrush}" Margin="4,0,0,0"/>
+                                                <TextBlock Text="°C" Style="{StaticResource CellUnitStyle}"/>
+                                            </StackPanel>
                                         </Grid>
-                                    </Border>
+                                        <!-- 原状态条 -->
+                                        <Border Background="#33000000" CornerRadius="2" Padding="5,3">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Ellipse Width="7" Height="7"
+                                                                Fill="{Binding Status, Converter={StaticResource ChannelStatusBrushCv}}"
+                                                                VerticalAlignment="Center"/>
+                                                    <TextBlock Text="{Binding StatusText}"
+                                                                Style="{StaticResource CellValueStyle}"
+                                                                FontSize="11"
+                                                                Margin="5,0,0,0"/>
+                                                </StackPanel>
+                                                <TextBlock Grid.Column="1"
+                                                            Text="{Binding RecipeName}"
+                                                            Style="{StaticResource CellLabelStyle}"
+                                                            TextTrimming="CharacterEllipsis"
+                                                            MaxWidth="120"
+                                                            HorizontalAlignment="Right"/>
+                                            </Grid>
+                                        </Border>
+                                    </StackPanel>
                                     <StackPanel Grid.Row="0" Grid.RowSpan="8" Grid.Column="2" HorizontalAlignment="Stretch"
                                                 VerticalAlignment="Stretch" Margin="5,0,0,0">
                                         <Border Width="15" Height="5"
@@ -426,7 +450,8 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="220"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="180"/>
             </Grid.RowDefinitions>
 
             <Border Grid.Row="0" Style="{StaticResource VsCardStyle}">
@@ -523,7 +548,87 @@
                 </Grid>
             </Border>
 
-            <Border Grid.Row="2" Style="{StaticResource VsCardStyle}">
+            <!-- 单体电压墙（PACK / BMS）-->
+            <Border Grid.Row="2" Style="{StaticResource VsCardStyle}" Margin="0,0,0,12"
+                    Visibility="{Binding SelectedChannel.CellVoltageDelta, Converter={x:Static cv:PositiveToVisibilityConverter.Instance}}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Border Grid.Row="0" Background="{StaticResource VsBgHeaderBrush}"
+                            BorderBrush="{StaticResource VsBorderBrush}" BorderThickness="0,0,0,1"
+                            Padding="12,6">
+                        <Grid>
+                            <StackPanel Orientation="Horizontal">
+                                <ctrl:VsIcon Kind="{StaticResource Icon.ChartBar}" Width="14" Height="14"
+                                             Foreground="{StaticResource VsAccentBrush}"/>
+                                <TextBlock Text="单体电压" FontWeight="SemiBold" Margin="6,0,0,0"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <TextBlock Text="最高" Style="{StaticResource CellLabelStyle}"/>
+                                <TextBlock Text="{Binding SelectedChannel.MaxCellVoltage, StringFormat={}{0:F3}}"
+                                           Foreground="{StaticResource VsErrorBrush}" FontFamily="Consolas"
+                                           FontSize="11" Margin="3,0,8,0"/>
+                                <TextBlock Text="最低" Style="{StaticResource CellLabelStyle}"/>
+                                <TextBlock Text="{Binding SelectedChannel.MinCellVoltage, StringFormat={}{0:F3}}"
+                                           Foreground="{StaticResource VsAccentBrush}" FontFamily="Consolas"
+                                           FontSize="11" Margin="3,0,8,0"/>
+                                <TextBlock Text="ΔV" Style="{StaticResource CellLabelStyle}"/>
+                                <TextBlock Text="{Binding SelectedChannel.CellVoltageDelta, StringFormat={}{0:F3}}"
+                                           Foreground="{StaticResource AccentAmberBrush}" FontFamily="Consolas"
+                                           FontWeight="Bold" FontSize="11" Margin="3,0,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- 条形墙：每节一根竖条，最高红 / 最低蓝高亮 -->
+                    <ItemsControl Grid.Row="1" ItemsSource="{Binding SelectedChannel.Cells}"
+                                  Margin="8,8,8,10" Height="120">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Width="34" Margin="2" Padding="0,2"
+                                        Background="{StaticResource VsBgMidBrush}"
+                                        CornerRadius="2"
+                                        ToolTip="{Binding Voltage, StringFormat=单体电压 {0:F4} V}">
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Voltage, StringFormat={}{0:F3}}"
+                                                   FontFamily="Consolas" FontSize="9"
+                                                   HorizontalAlignment="Center"
+                                                   Foreground="{StaticResource VsTextSecondaryBrush}"/>
+                                        <Border Height="6" Margin="0,2" CornerRadius="1">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="Background" Value="{StaticResource VsSuccessBrush}"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsMax}" Value="True">
+                                                            <Setter Property="Background" Value="{StaticResource VsErrorBrush}"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding IsMin}" Value="True">
+                                                            <Setter Property="Background" Value="{StaticResource VsAccentBrush}"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                        </Border>
+                                        <TextBlock Text="{Binding Index}" FontSize="8"
+                                                   HorizontalAlignment="Center"
+                                                   Foreground="{StaticResource VsTextMutedBrush}"/>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </Border>
+
+            <Border Grid.Row="3" Style="{StaticResource VsCardStyle}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>

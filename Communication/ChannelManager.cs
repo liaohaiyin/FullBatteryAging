@@ -17,6 +17,7 @@ namespace BatteryAging.Communication
     {
         private readonly Dictionary<int, ChannelExecutor> _channels = new();
         private readonly Dictionary<string, IDeviceDriver> _drivers = new();
+        private readonly Dictionary<string, IBmsDriver> _bmsDrivers = new();
         private readonly List<Cabinet> _cabinets = new();
 
         public IReadOnlyDictionary<int, ChannelExecutor> Channels => _channels;
@@ -55,6 +56,31 @@ namespace BatteryAging.Communication
                 _drivers[cab.Id] = driver;
 
                 _ = ConnectAsync(cab.Id, driver);
+
+                // ── BMS 采集驱动（按机柜，单 PACK 多通道可共用）──
+                IBmsDriver bms = null;
+                if (cab.HasBms)
+                {
+                    bms = BmsDriverFactory.Create(cab);
+                    bms.CommunicationError += (s, msg) =>
+                        CommunicationError?.Invoke(this, $"[{cab.Name}] BMS {msg}");
+                    _bmsDrivers[cab.Id] = bms;
+                    _ = bms.ConnectAsync();
+                }
+
+                for (int local = 1; local <= cab.ChannelCount; local++)
+                {
+                    int global = cab.ChannelStartIndex + local - 1;
+                    var executor = new ChannelExecutor(global, driver, cab.Id, local)
+                    {
+                        SamplingIntervalMs = sampleMs,
+                        Chamber = chamber,
+                        Bms = bms,
+                        CellCount = cab.CellCount,
+                        TempPointCount = cab.TempPointCount
+                    };
+                    _channels[global] = executor;
+                }
 
                 for (int local = 1; local <= cab.ChannelCount; local++)
                 {
@@ -144,7 +170,9 @@ namespace BatteryAging.Communication
         {
             StopAll();
             foreach (var d in _drivers.Values) { try { d.Dispose(); } catch { } }
+            foreach (var b in _bmsDrivers.Values) { try { b.Dispose(); } catch { } }
             _drivers.Clear();
+            _bmsDrivers.Clear();
             _channels.Clear();
             _cabinets.Clear();
         }

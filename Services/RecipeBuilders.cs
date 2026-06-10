@@ -226,7 +226,11 @@ namespace BatteryAging.Services
             MaxTemperature = s.MaxTemperature, ProtectionTimeSeconds = s.ProtectionTimeSeconds,
             ReversePolarityCheck = s.ReversePolarityCheck, MaxVoltageDropRate = s.MaxVoltageDropRate,
             Remark = s.Remark, TargetTemperature = s.TargetTemperature,
-            WaitForTempStable = s.WaitForTempStable, SubRecipeId = s.SubRecipeId
+            WaitForTempStable = s.WaitForTempStable, SubRecipeId = s.SubRecipeId,
+            CellMaxVoltage = s.CellMaxVoltage,
+            CellMinVoltage = s.CellMinVoltage,
+            MaxCellVoltageDelta = s.MaxCellVoltageDelta,
+            MaxTempDelta = s.MaxTempDelta
         };
     }
 }

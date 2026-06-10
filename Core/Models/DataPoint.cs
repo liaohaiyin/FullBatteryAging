@@ -41,5 +41,19 @@ namespace BatteryAging.Core.Models
         public double Temperature { get; set; }          // 温度 (°C)
 
         public double Soc { get; set; }                  // SOC (%)，估算值
+
+        // ── PACK：单体电压 / 多路温度（来自 BMS）──
+        public double[] CellVoltages { get; set; } = Array.Empty<double>();  // 各单体电压 (V)，JSON 列
+        public double[] Temperatures { get; set; } = Array.Empty<double>();  // 各点温度 (℃)，JSON 列
+        public double MaxCellVoltage { get; set; }       // 最高单体电压
+        public double MinCellVoltage { get; set; }       // 最低单体电压
+        public double CellVoltageDelta { get; set; }     // 压差 ΔV
+        public int MaxCellIndex { get; set; }            // 最高单体序号
+        public int MinCellIndex { get; set; }            // 最低单体序号
+        public double MaxTempPoint { get; set; }         // 多路温度最高
+        public double TempDelta { get; set; }            // 温差
+        public double BmsSoc { get; set; }
+        public double BmsSoh { get; set; }
+        public int FaultCode { get; set; }
     }
 }

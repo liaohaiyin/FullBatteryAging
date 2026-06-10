@@ -239,6 +239,47 @@
                             </StackPanel>
                         </Grid>
 
+                        <Border Height="1" Background="{StaticResource BorderDimBrush}" Margin="0,4,0,12"/>
+
+                        <TextBlock Text="BMS 采集（PACK 单体电压 / 多路温度）" FontWeight="Medium" FontSize="14"
+                                   Foreground="{StaticResource AccentCyanBrush}" Margin="0,0,0,8"/>
+                        <CheckBox IsChecked="{Binding HasBms}" Content="启用 BMS 采集"
+                                  Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,8"/>
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                                <TextBlock Text="BMS驱动" Style="{StaticResource FieldLabel}"/>
+                                <ComboBox ItemsSource="{Binding DataContext.BmsDriverTypes, RelativeSource={RelativeSource AncestorType=Page}}"
+                                          DisplayMemberPath="DisplayName" SelectedValuePath="Value"
+                                          SelectedValue="{Binding BmsDriverType}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Margin="8,0">
+                                <TextBlock Text="单体节数" Style="{StaticResource FieldLabel}"/>
+                                <TextBox Text="{Binding CellCount, UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Margin="8,0,0,0">
+                                <TextBlock Text="温度点数" Style="{StaticResource FieldLabel}"/>
+                                <TextBox Text="{Binding TempPointCount, UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+                        </Grid>
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                                <TextBlock Text="BMS IP（Modbus）" Style="{StaticResource FieldLabel}"/>
+                                <TextBox Text="{Binding BmsIp, UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                <TextBlock Text="BMS 端口" Style="{StaticResource FieldLabel}"/>
+                                <TextBox Text="{Binding BmsPort, UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+                        </Grid>
                         <StackPanel Margin="0,0,0,12">
                             <TextBlock Text="{DynamicResource Cabinet_Remark}" Style="{StaticResource FieldLabel}"/>
                             <TextBox Text="{Binding Remark, UpdateSourceTrigger=PropertyChanged}"

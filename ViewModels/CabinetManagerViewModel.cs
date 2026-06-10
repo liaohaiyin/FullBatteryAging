@@ -23,6 +23,8 @@ namespace BatteryAging.ViewModels
             = EnumHelper.GetItems<ConnectionType>();
         public List<EnumDisplayItem<CabinetType>> CabinetTypes { get; } = 
             EnumHelper.GetItems<CabinetType>();
+        public List<EnumDisplayItem<BmsDriverType>> BmsDriverTypes { get; }
+            = EnumHelper.GetItems<BmsDriverType>();
 
         [ObservableProperty] private Cabinet _selectedCabinet;
 

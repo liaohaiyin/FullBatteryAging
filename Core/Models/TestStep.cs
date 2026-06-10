@@ -65,5 +65,11 @@ namespace BatteryAging.Core.Models
         public string SubRecipeId { get; set; }                     // 引用的子方案 Id
 
         public string Remark { get; set; }               // 备注
+
+        // ── PACK 单体/温度保护（BMS，0=不检测）──
+        public double CellMaxVoltage { get; set; } = 0;       // 单体过压阈值 (V)
+        public double CellMinVoltage { get; set; } = 0;       // 单体欠压阈值 (V)
+        public double MaxCellVoltageDelta { get; set; } = 0;  // 压差上限 (V)
+        public double MaxTempDelta { get; set; } = 0;         // 温差上限 (℃)
     }
 }

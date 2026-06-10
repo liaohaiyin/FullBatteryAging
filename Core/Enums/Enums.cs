@@ -162,7 +162,19 @@ namespace BatteryAging.Core.Enums
         [Description("电压跌落异常")]
         VoltageDropAnomaly,
         [Description("通讯中断")]
-        CommunicationLost
+        CommunicationLost,
+        [Description("单体过压")]
+        CellOverVoltage,
+        [Description("单体欠压")]
+        CellUnderVoltage,
+        [Description("压差过大")]
+        CellVoltageDeltaHigh,
+        [Description("温差过大")]
+        TempDeltaHigh,
+        [Description("BMS通讯中断")]
+        BmsCommunicationLost,
+        [Description("BMS上报故障")]
+        BmsFault
     }
 
     /// <summary>
@@ -187,6 +199,17 @@ namespace BatteryAging.Core.Enums
         Tcp,  
         [Description("串口")]
         Serial
+    }
+
+    /// <summary>BMS 采集驱动类型</summary>
+    public enum BmsDriverType
+    {
+        [Description("模拟器")]
+        Simulator,
+        [Description("Modbus")]
+        Modbus,
+        [Description("CAN")]
+        Can
     }
 
     /// <summary>

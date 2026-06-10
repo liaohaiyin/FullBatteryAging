@@ -1,5 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using BatteryAging.Core.Models;
+using System;
+using System.Text.Json;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BatteryAging.Data.Context
 {
@@ -48,6 +52,18 @@ namespace BatteryAging.Data.Context
             {
                 e.HasKey(d => d.Id);
                 e.HasIndex(d => new { d.TestRecordId, d.Timestamp });
+
+                // 单体电压 / 多温度 → JSON 文本列
+                var conv = new ValueConverter<double[], string>(
+                    v => JsonSerializer.Serialize(v ?? Array.Empty<double>(), (JsonSerializerOptions)null),
+                    v => string.IsNullOrEmpty(v) ? Array.Empty<double>()
+                         : JsonSerializer.Deserialize<double[]>(v, (JsonSerializerOptions)null));
+                var cmp = new ValueComparer<double[]>(
+                    (a, b) => (a ?? Array.Empty<double>()).SequenceEqual(b ?? Array.Empty<double>()),
+                    a => a == null ? 0 : a.Aggregate(17, (h, x) => h * 31 + x.GetHashCode()),
+                    a => (double[])a.Clone());
+                e.Property(d => d.CellVoltages).HasConversion(conv, cmp);
+                e.Property(d => d.Temperatures).HasConversion(conv, cmp);
             });
 
             modelBuilder.Entity<Cabinet>(e =>

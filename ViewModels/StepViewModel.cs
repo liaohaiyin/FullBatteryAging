@@ -43,6 +43,10 @@ namespace BatteryAging.ViewModels
             _jumpTargetIndex = step.JumpTargetIndex;
             _targetTemperature = step.TargetTemperature;
             _waitForTempStable = step.WaitForTempStable;
+            _cellMaxVoltage = step.CellMaxVoltage;
+            _cellMinVoltage = step.CellMinVoltage;
+            _maxCellVoltageDelta = step.MaxCellVoltageDelta;
+            _maxTempDelta = step.MaxTempDelta;
         }
 
         [ObservableProperty] private int _sequence;
@@ -135,5 +139,16 @@ namespace BatteryAging.ViewModels
 
         [ObservableProperty] private bool _waitForTempStable;
         partial void OnWaitForTempStableChanged(bool value) => _step.WaitForTempStable = value;
+        [ObservableProperty] private double _cellMaxVoltage;
+        partial void OnCellMaxVoltageChanged(double value) => _step.CellMaxVoltage = value;
+
+        [ObservableProperty] private double _cellMinVoltage;
+        partial void OnCellMinVoltageChanged(double value) => _step.CellMinVoltage = value;
+
+        [ObservableProperty] private double _maxCellVoltageDelta;
+        partial void OnMaxCellVoltageDeltaChanged(double value) => _step.MaxCellVoltageDelta = value;
+
+        [ObservableProperty] private double _maxTempDelta;
+        partial void OnMaxTempDeltaChanged(double value) => _step.MaxTempDelta = value;
     }
 }

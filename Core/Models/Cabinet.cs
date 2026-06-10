@@ -49,5 +49,13 @@ namespace BatteryAging.Core.Models
         public bool HasChamber { get; set; } = false;
         public string ChamberIp { get; set; } = "127.0.0.1";
         public int ChamberPort { get; set; } = 502;
+
+        // ── BMS（PACK 单体电压 / 多路温度采集）──
+        public bool HasBms { get; set; } = false;
+        public BmsDriverType BmsDriverType { get; set; } = BmsDriverType.Simulator;
+        public string BmsIp { get; set; } = "127.0.0.1";
+        public int BmsPort { get; set; } = 502;
+        public int CellCount { get; set; } = 0;        // 每 PACK 单体数（0=非PACK）
+        public int TempPointCount { get; set; } = 0;   // 温度采集点数
     }
 }
