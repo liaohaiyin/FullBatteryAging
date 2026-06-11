@@ -74,6 +74,7 @@ namespace BatteryAging.ViewModels
             _executor.DataSampled += OnDataSampled;
             _executor.StepChanged += OnStepChanged;
             _executor.StatusChanged += OnStatusChanged;
+            _executor.BmsSampled += OnBmsSampled;
         }
 
         private void OnDataSampled(object sender, DataSampleEventArgs e)
@@ -96,8 +97,17 @@ namespace BatteryAging.ViewModels
                 TotalChargeEnergy = _executor.TotalChargeEnergy;
                 TotalDischargeEnergy = _executor.TotalDischargeEnergy;
                 Power = Math.Round(d.Voltage * d.Current, 3);
-
-                // ── PACK 单体 / 多温度 ──
+                
+                // 保留近 600 个点用于绘图（约 10 分钟 @1Hz）
+                RecentSamples.Add(d);
+                while (RecentSamples.Count > 600) RecentSamples.RemoveAt(0);
+            });
+        }
+        private void OnBmsSampled(object sender, BmsSampleEventArgs e)
+        {
+            App.UIDispatch(() =>
+            {
+                var d = e.Data;
                 MaxCellVoltage = d.MaxCellVoltage;
                 MinCellVoltage = d.MinCellVoltage;
                 CellVoltageDelta = d.CellVoltageDelta;
@@ -109,6 +119,7 @@ namespace BatteryAging.ViewModels
                 var cv = d.CellVoltages;
                 if (cv != null && cv.Length > 0)
                 {
+                    // 长度变化才重建，否则只改值，避免每秒清空导致绑定抖动
                     if (Cells.Count != cv.Length)
                     {
                         Cells.Clear();
@@ -121,9 +132,6 @@ namespace BatteryAging.ViewModels
                         Cells[i].IsMin = (i + 1) == d.MinCellIndex;
                     }
                 }
-                // 保留近 600 个点用于绘图（约 10 分钟 @1Hz）
-                RecentSamples.Add(d);
-                while (RecentSamples.Count > 600) RecentSamples.RemoveAt(0);
             });
         }
 
@@ -177,6 +185,14 @@ namespace BatteryAging.ViewModels
             TotalChargeEnergy = 0;
             TotalDischargeEnergy = 0;
             RecentSamples.Clear();
+            // ── BMS ──
+            Cells.Clear();
+            MaxCellVoltage = 0;
+            MinCellVoltage = 0;
+            CellVoltageDelta = 0;
+            MaxPackTemperature = 0;
+            TempDelta = 0;
+            FaultCode = 0;
         }
     }
     public partial class CellVoltageItem : ObservableObject

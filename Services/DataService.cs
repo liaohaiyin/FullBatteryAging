@@ -36,6 +36,8 @@ namespace BatteryAging.Services
         Task<List<CycleData>> GetCycleDataAsync(int recordId);
         Task SaveDcirAsync(DcirResult r);
         Task<List<DcirResult>> GetDcirAsync(int recordId);
+        Task SaveBmsDataPointsAsync(IEnumerable<BmsDataPoint> points);
+        Task<List<BmsDataPoint>> GetBmsDataPointsAsync(int recordId);
     }
 
     public class DataService : IDataService
@@ -244,6 +246,21 @@ namespace BatteryAging.Services
                         .Deserialize<Dictionary<double, double>>(json);
             }
             return list;
+        }
+        public async Task SaveBmsDataPointsAsync(IEnumerable<BmsDataPoint> points)
+        {
+            await using var db = await _factory.CreateDbContextAsync();
+            db.BmsDataPoints.AddRange(points);
+            await db.SaveChangesAsync();
+        }
+
+        public async Task<List<BmsDataPoint>> GetBmsDataPointsAsync(int recordId)
+        {
+            await using var db = await _factory.CreateDbContextAsync();
+            return await db.BmsDataPoints
+                .Where(d => d.TestRecordId == recordId)
+                .OrderBy(d => d.Timestamp)
+                .ToListAsync();
         }
     }
 }

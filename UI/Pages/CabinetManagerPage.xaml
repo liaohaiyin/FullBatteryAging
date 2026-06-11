@@ -239,7 +239,7 @@
                             </StackPanel>
                         </Grid>
 
-                        <Border Height="1" Background="{StaticResource BorderDimBrush}" Margin="0,4,0,12"/>
+                        <Border Height="1" Background="{DynamicResource BorderDimBrush}" Margin="0,4,0,12"/>
 
                         <TextBlock Text="BMS 采集（PACK 单体电压 / 多路温度）" FontWeight="Medium" FontSize="14"
                                    Foreground="{StaticResource AccentCyanBrush}" Margin="0,0,0,8"/>

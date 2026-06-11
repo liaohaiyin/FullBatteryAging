@@ -88,6 +88,7 @@ namespace BatteryAging.Communication
         public event EventHandler<CheckpointEventArgs> CheckpointReached;
         public event EventHandler<CycleCompletedEventArgs> CycleCompleted;
         public event EventHandler<DcirResultEventArgs> DcirMeasured;
+        public event EventHandler<BmsSampleEventArgs> BmsSampled;
 
         public ChannelExecutor(int globalChannelIndex, IDeviceDriver driver,
             string cabinetId = null, int localChannelIndex = 0)
@@ -399,6 +400,30 @@ namespace BatteryAging.Communication
                         CellVoltageDelta = bms.CellVoltageDelta;
                         MaxPackTemperature = bms.MaxTemperature;
                         TempDelta = bms.TempDelta;
+
+                        BmsSampled?.Invoke(this, new BmsSampleEventArgs
+                        {
+                            ChannelIndex = ChannelIndex,
+                            Data = new BmsDataPoint
+                            {
+                                TestRecordId = CurrentRecord?.Id ?? 0,
+                                ChannelIndex = ChannelIndex,
+                                Timestamp = bms.Timestamp,
+                                TotalElapsedSeconds = TotalElapsedSeconds,
+                                CellVoltages = bms.CellVoltages,
+                                Temperatures = bms.Temperatures,
+                                MaxCellVoltage = Math.Round(bms.MaxCellVoltage, 4),
+                                MinCellVoltage = Math.Round(bms.MinCellVoltage, 4),
+                                CellVoltageDelta = Math.Round(bms.CellVoltageDelta, 4),
+                                MaxCellIndex = bms.MaxCellIndex,
+                                MinCellIndex = bms.MinCellIndex,
+                                MaxTempPoint = Math.Round(bms.MaxTemperature, 2),
+                                TempDelta = Math.Round(bms.TempDelta, 2),
+                                BmsSoc = bms.Soc,
+                                BmsSoh = bms.Soh,
+                                FaultCode = bms.FaultCode
+                            }
+                        });
                     }
                     catch (OperationCanceledException) { break; }
                     catch
@@ -450,19 +475,6 @@ namespace BatteryAging.Communication
                     Energy = Math.Round(Energy, 5),
                     Temperature = Math.Round(Temperature, 2),
                     Soc = EstimateSoc(),
-                    // ── PACK / BMS ──
-                    CellVoltages = bms?.CellVoltages ?? Array.Empty<double>(),
-                    Temperatures = bms?.Temperatures ?? Array.Empty<double>(),
-                    MaxCellVoltage = bms != null ? Math.Round(bms.MaxCellVoltage, 4) : 0,
-                    MinCellVoltage = bms != null ? Math.Round(bms.MinCellVoltage, 4) : 0,
-                    CellVoltageDelta = bms != null ? Math.Round(bms.CellVoltageDelta, 4) : 0,
-                    MaxCellIndex = bms?.MaxCellIndex ?? 0,
-                    MinCellIndex = bms?.MinCellIndex ?? 0,
-                    MaxTempPoint = bms != null ? Math.Round(bms.MaxTemperature, 2) : 0,
-                    TempDelta = bms != null ? Math.Round(bms.TempDelta, 2) : 0,
-                    BmsSoc = bms?.Soc ?? 0,
-                    BmsSoh = bms?.Soh ?? 0,
-                    FaultCode = bms?.FaultCode ?? 0
                 };
                 DataSampled?.Invoke(this, new DataSampleEventArgs
                 {

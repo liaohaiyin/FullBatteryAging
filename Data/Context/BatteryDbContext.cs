@@ -18,6 +18,7 @@ namespace BatteryAging.Data.Context
         public DbSet<Cabinet> Cabinets { get; set; }
         public DbSet<CycleData> CycleData { get; set; }
         public DbSet<DcirResult> DcirResults { get; set; }
+        public DbSet<BmsDataPoint> BmsDataPoints { get; set; }
 
         // ── 鉴权（登录 / 权限）────────────────────────────────────────────
         public DbSet<User> Users { get; set; }
@@ -52,18 +53,6 @@ namespace BatteryAging.Data.Context
             {
                 e.HasKey(d => d.Id);
                 e.HasIndex(d => new { d.TestRecordId, d.Timestamp });
-
-                // 单体电压 / 多温度 → JSON 文本列
-                var conv = new ValueConverter<double[], string>(
-                    v => JsonSerializer.Serialize(v ?? Array.Empty<double>(), (JsonSerializerOptions)null),
-                    v => string.IsNullOrEmpty(v) ? Array.Empty<double>()
-                         : JsonSerializer.Deserialize<double[]>(v, (JsonSerializerOptions)null));
-                var cmp = new ValueComparer<double[]>(
-                    (a, b) => (a ?? Array.Empty<double>()).SequenceEqual(b ?? Array.Empty<double>()),
-                    a => a == null ? 0 : a.Aggregate(17, (h, x) => h * 31 + x.GetHashCode()),
-                    a => (double[])a.Clone());
-                e.Property(d => d.CellVoltages).HasConversion(conv, cmp);
-                e.Property(d => d.Temperatures).HasConversion(conv, cmp);
             });
 
             modelBuilder.Entity<Cabinet>(e =>
@@ -105,6 +94,24 @@ namespace BatteryAging.Data.Context
                  .WithMany()
                  .HasForeignKey(u => u.RoleId)
                  .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            modelBuilder.Entity<BmsDataPoint>(e =>
+            {
+                e.HasKey(d => d.Id);
+                e.HasIndex(d => new { d.TestRecordId, d.Timestamp });
+                e.HasIndex(d => d.ChannelIndex);
+
+                var conv = new ValueConverter<double[], string>(
+                    v => JsonSerializer.Serialize(v ?? Array.Empty<double>(), (JsonSerializerOptions)null),
+                    v => string.IsNullOrEmpty(v) ? Array.Empty<double>()
+                         : JsonSerializer.Deserialize<double[]>(v, (JsonSerializerOptions)null));
+                var cmp = new ValueComparer<double[]>(
+                    (a, b) => (a ?? Array.Empty<double>()).SequenceEqual(b ?? Array.Empty<double>()),
+                    a => a == null ? 0 : a.Aggregate(17, (h, x) => h * 31 + x.GetHashCode()),
+                    a => (double[])a.Clone());
+                e.Property(d => d.CellVoltages).HasConversion(conv, cmp);
+                e.Property(d => d.Temperatures).HasConversion(conv, cmp);
             });
 
             base.OnModelCreating(modelBuilder);

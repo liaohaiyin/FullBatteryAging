@@ -19,6 +19,7 @@ namespace BatteryAging.ViewModels
         //private readonly IMesService _mes;
 
         private readonly ConcurrentDictionary<int, List<DataPoint>> _pendingPoints = new();
+        private readonly ConcurrentDictionary<int, List<BmsDataPoint>> _pendingBms = new();
 
         public ObservableCollection<ChannelViewModel> Channels { get; } = new();
         public ObservableCollection<TestRecipe> AvailableRecipes { get; } = new();
@@ -65,6 +66,7 @@ namespace BatteryAging.ViewModels
                 executor.StepChanged += OnChannelStepChanged;
                 executor.CheckpointReached += OnCheckpointReached;
                 executor.CycleCompleted += OnCycleCompleted;
+                executor.BmsSampled += OnBmsSampled;
                 executor.DcirMeasured += async (s, e) =>
                 {
                     await _dataService.SaveDcirAsync(e.Result);
@@ -437,6 +439,12 @@ namespace BatteryAging.ViewModels
             catch (Exception ex) { AppendLog($"循环记录保存失败: {ex.Message}"); }
         }
 
+        private void OnBmsSampled(object sender, BmsSampleEventArgs e)
+        {
+            var list = _pendingBms.GetOrAdd(e.ChannelIndex, _ => new List<BmsDataPoint>());
+            lock (list) { list.Add(e.Data); }
+        }
+
         private async Task FinalizeRecordAsync(int channelIndex, ChannelStatus status,
             ProtectionType protection, string message)
         {
@@ -446,6 +454,7 @@ namespace BatteryAging.ViewModels
                 if (ch == null || ch.TestRecordId == 0) return;
 
                 await FlushPointsAsync(channelIndex);
+                await FlushBmsAsync(channelIndex);
 
                 var executor = ch.Executor;
                 var record = new TestRecord
@@ -517,6 +526,8 @@ namespace BatteryAging.ViewModels
             {
                 foreach (var key in _pendingPoints.Keys.ToList())
                     await FlushPointsAsync(key);
+                foreach (var key in _pendingBms.Keys.ToList())
+                    await FlushBmsAsync(key);
             };
             timer.Start();
         }
@@ -533,6 +544,20 @@ namespace BatteryAging.ViewModels
             }
             try { await _dataService.SaveDataPointsAsync(toSave); }
             catch (Exception ex) { AppendLog($"保存数据点失败 CH{channelIndex}: {ex.Message}"); }
+        }
+
+        private async Task FlushBmsAsync(int channelIndex)
+        {
+            if (!_pendingBms.TryGetValue(channelIndex, out var list)) return;
+            List<BmsDataPoint> toSave;
+            lock (list)
+            {
+                if (list.Count == 0) return;
+                toSave = new List<BmsDataPoint>(list);
+                list.Clear();
+            }
+            try { await _dataService.SaveBmsDataPointsAsync(toSave); }
+            catch (Exception ex) { AppendLog($"保存BMS数据失败 CH{channelIndex}: {ex.Message}"); }
         }
 
         private void AppendLog(string msg)

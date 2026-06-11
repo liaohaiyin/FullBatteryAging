@@ -1,4 +1,3 @@
-using System;
 using BatteryAging.Core.Models;
 using BatteryAging.Core.Enums;
 
@@ -54,5 +53,12 @@ namespace BatteryAging.Communication
     {
         public int ChannelIndex { get; set; }
         public DcirResult Result { get; set; }
+    }
+
+    /// <summary>BMS 采样事件（单体电压/多温度）</summary>
+    public class BmsSampleEventArgs : EventArgs
+    {
+        public int ChannelIndex { get; set; }
+        public BatteryAging.Core.Models.BmsDataPoint Data { get; set; }
     }
 }
