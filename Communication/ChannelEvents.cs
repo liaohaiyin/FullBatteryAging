@@ -59,6 +59,6 @@ namespace BatteryAging.Communication
     public class BmsSampleEventArgs : EventArgs
     {
         public int ChannelIndex { get; set; }
-        public BatteryAging.Core.Models.BmsDataPoint Data { get; set; }
+        public BmsDataPoint Data { get; set; }
     }
 }
