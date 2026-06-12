@@ -320,7 +320,6 @@
     <sys:String x:Key="Cabinet_Remark">备注</sys:String>
     <sys:String x:Key="Cabinet_InfoPre">机柜配置修改后需要</sys:String>
     <sys:String x:Key="Cabinet_InfoBold">重启程序</sys:String>
-    <sys:String x:Key="Cabinet_InfoPost">才能生效。新威/蓝电/致茂等真实驱动正在开发中，目前真实设备会回退到模拟器以避免阻塞。</sys:String>
     <sys:String x:Key="Cabinet_Save">保存机柜配置</sys:String>
     <sys:String x:Key="Compare_BarCodePrefix">条码前缀</sys:String>
     <sys:String x:Key="Compare_LoadCandidates">查询候选</sys:String>

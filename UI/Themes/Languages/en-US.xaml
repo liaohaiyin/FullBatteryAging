@@ -321,7 +321,6 @@
     <sys:String x:Key="Cabinet_Remark">Remark</sys:String>
     <sys:String x:Key="Cabinet_InfoPre">Cabinet changes require </sys:String>
     <sys:String x:Key="Cabinet_InfoBold">restarting the app</sys:String>
-    <sys:String x:Key="Cabinet_InfoPost"> to take effect. NeWare/Land/XinDaNeng real drivers are under development; real devices currently fall back to the simulator.</sys:String>
     <sys:String x:Key="Cabinet_Save">Save Cabinet Config</sys:String>
     <sys:String x:Key="Compare_BarCodePrefix">Barcode Prefix</sys:String>
     <sys:String x:Key="Compare_LoadCandidates">Find Candidates</sys:String>
