@@ -341,4 +341,19 @@
     <sys:String x:Key="Main_Theme_Dark">Dark</sys:String>
     <sys:String x:Key="Main_Theme_Light">Light</sys:String>
     <sys:String x:Key="Main_Theme_Navy">Navy</sys:String>
+
+    <!-- ── PACK / BMS (cabinet config + step protection) ── -->
+    <sys:String x:Key="Cabinet_BmsSection">BMS Acquisition (PACK cell voltage / multi-temp)</sys:String>
+    <sys:String x:Key="Cabinet_BmsEnable">Enable BMS acquisition</sys:String>
+    <sys:String x:Key="Cabinet_BmsDriver">BMS Driver</sys:String>
+    <sys:String x:Key="Cabinet_CellCount">Cell Count</sys:String>
+    <sys:String x:Key="Cabinet_TempPointCount">Temp Points</sys:String>
+    <sys:String x:Key="Cabinet_BmsIp">BMS IP (Modbus)</sys:String>
+    <sys:String x:Key="Cabinet_BmsPort">BMS Port</sys:String>
+
+    <sys:String x:Key="Recipe_CellProtection">PACK Cell Protection (0 = off)</sys:String>
+    <sys:String x:Key="Recipe_CellMaxVoltage">Cell Over-Volt (V)</sys:String>
+    <sys:String x:Key="Recipe_CellMinVoltage">Cell Under-Volt (V)</sys:String>
+    <sys:String x:Key="Recipe_MaxCellVoltageDelta">Max ΔV (V)</sys:String>
+    <sys:String x:Key="Recipe_MaxTempDelta">Max ΔT (°C)</sys:String>
 </ResourceDictionary>

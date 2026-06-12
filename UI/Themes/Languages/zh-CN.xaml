@@ -340,4 +340,19 @@
     <sys:String x:Key="Main_Theme_Dark">深色</sys:String>
     <sys:String x:Key="Main_Theme_Light">浅色</sys:String>
     <sys:String x:Key="Main_Theme_Navy">深蓝</sys:String>
+
+    <!-- ── PACK / BMS（机柜配置 + 工步保护）── -->
+    <sys:String x:Key="Cabinet_BmsSection">BMS 采集（PACK 单体电压 / 多路温度）</sys:String>
+    <sys:String x:Key="Cabinet_BmsEnable">启用 BMS 采集</sys:String>
+    <sys:String x:Key="Cabinet_BmsDriver">BMS 驱动</sys:String>
+    <sys:String x:Key="Cabinet_CellCount">单体节数</sys:String>
+    <sys:String x:Key="Cabinet_TempPointCount">温度点数</sys:String>
+    <sys:String x:Key="Cabinet_BmsIp">BMS IP（Modbus）</sys:String>
+    <sys:String x:Key="Cabinet_BmsPort">BMS 端口</sys:String>
+
+    <sys:String x:Key="Recipe_CellProtection">PACK 单体保护（0=不检测）</sys:String>
+    <sys:String x:Key="Recipe_CellMaxVoltage">单体过压 (V)</sys:String>
+    <sys:String x:Key="Recipe_CellMinVoltage">单体欠压 (V)</sys:String>
+    <sys:String x:Key="Recipe_MaxCellVoltageDelta">压差上限 ΔV (V)</sys:String>
+    <sys:String x:Key="Recipe_MaxTempDelta">温差上限 ΔT (°C)</sys:String>
 </ResourceDictionary>
