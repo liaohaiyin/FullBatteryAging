@@ -28,7 +28,7 @@ namespace BatteryAging.UI.Pages
             _model = new PlotModel
             {
                 DefaultFont = "微软雅黑",
-                PlotMargins = new OxyThickness(60, 8, 60, 36),
+                PlotMargins = new OxyThickness(40, 8, 100, 36),
                 PlotAreaBorderColor = OxyColor.FromArgb(60, 0, 0, 0)
 
             };
@@ -52,13 +52,45 @@ namespace BatteryAging.UI.Pages
             {
                 Position = AxisPosition.Right,
                 Key = "I",
-                Title = "电流 (A) / 温度 (°C)",
+                Title = "电流 (A)",
                 TitleColor = OxyColor.FromRgb(0xFF, 0x6F, 0x00)
             });
+            _model.Axes.Add(new LinearAxis
+            {
+                Position = AxisPosition.Right,
+                Key = "T",
+                Title = "温度 (°C)",
+                TitleColor = OxyColor.FromRgb(0xE5, 0x39, 0x35),
+                PositionTier = 1,                 // 排在电流轴外侧，避免重叠
+                AxisDistance = 6,
+                MajorGridlineStyle = LineStyle.None
+            });
 
-            _voltage = new LineSeries { Title = "电压", Color = OxyColor.FromRgb(0x00, 0x79, 0x6B), YAxisKey = "V", StrokeThickness = 1.4 };
-            _current = new LineSeries { Title = "电流", Color = OxyColor.FromRgb(0xFF, 0x6F, 0x00), YAxisKey = "I", StrokeThickness = 1.4 };
-            _temperature = new LineSeries { Title = "温度", Color = OxyColor.FromRgb(0xE5, 0x39, 0x35), YAxisKey = "I", StrokeThickness = 1.0, LineStyle = LineStyle.Dash };
+            _voltage = new LineSeries
+            {
+                Title = "电压",
+                Color = OxyColor.FromRgb(0x00, 0x79, 0x6B),
+                YAxisKey = "V",
+                StrokeThickness = 1.4,
+                TrackerFormatString = "{0}\n时间: {2:0.#} s\n电压: {4:0.0000} V"
+            };
+            _current = new LineSeries
+            {
+                Title = "电流",
+                Color = OxyColor.FromRgb(0xFF, 0x6F, 0x00),
+                YAxisKey = "I",
+                StrokeThickness = 1.4,
+                TrackerFormatString = "{0}\n时间: {2:0.#} s\n电流: {4:0.0000} A"
+            };
+            _temperature = new LineSeries
+            {
+                Title = "温度",
+                Color = OxyColor.FromRgb(0xE5, 0x39, 0x35),
+                YAxisKey = "T",
+                StrokeThickness = 1.0,
+                LineStyle = LineStyle.Dash,
+                TrackerFormatString = "{0}\n时间: {2:0.#} s\n温度: {4:0.0} °C"
+            };
             _model.Series.Add(_voltage);
             _model.Series.Add(_current);
             _model.Series.Add(_temperature);
@@ -71,7 +103,7 @@ namespace BatteryAging.UI.Pages
             _cycleModel = new PlotModel
             {
                 DefaultFont = "微软雅黑",
-                PlotMargins = new OxyThickness(60, 8, 20, 36),
+                PlotMargins = new OxyThickness(50, 8, 20, 36),
                 PlotAreaBorderColor = OxyColor.FromArgb(60, 0, 0, 0)
             };
             _cycleModel.Axes.Add(new LinearAxis

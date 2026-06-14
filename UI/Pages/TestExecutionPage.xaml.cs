@@ -112,7 +112,8 @@ namespace BatteryAging.UI.Pages
                 Color = OxyColor.FromRgb(0x00, 0xE5, 0xFF),
                 StrokeThickness = 1.8,
                 YAxisKey = "VoltageAxis",
-                MarkerType = MarkerType.None
+                MarkerType = MarkerType.None,
+                TrackerFormatString = "{0}\n时间: {2:0.#} s\n电压: {4:0.0000} V"
             };
             _currentSeries = new LineSeries
             {
@@ -120,7 +121,8 @@ namespace BatteryAging.UI.Pages
                 Color = OxyColor.FromRgb(0xFF, 0xC1, 0x07),
                 StrokeThickness = 1.8,
                 YAxisKey = "CurrentAxis",
-                MarkerType = MarkerType.None
+                MarkerType = MarkerType.None,
+                TrackerFormatString = "{0}\n时间: {2:0.#} s\n电流: {4:0.0000} A"
             };
             _plotModel.Series.Add(_voltageSeries);
             _plotModel.Series.Add(_currentSeries);

@@ -331,7 +331,7 @@
                                         <Border Background="{Binding CurrentStepType, Converter={StaticResource StepTypeBrushCv}}"
                                                 CornerRadius="2" Padding="4,0">
                                             <TextBlock Text="{Binding CurrentStepType, Converter={StaticResource EnumDescCv}}"
-                                                        Foreground="White" FontSize="9"/>
+                                                        Foreground="White" FontSize="12"/>
                                         </Border>
                                         <TextBlock Style="{StaticResource CellLabelStyle}" Margin="4,0,0,0">
                                             <Run Text="{Binding CurrentStepIndex, Mode=OneWay}"/>
