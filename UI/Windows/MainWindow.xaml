@@ -20,8 +20,7 @@
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="180"/>
-                <ColumnDefinition Width="639*"/>
-                <ColumnDefinition Width="70*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
             <!-- 侧边导航 -->

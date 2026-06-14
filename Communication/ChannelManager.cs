@@ -80,14 +80,7 @@ namespace BatteryAging.Communication
                         TempPointCount = cab.TempPointCount
                     };
                     _channels[global] = executor;
-                }
-
-                for (int local = 1; local <= cab.ChannelCount; local++)
-                {
-                    int global = cab.ChannelStartIndex + local - 1;
-                    var executor = new ChannelExecutor(global, driver, cab.Id, local) { SamplingIntervalMs = sampleMs, Chamber = chamber };
-                    _channels[global] = executor;
-                }
+                }               
             }
         }
 
