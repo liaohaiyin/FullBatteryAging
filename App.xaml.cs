@@ -40,6 +40,7 @@ namespace BatteryAging
             var services = new ServiceCollection();
             ConfigureServices(services, config);
             Services = services.BuildServiceProvider();
+            ScottPlot.Fonts.Default = "微软雅黑";
 
             // ── 初始化数据库 + 启用 WAL ──
             using (var scope = Services.CreateScope())

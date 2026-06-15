@@ -1,8 +1,6 @@
 using BatteryAging.ViewModels;
-using OxyPlot;
-using OxyPlot.Axes;
-using OxyPlot.Legends;
-using OxyPlot.Series;
+using ScottPlot;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows;
@@ -14,12 +12,15 @@ namespace BatteryAging.UI.Pages
     public partial class TestExecutionPage : Page
     {
         private readonly TestExecutionViewModel _vm;
-        private readonly PlotModel _plotModel;
-        private readonly LineSeries _voltageSeries;
-        private readonly LineSeries _currentSeries;
-        private readonly LinearAxis _voltageAxis;
-        private readonly LinearAxis _currentAxis;
-        private readonly LinearAxis _timeAxis;
+
+        private readonly List<double> _time = new();
+        private readonly List<double> _volt = new();
+        private readonly List<double> _curr = new();
+
+        private readonly ScottPlot.Plottables.Scatter _voltageSeries;
+        private readonly ScottPlot.Plottables.Scatter _currentSeries;
+        private readonly IYAxis _currentAxis;
+
         private ChannelViewModel _currentChannel;
         private GridLength _savedRightWidth = new GridLength(1.2, GridUnitType.Star);
 
@@ -29,107 +30,37 @@ namespace BatteryAging.UI.Pages
             _vm = vm;
             DataContext = vm;
 
-            // ── 深色主题 PlotModel ──
-            _plotModel = new PlotModel
-            {
-                DefaultFont = "微软雅黑",
-                Background = OxyColors.Transparent,
-                PlotAreaBorderColor = OxyColor.FromArgb(80, 110, 160, 200),
-                PlotAreaBorderThickness = new OxyThickness(1),
-                TextColor = OxyColor.FromRgb(0x8F, 0xA8, 0xC0),
-                TitleColor = OxyColor.FromRgb(0xE0, 0xF2, 0xF1),
-                SubtitleColor = OxyColor.FromRgb(0xE0, 0xF2, 0xF1),
-                PlotMargins = new OxyThickness(56, 8, 56, 32)
-            };
+            var plot = LivePlot.Plot;
+            plot.FigureBackground.Color = Colors.Transparent;
+            plot.DataBackground.Color = Colors.Transparent;
+            plot.Legend.BackgroundColor = Color.FromHex("#404040");
+            plot.Legend.FontColor = Color.FromHex("#d7d7d7");
+            plot.Legend.OutlineColor = Color.FromHex("#d7d7d7");
 
-            _plotModel.Legends.Add(new Legend
-            {
-                LegendPosition = LegendPosition.TopRight,
-                LegendBackground = OxyColor.FromArgb(180, 15, 42, 69),
-                LegendBorder = OxyColor.FromArgb(120, 110, 160, 200),
-                LegendBorderThickness = 1,
-                LegendTextColor = OxyColor.FromRgb(0xE0, 0xF2, 0xF1),
-                LegendFontSize = 11
-            });
+            var labelColor = Color.FromHex("#FFF1F1F1");
+            plot.Axes.Bottom.Label.Text = "时间 (s)";
+            plot.Axes.Bottom.Label.ForeColor = labelColor;
+            plot.Axes.Left.Label.Text = "电压 (V)";
+            plot.Axes.Left.Label.ForeColor = labelColor;
+            _currentAxis = plot.Axes.AddRightAxis();
+            _currentAxis.Label.Text = "电流 (A)";
+            _currentAxis.Label.ForeColor = labelColor;
 
-            // ── X 轴：时间 ──
-            _timeAxis = new LinearAxis
-            {
-                Position = AxisPosition.Bottom,
-                Title = "时间 (s)",
-                TitleColor = OxyColor.FromRgb(0x8F, 0xA8, 0xC0),
-                TextColor = OxyColor.FromRgb(0x8F, 0xA8, 0xC0),
-                TicklineColor = OxyColor.FromArgb(120, 110, 160, 200),
-                MajorGridlineStyle = LineStyle.Dot,
-                MajorGridlineColor = OxyColor.FromArgb(60, 110, 160, 200),
-                MinorGridlineStyle = LineStyle.None,
-                MinorTickSize = 0,
-                AxislineColor = OxyColor.FromArgb(120, 110, 160, 200),
-                AxislineThickness = 1,
-                AxislineStyle = LineStyle.Solid,
-                FontSize = 11
-            };
-            _plotModel.Axes.Add(_timeAxis);
+            _voltageSeries = plot.Add.Scatter(_time, _volt);
+            _voltageSeries.Color = Color.FromHex("#00E5FF");
+            _voltageSeries.LineWidth = 1.8f; _voltageSeries.MarkerSize = 0;
+            _voltageSeries.LegendText = "电压";
+            _voltageSeries.Axes.YAxis = plot.Axes.Left;
 
-            // ── 左 Y 轴：电压 ──
-            _voltageAxis = new LinearAxis
-            {
-                Position = AxisPosition.Left,
-                Key = "VoltageAxis",
-                Title = "电压 (V)",
-                TitleColor = OxyColor.FromRgb(0x00, 0xE5, 0xFF),
-                TextColor = OxyColor.FromRgb(0x00, 0xE5, 0xFF),
-                TicklineColor = OxyColor.FromArgb(120, 0, 229, 255),
-                MajorGridlineStyle = LineStyle.Dot,
-                MajorGridlineColor = OxyColor.FromArgb(60, 110, 160, 200),
-                AxislineColor = OxyColor.FromArgb(120, 110, 160, 200),
-                AxislineThickness = 1,
-                AxislineStyle = LineStyle.Solid,
-                FontSize = 11
-            };
-            _plotModel.Axes.Add(_voltageAxis);
+            _currentSeries = plot.Add.Scatter(_time, _curr);
+            _currentSeries.Color = Color.FromHex("#FFC107");
+            _currentSeries.LineWidth = 1.8f; _currentSeries.MarkerSize = 0;
+            _currentSeries.LegendText = "电流";
+            _currentSeries.Axes.YAxis = _currentAxis;
 
-            // ── 右 Y 轴：电流 ──
-            _currentAxis = new LinearAxis
-            {
-                Position = AxisPosition.Right,
-                Key = "CurrentAxis",
-                Title = "电流 (A)",
-                TitleColor = OxyColor.FromRgb(0xFF, 0xC1, 0x07),
-                TextColor = OxyColor.FromRgb(0xFF, 0xC1, 0x07),
-                TicklineColor = OxyColor.FromArgb(120, 255, 193, 7),
-                MajorGridlineStyle = LineStyle.None,
-                AxislineColor = OxyColor.FromArgb(120, 110, 160, 200),
-                AxislineThickness = 1,
-                AxislineStyle = LineStyle.Solid,
-                FontSize = 11
-            };
-            _plotModel.Axes.Add(_currentAxis);
+            plot.ShowLegend(Alignment.UpperRight);
+            LivePlot.Refresh();
 
-            _voltageSeries = new LineSeries
-            {
-                Title = "电压",
-                Color = OxyColor.FromRgb(0x00, 0xE5, 0xFF),
-                StrokeThickness = 1.8,
-                YAxisKey = "VoltageAxis",
-                MarkerType = MarkerType.None,
-                TrackerFormatString = "{0}\n时间: {2:0.#} s\n电压: {4:0.0000} V"
-            };
-            _currentSeries = new LineSeries
-            {
-                Title = "电流",
-                Color = OxyColor.FromRgb(0xFF, 0xC1, 0x07),
-                StrokeThickness = 1.8,
-                YAxisKey = "CurrentAxis",
-                MarkerType = MarkerType.None,
-                TrackerFormatString = "{0}\n时间: {2:0.#} s\n电流: {4:0.0000} A"
-            };
-            _plotModel.Series.Add(_voltageSeries);
-            _plotModel.Series.Add(_currentSeries);
-
-            LivePlot.Model = _plotModel;
-
-            // 监听 SelectedChannel 切换
             _vm.PropertyChanged += OnVmPropertyChanged;
             AttachChannel(_vm.SelectedChannel);
             Unloaded += OnPageUnloaded;
@@ -153,9 +84,7 @@ namespace BatteryAging.UI.Pages
             }
             else
             {
-                _voltageSeries.Points.Clear();
-                _currentSeries.Points.Clear();
-                _plotModel.InvalidatePlot(true);
+                ClearPlot();
             }
         }
 
@@ -167,17 +96,17 @@ namespace BatteryAging.UI.Pages
                 {
                     if (item is SamplePoint dp)
                     {
-                        _voltageSeries.Points.Add(new DataPoint(dp.ElapsedSeconds, dp.Voltage));
-                        _currentSeries.Points.Add(new DataPoint(dp.ElapsedSeconds, dp.Current));
+                        _time.Add(dp.ElapsedSeconds);
+                        _volt.Add(dp.Voltage);
+                        _curr.Add(dp.Current);
                     }
                 }
-                _plotModel.InvalidatePlot(true);
+                LivePlot.Plot.Axes.AutoScale();
+                LivePlot.Refresh();
             }
             else if (e.Action == NotifyCollectionChangedAction.Reset)
             {
-                _voltageSeries.Points.Clear();
-                _currentSeries.Points.Clear();
-                _plotModel.InvalidatePlot(true);
+                ClearPlot();
             }
             else
             {
@@ -187,21 +116,28 @@ namespace BatteryAging.UI.Pages
 
         private void RebuildPlot()
         {
-            _voltageSeries.Points.Clear();
-            _currentSeries.Points.Clear();
+            _time.Clear(); _volt.Clear(); _curr.Clear();
             if (_currentChannel != null)
             {
                 foreach (var dp in _currentChannel.RecentSamples)
                 {
-                    _voltageSeries.Points.Add(new DataPoint(dp.ElapsedSeconds, dp.Voltage));
-                    _currentSeries.Points.Add(new DataPoint(dp.ElapsedSeconds, dp.Current));
+                    _time.Add(dp.ElapsedSeconds);
+                    _volt.Add(dp.Voltage);
+                    _curr.Add(dp.Current);
                 }
             }
-            _plotModel.InvalidatePlot(true);
+            LivePlot.Plot.Axes.AutoScale();
+            LivePlot.Refresh();
         }
+
+        private void ClearPlot()
+        {
+            _time.Clear(); _volt.Clear(); _curr.Clear();
+            LivePlot.Refresh();
+        }
+
         private void CollapseToggle_Checked(object sender, RoutedEventArgs e)
         {
-            // 展开
             if (RightPanel == null || RightColumn == null) return;
             RightColumn.MinWidth = 440;
             RightColumn.Width = _savedRightWidth;
@@ -210,13 +146,13 @@ namespace BatteryAging.UI.Pages
 
         private void CollapseToggle_Unchecked(object sender, RoutedEventArgs e)
         {
-            // 折叠
             if (RightPanel == null || RightColumn == null) return;
             if (RightColumn.Width.Value > 0) _savedRightWidth = RightColumn.Width;
             RightPanel.Visibility = Visibility.Collapsed;
             RightColumn.MinWidth = 0;
             RightColumn.Width = new GridLength(0);
         }
+
         private void OnPageUnloaded(object sender, RoutedEventArgs e)
         {
             _vm.PropertyChanged -= OnVmPropertyChanged;

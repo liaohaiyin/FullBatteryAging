@@ -1,23 +1,28 @@
+using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows.Controls;
-using OxyPlot;
-using OxyPlot.Axes;
-using OxyPlot.Series;
+using ScottPlot;
 using BatteryAging.ViewModels;
-using OxyPlot.Legends;
 
 namespace BatteryAging.UI.Pages
 {
     public partial class DataQueryPage : Page
     {
         private readonly DataQueryViewModel _vm;
-        private readonly PlotModel _model;
-        private readonly PlotModel _cycleModel;
-        private readonly LineSeries _voltage;
-        private readonly LineSeries _current;
-        private readonly LineSeries _temperature;
-        private readonly LineSeries _cycleSeries;
+
+        private readonly List<double> _t = new();
+        private readonly List<double> _v = new();
+        private readonly List<double> _i = new();
+        private readonly List<double> _temp = new();
+        private readonly List<double> _cycX = new();
+        private readonly List<double> _cycY = new();
+
+        private readonly ScottPlot.Plottables.Scatter _voltage;
+        private readonly ScottPlot.Plottables.Scatter _current;
+        private readonly ScottPlot.Plottables.Scatter _temperature;
+        private readonly ScottPlot.Plottables.Scatter _cycleSeries;
 
         public DataQueryPage(DataQueryViewModel vm)
         {
@@ -25,169 +30,116 @@ namespace BatteryAging.UI.Pages
             _vm = vm;
             DataContext = vm;
 
-            _model = new PlotModel
-            {
-                DefaultFont = "微软雅黑",
-                PlotMargins = new OxyThickness(40, 8, 100, 36),
-                PlotAreaBorderColor = OxyColor.FromArgb(60, 0, 0, 0)
+            // ── 历史曲线（电压/电流/温度，三轴）──
+            var p = HistoryPlot.Plot;
+            p.FigureBackground.Color = Colors.Transparent;
+            p.DataBackground.Color = Colors.Transparent;
+            p.Legend.BackgroundColor = Color.FromHex("#404040");
+            p.Legend.FontColor = Color.FromHex("#d7d7d7");
+            p.Legend.OutlineColor = Color.FromHex("#d7d7d7");
 
-            };
-            _model.Axes.Add(new LinearAxis
-            {
-                Position = AxisPosition.Bottom,
-                Title = "时间 (s)",
-                MajorGridlineStyle = LineStyle.Dot,
-                MajorGridlineColor = OxyColor.FromArgb(40, 0, 0, 0)                
-            });
-            _model.Axes.Add(new LinearAxis
-            {
-                Position = AxisPosition.Left,
-                Key = "V",
-                Title = "电压 (V)",
-                TitleColor = OxyColor.FromRgb(0x00, 0x79, 0x6B),
-                MajorGridlineStyle = LineStyle.Dot,
-                MajorGridlineColor = OxyColor.FromArgb(40, 0, 0, 0)
-            });
-            _model.Axes.Add(new LinearAxis
-            {
-                Position = AxisPosition.Right,
-                Key = "I",
-                Title = "电流 (A)",
-                TitleColor = OxyColor.FromRgb(0xFF, 0x6F, 0x00)
-            });
-            _model.Axes.Add(new LinearAxis
-            {
-                Position = AxisPosition.Right,
-                Key = "T",
-                Title = "温度 (°C)",
-                TitleColor = OxyColor.FromRgb(0xE5, 0x39, 0x35),
-                PositionTier = 1,                 // 排在电流轴外侧，避免重叠
-                AxisDistance = 6,
-                MajorGridlineStyle = LineStyle.None
-            });
+            var labelColor = Color.FromHex("#FFF1F1F1");
+            p.Axes.Bottom.Label.Text = "时间 (s)";
+            p.Axes.Bottom.Label.ForeColor = labelColor;
+            p.Axes.Left.Label.Text = "电压 (V)";
+            p.Axes.Left.Label.ForeColor = labelColor;
 
-            _voltage = new LineSeries
-            {
-                Title = "电压",
-                Color = OxyColor.FromRgb(0x00, 0x79, 0x6B),
-                YAxisKey = "V",
-                StrokeThickness = 1.4,
-                TrackerFormatString = "{0}\n时间: {2:0.#} s\n电压: {4:0.0000} V"
-            };
-            _current = new LineSeries
-            {
-                Title = "电流",
-                Color = OxyColor.FromRgb(0xFF, 0x6F, 0x00),
-                YAxisKey = "I",
-                StrokeThickness = 1.4,
-                TrackerFormatString = "{0}\n时间: {2:0.#} s\n电流: {4:0.0000} A"
-            };
-            _temperature = new LineSeries
-            {
-                Title = "温度",
-                Color = OxyColor.FromRgb(0xE5, 0x39, 0x35),
-                YAxisKey = "T",
-                StrokeThickness = 1.0,
-                LineStyle = LineStyle.Dash,
-                TrackerFormatString = "{0}\n时间: {2:0.#} s\n温度: {4:0.0} °C"
-            };
-            _model.Series.Add(_voltage);
-            _model.Series.Add(_current);
-            _model.Series.Add(_temperature);
+            var iAxis = p.Axes.AddRightAxis();
+            iAxis.Label.Text = "电流 (A)";
+            iAxis.Label.ForeColor = labelColor;
+            var tAxis = p.Axes.AddRightAxis();
+            tAxis.Label.Text = "温度 (°C)";
+            tAxis.Label.ForeColor = labelColor;
 
-            HistoryPlot.Model = _model;
+            _voltage = p.Add.Scatter(_t, _v);
+            _voltage.Color = Color.FromHex("#00796B");
+            _voltage.LineWidth = 1.4f; _voltage.MarkerSize = 0;
+            _voltage.LegendText = "电压";
+            _voltage.Axes.YAxis = p.Axes.Left;
+
+            _current = p.Add.Scatter(_t, _i);
+            _current.Color = Color.FromHex("#FF6F00");
+            _current.LineWidth = 1.4f; _current.MarkerSize = 0;
+            _current.LegendText = "电流";
+            _current.Axes.YAxis = iAxis;
+
+            _temperature = p.Add.Scatter(_t, _temp);
+            _temperature.Color = Color.FromHex("#E53935");
+            _temperature.LineWidth = 1.0f; _temperature.MarkerSize = 0;
+            _temperature.LinePattern = LinePattern.Dashed;
+            _temperature.LegendText = "温度";
+            _temperature.Axes.YAxis = tAxis;
+
+            p.ShowLegend();
+            HistoryPlot.Refresh();
+
+            // ── 循环衰减 ──
+            var cp = CyclePlot.Plot;
+            cp.FigureBackground.Color = Colors.Transparent;
+            cp.DataBackground.Color = Colors.Transparent;
+            cp.Legend.BackgroundColor = Color.FromHex("#404040");
+            cp.Legend.FontColor = Color.FromHex("#d7d7d7");
+            cp.Legend.OutlineColor = Color.FromHex("#d7d7d7");
+            cp.Axes.Bottom.Label.Text = "循环次数";
+            cp.Axes.Bottom.Label.ForeColor = labelColor;
+            cp.Axes.Left.Label.Text = "放电容量 (Ah)";
+            cp.Axes.Left.Label.ForeColor = labelColor;
+            _cycleSeries = cp.Add.Scatter(_cycX, _cycY);
+            _cycleSeries.Color = Color.FromHex("#00796B");
+            _cycleSeries.LineWidth = 1.6f;
+            _cycleSeries.MarkerSize = 5;
+            _cycleSeries.LegendText = "容量衰减";
+            CyclePlot.Refresh();
 
             _vm.PropertyChanged += OnVmPropertyChanged;
             ((INotifyCollectionChanged)_vm.DataPoints).CollectionChanged += OnDataChanged;
-
-            _cycleModel = new PlotModel
-            {
-                DefaultFont = "微软雅黑",
-                PlotMargins = new OxyThickness(50, 8, 20, 36),
-                PlotAreaBorderColor = OxyColor.FromArgb(60, 0, 0, 0)
-            };
-            _cycleModel.Axes.Add(new LinearAxis
-            {
-                Position = AxisPosition.Bottom,
-                Title = "循环次数",
-                MajorGridlineStyle = LineStyle.Dot,
-                MajorGridlineColor = OxyColor.FromArgb(40, 0, 0, 0)
-            });
-            _cycleModel.Axes.Add(new LinearAxis
-            {
-                Position = AxisPosition.Left,
-                Title = "放电容量 (Ah)",
-                TitleColor = OxyColor.FromRgb(0x00, 0x79, 0x6B),
-                MajorGridlineStyle = LineStyle.Dot,
-                MajorGridlineColor = OxyColor.FromArgb(40, 0, 0, 0)
-            });
-            _cycleSeries = new LineSeries
-            {
-                Title = "容量衰减",
-                Color = OxyColor.FromRgb(0x00, 0x79, 0x6B),
-                StrokeThickness = 1.6,
-                MarkerType = MarkerType.Circle,
-                MarkerSize = 3
-            };
-            _cycleModel.Series.Add(_cycleSeries);
-            CyclePlot.Model = _cycleModel;
-
             ((INotifyCollectionChanged)_vm.CycleData).CollectionChanged += OnCycleChanged;
             Unloaded += OnPageUnloaded;
         }
 
         private void OnVmPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(DataQueryViewModel.SelectedRecord))
+            if (e.PropertyName == nameof(DataQueryViewModel.SelectedRecord) && _vm.SelectedRecord == null)
             {
-                if (_vm.SelectedRecord == null)
-                {
-                    if (Dispatcher.CheckAccess())
-                    {
-                        ClearAllSeries();
-                    }
-                    else
-                    {
-                        Dispatcher.BeginInvoke((Action)ClearAllSeries);
-                    }
-                }
+                if (Dispatcher.CheckAccess()) ClearAllSeries();
+                else Dispatcher.BeginInvoke((Action)ClearAllSeries);
             }
         }
 
         private void OnDataChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            _voltage.Points.Clear();
-            _current.Points.Clear();
-            _temperature.Points.Clear();
-            foreach (var p in _vm.DataPoints)
+            _t.Clear(); _v.Clear(); _i.Clear(); _temp.Clear();
+            foreach (var pt in _vm.DataPoints)
             {
-                _voltage.Points.Add(new DataPoint(p.ElapsedSeconds, p.Voltage));
-                _current.Points.Add(new DataPoint(p.ElapsedSeconds, p.Current));
-                _temperature.Points.Add(new DataPoint(p.ElapsedSeconds, p.Temperature));
+                _t.Add(pt.ElapsedSeconds);
+                _v.Add(pt.Voltage);
+                _i.Add(pt.Current);
+                _temp.Add(pt.Temperature);
             }
-            _model.InvalidatePlot(true);
+            HistoryPlot.Plot.Axes.AutoScale();
+            HistoryPlot.Refresh();
         }
 
         private void OnCycleChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            _cycleSeries.Points.Clear();
+            _cycX.Clear(); _cycY.Clear();
             foreach (var c in _vm.CycleData)
             {
-                // 直接画放电容量：
-                _cycleSeries.Points.Add(new DataPoint(c.CycleIndex, c.DischargeCapacity));
+                _cycX.Add(c.CycleIndex);
+                _cycY.Add(c.DischargeCapacity);
             }
-            _cycleModel.InvalidatePlot(true);
+            CyclePlot.Plot.Axes.AutoScale();
+            CyclePlot.Refresh();
         }
+
         private void ClearAllSeries()
         {
-            _voltage.Points.Clear();
-            _current.Points.Clear();
-            _temperature.Points.Clear();
-            _model.InvalidatePlot(true);
-
-            _cycleSeries.Points.Clear();
-            _cycleModel.InvalidatePlot(true);
+            _t.Clear(); _v.Clear(); _i.Clear(); _temp.Clear();
+            HistoryPlot.Refresh();
+            _cycX.Clear(); _cycY.Clear();
+            CyclePlot.Refresh();
         }
+
         private void OnPageUnloaded(object sender, System.Windows.RoutedEventArgs e)
         {
             _vm.PropertyChanged -= OnVmPropertyChanged;

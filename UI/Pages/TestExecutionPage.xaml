@@ -1,7 +1,7 @@
 <Page x:Class="BatteryAging.UI.Pages.TestExecutionPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:oxy="clr-namespace:OxyPlot.SkiaSharp.Wpf;assembly=OxyPlot.SkiaSharp.Wpf"
+      xmlns:sp="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF"
       xmlns:ap="clr-namespace:BatteryAging.UI.AttachedProperties"
       xmlns:ctrl="clr-namespace:BatteryAging.UI.Controls"
       xmlns:cv="clr-namespace:BatteryAging.UI.Converters"
@@ -27,7 +27,7 @@
             <Setter Property="FontFamily" Value="Segoe UI, Microsoft YaHei"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Margin" Value="2,0,0,0"/>
-        </Style>
+        </Style>        
         <Style x:Key="PanelCollapseToggle" TargetType="ToggleButton">
             <Setter Property="Background" Value="{DynamicResource VsBgPanelBrush}"/>
             <Setter Property="BorderBrush" Value="{StaticResource VsBorderBrush}"/>
@@ -482,7 +482,7 @@
                             </Border>
                         </StackPanel>
                     </Border>
-                    <oxy:PlotView Grid.Row="1" x:Name="LivePlot" Background="Transparent" Margin="2,8,2,2"/>
+                    <sp:WpfPlot Grid.Row="1" x:Name="LivePlot" Margin="2,8,2,2"/>
                 </Grid>
             </Border>
 
