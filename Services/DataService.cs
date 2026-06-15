@@ -20,7 +20,8 @@ namespace BatteryAging.Services
         Task UpdateRecordAsync(TestRecord record);
         Task UpdateRecordCheckpointAsync(int recordId, int stepIndex, int loopIndex,
             double totalElapsed, double chargeAh, double dischargeAh, double chargeWh, double dischargeWh);
-        Task<List<TestRecord>> QueryRecordsAsync(DateTime? start, DateTime? end, int? channel, string barCode);
+        Task<(List<TestRecord> Records, int TotalCount)> QueryRecordsPagedAsync(
+            DateTime? start, DateTime? end, int? channel, string barCode, int page, int pageSize);
         Task<List<TestRecord>> GetInterruptedRecordsAsync();
         Task<List<DataPoint>> GetDataPointsAsync(int recordId);
         Task SaveDataPointsAsync(IEnumerable<DataPoint> points);
@@ -137,8 +138,8 @@ namespace BatteryAging.Services
             await db.SaveChangesAsync();
         }
 
-        public async Task<List<TestRecord>> QueryRecordsAsync(
-            DateTime? start, DateTime? end, int? channel, string barCode)
+        public async Task<(List<TestRecord> Records, int TotalCount)> QueryRecordsPagedAsync(
+             DateTime? start, DateTime? end, int? channel, string barCode, int page, int pageSize)
         {
             await using var db = await _factory.CreateDbContextAsync();
             var q = db.TestRecords.AsQueryable();
@@ -147,7 +148,14 @@ namespace BatteryAging.Services
             if (channel.HasValue) q = q.Where(r => r.ChannelIndex == channel.Value);
             if (!string.IsNullOrWhiteSpace(barCode))
                 q = q.Where(r => r.BarCode.Contains(barCode));
-            return await q.OrderByDescending(r => r.StartTime).Take(500).ToListAsync();
+
+            var total = await q.CountAsync();
+            if (page < 1) page = 1;
+            var records = await q.OrderByDescending(r => r.StartTime)
+                                 .Skip((page - 1) * pageSize)
+                                 .Take(pageSize)
+                                 .ToListAsync();
+            return (records, total);
         }
 
         /// <summary>查询未正常结束的测试记录（用于掉电续测）</summary>

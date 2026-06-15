@@ -356,4 +356,12 @@
     <sys:String x:Key="Recipe_CellMinVoltage">Cell Under-Volt (V)</sys:String>
     <sys:String x:Key="Recipe_MaxCellVoltageDelta">Max ΔV (V)</sys:String>
     <sys:String x:Key="Recipe_MaxTempDelta">Max ΔT (°C)</sys:String>
+
+    <!-- ── paging ── -->
+    <sys:String x:Key="DataQuery_TotalRecords">Total</sys:String>
+    <sys:String x:Key="DataQuery_RecordsUnit">records</sys:String>
+    <sys:String x:Key="DataQuery_FirstPage">First</sys:String>
+    <sys:String x:Key="DataQuery_PrevPage">Prev</sys:String>
+    <sys:String x:Key="DataQuery_NextPage">Next</sys:String>
+    <sys:String x:Key="DataQuery_LastPage">Last</sys:String>
 </ResourceDictionary>

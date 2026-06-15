@@ -32,6 +32,35 @@ namespace BatteryAging.ViewModels
         public IAsyncRelayCommand ExportCommand { get; }
         public IAsyncRelayCommand LoadDataPointsCommand { get; }
 
+        /// <summary>
+        /// 分页相关属性和命令
+        /// </summary>
+        [ObservableProperty] private int _totalRecords;
+        [ObservableProperty] private int _totalPages = 1;
+
+        private int _currentPage = 1;
+        private const int PageSize = 50;
+        private readonly RelayCommand _firstPageCommand;
+        private readonly RelayCommand _previousPageCommand;
+        private readonly RelayCommand _nextPageCommand;
+        private readonly RelayCommand _lastPageCommand;
+
+        public int CurrentPage
+        {
+            get => _currentPage;
+            set
+            {
+                if (SetProperty(ref _currentPage, value))
+                    _ = QueryAsync(keepPage: true);
+            }
+        }
+
+        public IRelayCommand FirstPageCommand => _firstPageCommand;
+        public IRelayCommand PreviousPageCommand => _previousPageCommand;
+        public IRelayCommand NextPageCommand => _nextPageCommand;
+        public IRelayCommand LastPageCommand => _lastPageCommand;
+
+
         public DataQueryViewModel(IDataService dataService, IDialogService dialogService, IAuthService auth)
         {
             _dataService = dataService;
@@ -41,6 +70,11 @@ namespace BatteryAging.ViewModels
             QueryCommand = new AsyncRelayCommand(QueryAsync);
             ExportCommand = new AsyncRelayCommand(ExportAsync,() => _auth.HasPermission(Permission.DataQuery_Export));
             LoadDataPointsCommand = new AsyncRelayCommand(LoadDataPointsAsync);
+
+            _firstPageCommand = new RelayCommand(() => CurrentPage = 1, () => CurrentPage > 1);
+            _previousPageCommand = new RelayCommand(() => CurrentPage = Math.Max(1, CurrentPage - 1), () => CurrentPage > 1);
+            _nextPageCommand = new RelayCommand(() => CurrentPage = Math.Min(TotalPages, CurrentPage + 1), () => CurrentPage < TotalPages);
+            _lastPageCommand = new RelayCommand(() => CurrentPage = TotalPages, () => CurrentPage < TotalPages);
 
             _ = QueryAsync();
         }
@@ -58,14 +92,28 @@ namespace BatteryAging.ViewModels
             }
         }
 
-        private async Task QueryAsync()
+        private async Task QueryAsync() => await QueryAsync(keepPage: false);
+
+        private async Task QueryAsync(bool keepPage)
         {
             try
             {
-                var list = await _dataService.QueryRecordsAsync(StartDate, EndDate, ChannelFilter, BarCode);
+                if (!keepPage && _currentPage != 1)
+                {
+                    // 重置到第一页(不触发递归查询)
+                    SetProperty(ref _currentPage, 1, nameof(CurrentPage));
+                }
+
+                var (list, total) = await _dataService.QueryRecordsPagedAsync(
+                    StartDate, EndDate, ChannelFilter, BarCode, _currentPage, PageSize);
+
                 Records.Clear();
                 foreach (var r in list) Records.Add(r);
-                StatusText = $"查询到 {Records.Count} 条记录";
+
+                TotalRecords = total;
+                TotalPages = Math.Max(1, (total + PageSize - 1) / PageSize);
+                UpdatePagingCommands();
+                StatusText = $"共 {TotalRecords} 条记录，第 {CurrentPage}/{TotalPages} 页";
             }
             catch (Exception ex)
             {
@@ -121,6 +169,16 @@ namespace BatteryAging.ViewModels
             {
                 _dialogService.ShowError($"导出失败: {ex.Message}");
             }
+        }
+
+        partial void OnTotalPagesChanged(int value) => UpdatePagingCommands();
+
+        private void UpdatePagingCommands()
+        {
+            _firstPageCommand.NotifyCanExecuteChanged();
+            _previousPageCommand.NotifyCanExecuteChanged();
+            _nextPageCommand.NotifyCanExecuteChanged();
+            _lastPageCommand.NotifyCanExecuteChanged();
         }
     }
 }

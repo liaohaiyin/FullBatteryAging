@@ -355,4 +355,12 @@
     <sys:String x:Key="Recipe_CellMinVoltage">单体欠压 (V)</sys:String>
     <sys:String x:Key="Recipe_MaxCellVoltageDelta">压差上限 ΔV (V)</sys:String>
     <sys:String x:Key="Recipe_MaxTempDelta">温差上限 ΔT (°C)</sys:String>
+
+    <!-- ── 分页── -->
+    <sys:String x:Key="DataQuery_TotalRecords">共</sys:String>
+    <sys:String x:Key="DataQuery_RecordsUnit">条记录</sys:String>
+    <sys:String x:Key="DataQuery_FirstPage">首页</sys:String>
+    <sys:String x:Key="DataQuery_PrevPage">上一页</sys:String>
+    <sys:String x:Key="DataQuery_NextPage">下一页</sys:String>
+    <sys:String x:Key="DataQuery_LastPage">末页</sys:String>
 </ResourceDictionary>

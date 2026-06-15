@@ -74,6 +74,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Border Grid.Row="0" Background="{DynamicResource VsBgHeaderBrush}"
                         BorderBrush="{StaticResource VsBorderBrush}"
@@ -103,6 +104,41 @@
                         <DataGridTextColumn Header="{DynamicResource DataQuery_Col_DischargeWh}" Binding="{Binding TotalDischargeEnergy, StringFormat={}{0:F4}}" Width="100"/>
                     </DataGrid.Columns>
                 </DataGrid>
+                <!-- 分页控制 -->
+                <Border Grid.Row="2" Background="{StaticResource VsBgHeaderBrush}"
+                        BorderBrush="{StaticResource VsBorderBrush}" BorderThickness="0,1,0,0"
+                        Padding="8,5">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" VerticalAlignment="Center"
+                                   Foreground="{StaticResource VsTextSecondaryBrush}">
+                            <Run Text="{DynamicResource DataQuery_TotalRecords}"/>
+                            <Run Text=" "/>
+                            <Run Text="{Binding TotalRecords, Mode=OneWay}"/>
+                            <Run Text="{DynamicResource DataQuery_RecordsUnit}"/>
+                        </TextBlock>
+                        <StackPanel Grid.Column="2" Orientation="Horizontal">
+                            <Button Command="{Binding FirstPageCommand}" Content="{DynamicResource DataQuery_FirstPage}"
+                                    Style="{StaticResource VsOutlinedButton}" Margin="2,0" Padding="8,3"/>
+                            <Button Command="{Binding PreviousPageCommand}" Content="{DynamicResource DataQuery_PrevPage}"
+                                    Style="{StaticResource VsOutlinedButton}" Margin="2,0" Padding="8,3"/>
+                            <TextBlock VerticalAlignment="Center" Margin="10,0"
+                                       Foreground="{StaticResource VsTextPrimaryBrush}" FontFamily="Consolas">
+                                <Run Text="{Binding CurrentPage, Mode=OneWay}"/>
+                                <Run Text=" / "/>
+                                <Run Text="{Binding TotalPages, Mode=OneWay}"/>
+                            </TextBlock>
+                            <Button Command="{Binding NextPageCommand}" Content="{DynamicResource DataQuery_NextPage}"
+                                    Style="{StaticResource VsOutlinedButton}" Margin="2,0" Padding="8,3"/>
+                            <Button Command="{Binding LastPageCommand}" Content="{DynamicResource DataQuery_LastPage}"
+                                    Style="{StaticResource VsOutlinedButton}" Margin="2,0" Padding="8,3"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
             </Grid>
         </Border>
 
