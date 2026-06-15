@@ -33,8 +33,12 @@ namespace BatteryAging.UI.Pages
             plot.Legend.OutlineColor = Color.FromHex("#d7d7d7");
             var labelColor = Color.FromHex("#FFF1F1F1");
             plot.Axes.Bottom.Label.Text = "X";
+            plot.Axes.Bottom.Label.FontSize = 14;
+            plot.Axes.Bottom.Label.Bold = false;
             plot.Axes.Bottom.Label.ForeColor = labelColor;
             plot.Axes.Left.Label.Text = "Y";
+            plot.Axes.Left.Label.FontSize = 14;
+            plot.Axes.Left.Label.Bold = false;
             plot.Axes.Left.Label.ForeColor = labelColor;
             plot.ShowLegend(Alignment.UpperRight);
             ComparePlot.Refresh();

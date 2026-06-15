@@ -39,11 +39,17 @@ namespace BatteryAging.UI.Pages
 
             var labelColor = Color.FromHex("#FFF1F1F1");
             plot.Axes.Bottom.Label.Text = "时间 (s)";
+            plot.Axes.Bottom.Label.FontSize = 14;
+            plot.Axes.Bottom.Label.Bold = false;
             plot.Axes.Bottom.Label.ForeColor = labelColor;
             plot.Axes.Left.Label.Text = "电压 (V)";
+            plot.Axes.Left.Label.FontSize = 14;
+            plot.Axes.Left.Label.Bold = false;
             plot.Axes.Left.Label.ForeColor = labelColor;
             _currentAxis = plot.Axes.AddRightAxis();
             _currentAxis.Label.Text = "电流 (A)";
+            _currentAxis.Label.FontSize = 14;
+            _currentAxis.Label.Bold = false;
             _currentAxis.Label.ForeColor = labelColor;
 
             _voltageSeries = plot.Add.Scatter(_time, _volt);
@@ -60,7 +66,6 @@ namespace BatteryAging.UI.Pages
 
             plot.ShowLegend(Alignment.UpperRight);
             LivePlot.Refresh();
-
             _vm.PropertyChanged += OnVmPropertyChanged;
             AttachChannel(_vm.SelectedChannel);
             Unloaded += OnPageUnloaded;

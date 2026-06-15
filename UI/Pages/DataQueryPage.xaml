@@ -145,8 +145,8 @@
         <!-- 详细数据 -->
         <Grid Grid.Row="2" Margin="0,4,0,0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="3*"/>
                 <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
             <Border Grid.Column="0" Style="{StaticResource VsCardStyle}">
@@ -171,7 +171,7 @@
                             <ColumnDefinition Width="2*"/>
                         </Grid.ColumnDefinitions>
                         <sp:WpfPlot Grid.Column="0" x:Name="HistoryPlot" Margin="2,4,2,2"/>
-                        <sp:WpfPlot Grid.Column="1" x:Name="CyclePlot" Margin="2,4,2,2"/>
+                        <sp:WpfPlot Grid.Column="1" x:Name="CyclePlot" Margin="15,4,2,2"/>
                     </Grid>
                 </Grid>
             </Border>

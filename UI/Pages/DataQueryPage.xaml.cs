@@ -40,15 +40,23 @@ namespace BatteryAging.UI.Pages
 
             var labelColor = Color.FromHex("#FFF1F1F1");
             p.Axes.Bottom.Label.Text = "时间 (s)";
+            p.Axes.Bottom.Label.FontSize = 14;
+            p.Axes.Bottom.Label.Bold = false;
             p.Axes.Bottom.Label.ForeColor = labelColor;
             p.Axes.Left.Label.Text = "电压 (V)";
+            p.Axes.Left.Label.FontSize = 14;
+            p.Axes.Left.Label.Bold = false;
             p.Axes.Left.Label.ForeColor = labelColor;
 
             var iAxis = p.Axes.AddRightAxis();
             iAxis.Label.Text = "电流 (A)";
+            iAxis.Label.FontSize = 14;
+            iAxis.Label.Bold = false;
             iAxis.Label.ForeColor = labelColor;
             var tAxis = p.Axes.AddRightAxis();
             tAxis.Label.Text = "温度 (°C)";
+            tAxis.Label.FontSize = 14;
+            tAxis.Label.Bold = false;
             tAxis.Label.ForeColor = labelColor;
 
             _voltage = p.Add.Scatter(_t, _v);
@@ -82,8 +90,12 @@ namespace BatteryAging.UI.Pages
             cp.Legend.OutlineColor = Color.FromHex("#d7d7d7");
             cp.Axes.Bottom.Label.Text = "循环次数";
             cp.Axes.Bottom.Label.ForeColor = labelColor;
+            cp.Axes.Bottom.Label.FontSize = 14;
+            cp.Axes.Bottom.Label.Bold = false;
             cp.Axes.Left.Label.Text = "放电容量 (Ah)";
             cp.Axes.Left.Label.ForeColor = labelColor;
+            cp.Axes.Left.Label.FontSize = 14;
+            cp.Axes.Left.Label.Bold = false;
             _cycleSeries = cp.Add.Scatter(_cycX, _cycY);
             _cycleSeries.Color = Color.FromHex("#00796B");
             _cycleSeries.LineWidth = 1.6f;
