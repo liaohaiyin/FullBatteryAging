@@ -1,13 +1,16 @@
-﻿using System;
-using System.Windows.Controls;
-using ScottPlot;
+﻿using BatteryAging.UI.Helpers;
 using BatteryAging.ViewModels;
+using ScottPlot;
+using System;
+using System.Windows.Controls;
 
 namespace BatteryAging.UI.Pages
 {
     public partial class ComparisonPage : Page
     {
         private readonly ComparisonViewModel _vm;
+        private ScatterHighlighter _highlighter;
+        private readonly List<ScottPlot.Plottables.Scatter> _scatters = new();
 
         private static readonly Color[] Palette =
         {
@@ -44,7 +47,11 @@ namespace BatteryAging.UI.Pages
             ComparePlot.Refresh();
 
             _vm.SeriesChanged += OnSeriesChanged;
-            Unloaded += (_, _) => _vm.SeriesChanged -= OnSeriesChanged;
+            Unloaded += (_, _) =>
+            {
+                _vm.SeriesChanged -= OnSeriesChanged;
+                _highlighter?.Dispose();
+            };
         }
 
         private void OnSeriesChanged(object sender, EventArgs e)
@@ -57,6 +64,7 @@ namespace BatteryAging.UI.Pages
 
             var plot = ComparePlot.Plot;
             plot.Clear();
+            _scatters.Clear();
 
             var (xt, yt) = _vm.Mode switch
             {
@@ -84,10 +92,18 @@ namespace BatteryAging.UI.Pages
                 scatter.MarkerSize = _vm.Mode == CompareMode.CapacityFade ? 5 : 0;
                 scatter.LegendText = _vm.Mode == CompareMode.CapacityFade
                     ? $"{s.Name} ({s.RetentionPercent}%)" : s.Name;
+                _scatters.Add(scatter);
                 i++;
             }
 
             plot.Axes.AutoScale();
+
+            _highlighter?.Dispose();
+            _highlighter = new ScatterHighlighter(ComparePlot, _scatters,
+                (c, s) => _vm.Mode == CompareMode.CapacityFade
+                    ? $"循环 {c.X:F0}   {c.Y:F4} Ah"
+                    : $"{c.X:F1}   {c.Y:F4}");
+
             ComparePlot.Refresh();
         }
     }

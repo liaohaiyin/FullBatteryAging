@@ -1,3 +1,4 @@
+using BatteryAging.UI.Helpers;
 using BatteryAging.ViewModels;
 using ScottPlot;
 using System.Collections.Generic;
@@ -22,6 +23,7 @@ namespace BatteryAging.UI.Pages
         private readonly IYAxis _currentAxis;
 
         private ChannelViewModel _currentChannel;
+        private ScatterHighlighter _highlighter;
         private GridLength _savedRightWidth = new GridLength(1.2, GridUnitType.Star);
 
         public TestExecutionPage(TestExecutionViewModel vm)
@@ -69,6 +71,8 @@ namespace BatteryAging.UI.Pages
             _vm.PropertyChanged += OnVmPropertyChanged;
             AttachChannel(_vm.SelectedChannel);
             Unloaded += OnPageUnloaded;
+            _highlighter = new ScatterHighlighter(LivePlot, new[] { _voltageSeries, _currentSeries },
+            (c, s) => s == _currentSeries ? $"{c.X:F0}s   {c.Y:F4} A" : $"{c.X:F0}s   {c.Y:F4} V");
         }
 
         private void OnVmPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -166,6 +170,7 @@ namespace BatteryAging.UI.Pages
                 _currentChannel.RecentSamples.CollectionChanged -= OnSamplesChanged;
                 _currentChannel = null;
             }
+            _highlighter?.Dispose();
         }
     }
 }

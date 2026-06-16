@@ -1,10 +1,11 @@
+using BatteryAging.UI.Helpers;
+using BatteryAging.ViewModels;
+using ScottPlot;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows.Controls;
-using ScottPlot;
-using BatteryAging.ViewModels;
 
 namespace BatteryAging.UI.Pages
 {
@@ -23,6 +24,9 @@ namespace BatteryAging.UI.Pages
         private readonly ScottPlot.Plottables.Scatter _current;
         private readonly ScottPlot.Plottables.Scatter _temperature;
         private readonly ScottPlot.Plottables.Scatter _cycleSeries;
+
+        private ScatterHighlighter _historyHighlighter;
+        private ScatterHighlighter _cycleHighlighter;
 
         public DataQueryPage(DataQueryViewModel vm)
         {
@@ -107,6 +111,14 @@ namespace BatteryAging.UI.Pages
             ((INotifyCollectionChanged)_vm.DataPoints).CollectionChanged += OnDataChanged;
             ((INotifyCollectionChanged)_vm.CycleData).CollectionChanged += OnCycleChanged;
             Unloaded += OnPageUnloaded;
+            _historyHighlighter = new ScatterHighlighter(HistoryPlot, new[] { _voltage, _current, _temperature },
+            (c, s) =>
+            {
+                if (s == _current) return $"{c.X:F1}s   {c.Y:F4} A";
+                if (s == _temperature) return $"{c.X:F1}s   {c.Y:F1} °C";
+                return $"{c.X:F1}s   {c.Y:F4} V";
+            });
+            _cycleHighlighter = new ScatterHighlighter(CyclePlot, new[] { _cycleSeries }, (c, s) => $"循环 {c.X:F0}   {c.Y:F4} Ah");
         }
 
         private void OnVmPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -157,6 +169,8 @@ namespace BatteryAging.UI.Pages
             _vm.PropertyChanged -= OnVmPropertyChanged;
             ((INotifyCollectionChanged)_vm.DataPoints).CollectionChanged -= OnDataChanged;
             ((INotifyCollectionChanged)_vm.CycleData).CollectionChanged -= OnCycleChanged;
+            _historyHighlighter?.Dispose();
+            _cycleHighlighter?.Dispose();
         }
     }
 }
