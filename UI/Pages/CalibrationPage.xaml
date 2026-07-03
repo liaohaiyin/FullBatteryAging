@@ -116,11 +116,11 @@
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Margin="0,0,6,0">
                                 <TextBlock Text="{DynamicResource Calibration_RefVoltage}" Style="{StaticResource FieldLabel}"/>
-                                <TextBox Text="{Binding RefVoltage, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox Text="{Binding RefVoltage, UpdateSourceTrigger=LostFocus}"/>
                             </StackPanel>
                             <StackPanel Grid.Column="1" Margin="6,0,0,0">
                                 <TextBlock Text="{DynamicResource Calibration_MeasuredVoltage}" Style="{StaticResource FieldLabel}"/>
-                                <TextBox Text="{Binding MeasuredVoltage, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox Text="{Binding MeasuredVoltage, UpdateSourceTrigger=LostFocus}"/>
                             </StackPanel>
                         </Grid>
 
@@ -131,16 +131,16 @@
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Margin="0,0,6,0">
                                 <TextBlock Text="{DynamicResource Calibration_RefCurrent}" Style="{StaticResource FieldLabel}"/>
-                                <TextBox Text="{Binding RefCurrent, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox Text="{Binding RefCurrent, UpdateSourceTrigger=LostFocus}"/>
                             </StackPanel>
                             <StackPanel Grid.Column="1" Margin="6,0,0,0">
                                 <TextBlock Text="{DynamicResource Calibration_MeasuredCurrent}" Style="{StaticResource FieldLabel}"/>
-                                <TextBox Text="{Binding MeasuredCurrent, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox Text="{Binding MeasuredCurrent, UpdateSourceTrigger=LostFocus}"/>
                             </StackPanel>
                         </Grid>
 
                         <TextBlock Text="{DynamicResource Calibration_Tolerance}" Style="{StaticResource FieldLabel}"/>
-                        <TextBox Text="{Binding ToleragePercent, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox Text="{Binding ToleragePercent, UpdateSourceTrigger=LostFocus}"/>
 
                         <TextBlock Text="{DynamicResource Calibration_Technician}" Style="{StaticResource FieldLabel}"/>
                         <TextBox Text="{Binding Technician, UpdateSourceTrigger=PropertyChanged}"/>
@@ -153,7 +153,7 @@
                                 Command="{Binding DataContext.SaveRecordCommand, RelativeSource={RelativeSource AncestorType=Page}}"
                                 Margin="0,14,0,0" Padding="8,6" HorizontalAlignment="Right">
                             <StackPanel Orientation="Horizontal">
-                                <ctrl:VsIcon Kind="{StaticResource Icon.ContentSave}" Width="14" Height="14" VerticalAlignment="Center" Foreground="White"/>
+                                <ctrl:VsIcon Kind="{StaticResource Icon.ContentSave}" Width="14" Height="14" VerticalAlignment="Center"/>
                                 <TextBlock Text="{DynamicResource Calibration_Save}" Margin="6,0,0,0"/>
                             </StackPanel>
                         </Button>
