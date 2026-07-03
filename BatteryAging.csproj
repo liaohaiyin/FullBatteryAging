@@ -14,13 +14,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-	<Compile Remove="Services\Mes\**" />
-	<EmbeddedResource Remove="Services\Mes\**" />
-	<None Remove="Services\Mes\**" />
-	<Page Remove="Services\Mes\**" />
-  </ItemGroup>
-
-  <ItemGroup>
 	<Content Include="Resouces\logo.ico" />
 	<Resource Include="Resouces\wx.png" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />

@@ -2,6 +2,7 @@ using BatteryAging.Communication;
 using BatteryAging.Core.Enums;
 using BatteryAging.Core.Models;
 using BatteryAging.Services;
+using BatteryAging.Services.Mes;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.Concurrent;
@@ -16,7 +17,7 @@ namespace BatteryAging.ViewModels
         private readonly IDialogService _dialogService;
         private readonly IBatteryAnalyticsService _analytics;
         private readonly IAuthService _auth;
-        //private readonly IMesService _mes;
+        private readonly IMesService _mes;
 
         private readonly ConcurrentDictionary<int, List<DataPoint>> _pendingPoints = new();
         private readonly ConcurrentDictionary<int, List<BmsDataPoint>> _pendingBms = new();
@@ -44,13 +45,15 @@ namespace BatteryAging.ViewModels
             IDataService dataService,
             IDialogService dialogService,
             IBatteryAnalyticsService analytics,
-            IAuthService auth)
+            IAuthService auth,
+            IMesService mes)
         {
             _channelManager = channelManager;
             _dataService = dataService;
             _dialogService = dialogService;
             _analytics = analytics;
             _auth = auth;
+            _mes = mes;
 
             foreach (var executor in _channelManager.GetAll())
             {
@@ -231,24 +234,24 @@ namespace BatteryAging.ViewModels
             }
 
             // ── MES 过站校验 ──
-            //if (_mes.CheckInEnabled)
-            //{
-            //    var bar = string.IsNullOrWhiteSpace(BarCode) ? ch.BarCode : BarCode;
-            //    var chk = await _mes.CheckInAsync(new MesCheckRequest
-            //    {
-            //        BarCode = bar,
-            //        ChannelIndex = ch.ChannelIndex,
-            //        CabinetId = ch.Executor.CabinetId,
-            //        RecipeName = recipe.Name
-            //    });
-            //    if (!chk.Allowed)
-            //    {
-            //        AppendLog($"通道{ch.ChannelIndex} MES 过站拒绝: {chk.Message}");
-            //        _dialogService.ShowWarning($"MES 不允许开测: {chk.Message}");
-            //        return;   // 拦停
-            //    }
-            //    AppendLog($"通道{ch.ChannelIndex} MES 过站通过");
-            //}
+            if (_mes.CheckInEnabled)
+            {
+                var bar = string.IsNullOrWhiteSpace(BarCode) ? ch.BarCode : BarCode;
+                var chk = await _mes.CheckInAsync(new MesCheckRequest
+                {
+                    BarCode = bar,
+                    ChannelIndex = ch.ChannelIndex,
+                    CabinetId = ch.Executor.CabinetId,
+                    RecipeName = recipe.Name
+                });
+                if (!chk.Allowed)
+                {
+                    AppendLog($"通道{ch.ChannelIndex} MES 过站拒绝: {chk.Message}");
+                    _dialogService.ShowWarning($"MES 不允许开测: {chk.Message}");
+                    return;   // 拦停
+                }
+                AppendLog($"通道{ch.ChannelIndex} MES 过站通过");
+            }
 
             try
             {
@@ -495,26 +498,26 @@ namespace BatteryAging.ViewModels
                 await _dataService.UpdateRecordAsync(record);
 
                 // ── 上传 MES(失败仅记日志,不影响产线)──
-                //if (_mes.IsEnabled)
-                //{
-                //    var ack = await _mes.UploadResultAsync(new MesTestResult
-                //    {
-                //        BarCode = record.BarCode,
-                //        ChannelIndex = record.ChannelIndex,
-                //        RecipeName = record.RecipeName,
-                //        StartTime = record.StartTime,
-                //        EndTime = record.EndTime,
-                //        Status = record.Status.ToString(),
-                //        TotalChargeCapacity = record.TotalChargeCapacity,
-                //        TotalDischargeCapacity = record.TotalDischargeCapacity,
-                //        TotalChargeEnergy = record.TotalChargeEnergy,
-                //        TotalDischargeEnergy = record.TotalDischargeEnergy,
-                //        SohEstimate = record.SohEstimate,
-                //        Grade = record.Grade.ToString(),
-                //        CompletedCycles = record.CompletedCycles
-                //    });
-                //    AppendLog($"通道{channelIndex} MES 上传{(ack.Success ? "成功" : "失败: " + ack.Message)}");
-                //}
+                if (_mes.IsEnabled)
+                {
+                    var ack = await _mes.UploadResultAsync(new MesTestResult
+                    {
+                        BarCode = record.BarCode,
+                        ChannelIndex = record.ChannelIndex,
+                        RecipeName = record.RecipeName,
+                        StartTime = record.StartTime,
+                        EndTime = record.EndTime,
+                        Status = record.Status.ToString(),
+                        TotalChargeCapacity = record.TotalChargeCapacity,
+                        TotalDischargeCapacity = record.TotalDischargeCapacity,
+                        TotalChargeEnergy = record.TotalChargeEnergy,
+                        TotalDischargeEnergy = record.TotalDischargeEnergy,
+                        SohEstimate = record.SohEstimate,
+                        Grade = record.Grade.ToString(),
+                        CompletedCycles = record.CompletedCycles
+                    });
+                    AppendLog($"通道{channelIndex} MES 上传{(ack.Success ? "成功" : "失败: " + ack.Message)}");
+                }
             }
             catch (Exception ex) { AppendLog($"更新记录失败: {ex.Message}"); }
         }
