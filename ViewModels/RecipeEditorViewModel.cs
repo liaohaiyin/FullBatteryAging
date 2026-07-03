@@ -176,6 +176,7 @@ namespace BatteryAging.ViewModels
                 }
 
                 await _dataService.SaveRecipeAsync(recipe);
+                await LogAuditAsync("Update", "TestRecipe", recipe.Id, $"保存测试方案: {recipe.Name}");
                 await LoadAsync();
                 SelectedRecipe = Recipes.FirstOrDefault(r => r.Id == recipe.Id);
                 IsDirty = false;
@@ -193,13 +194,34 @@ namespace BatteryAging.ViewModels
             if (!_dialogService.Confirm($"确定删除方案 '{SelectedRecipe.Name}' 吗?")) return;
             try
             {
-                await _dataService.DeleteRecipeAsync(SelectedRecipe.Id);
+                var id = SelectedRecipe.Id;
+                var name = SelectedRecipe.Name;
+                await _dataService.DeleteRecipeAsync(id);
+                await LogAuditAsync("Delete", "TestRecipe", id, $"删除测试方案: {name}");
                 await LoadAsync();
             }
             catch (Exception ex)
             {
                 _dialogService.ShowError($"删除失败: {ex.Message}");
             }
+        }
+
+        private async Task LogAuditAsync(string action, string entityType, string entityId, string detail)
+        {
+            try
+            {
+                var s = _auth.CurrentSession;
+                await _dataService.LogAuditAsync(new AuditLog
+                {
+                    UserId = s.UserId,
+                    Username = s.IsAuthenticated ? s.Username : "system",
+                    Action = action,
+                    EntityType = entityType,
+                    EntityId = entityId,
+                    Detail = detail
+                });
+            }
+            catch { /* 审计日志失败不应阻断主业务操作 */ }
         }
 
         private void AddStep()

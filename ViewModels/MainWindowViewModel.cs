@@ -32,6 +32,8 @@ namespace BatteryAging.ViewModels
         public bool CanStats => _auth.HasPermission(Permission.Statistics_View);
         public bool CanCabinet => _auth.HasPermission(Permission.Settings_CommConfig);
         public bool CanUserMgmt => _auth.HasAnyPermission(Permission.Settings_UserManagement, Permission.Settings_RoleManagement);
+        public bool CanAuditLog => _auth.HasPermission(Permission.Settings_AuditLog);
+        public bool CanCalibration => _auth.HasPermission(Permission.Settings_Calibration);
 
         public IRelayCommand NavExecutionCommand { get; }
         public IRelayCommand NavRecipeCommand { get; }
@@ -41,6 +43,8 @@ namespace BatteryAging.ViewModels
         public IRelayCommand NavAboutCommand { get; }
         public IRelayCommand NavCompareCommand { get; }
         public IRelayCommand NavUserMgmtCommand { get; }
+        public IRelayCommand NavAuditLogCommand { get; }
+        public IRelayCommand NavCalibrationCommand { get; }
         public IRelayCommand NavLogoutCommand { get; }
 
         public MainWindowViewModel(IServiceProvider services, ILanguageService language, IAuthService auth, IDialogService dialogService)
@@ -57,6 +61,8 @@ namespace BatteryAging.ViewModels
             NavCompareCommand = new RelayCommand(() => CurrentPage = _services.GetRequiredService<ComparisonPage>());
             NavCabinetCommand = new RelayCommand(() => CurrentPage = _services.GetRequiredService<CabinetManagerPage>());
             NavUserMgmtCommand = new RelayCommand(() => CurrentPage = _services.GetRequiredService<UserManagementPage>());
+            NavAuditLogCommand = new RelayCommand(() => CurrentPage = _services.GetRequiredService<AuditLogPage>());
+            NavCalibrationCommand = new RelayCommand(() => CurrentPage = _services.GetRequiredService<CalibrationPage>());
             NavLogoutCommand = new RelayCommand(Logout);
             NavAboutCommand = new RelayCommand(() =>
             {
@@ -94,7 +100,7 @@ namespace BatteryAging.ViewModels
 
             _auth.Logout();
 
-            // ÖØÐÂµ¯µÇÂ¼´°¿Ú
+            // ï¿½ï¿½ï¿½Âµï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½
             var loginVm = _services.GetRequiredService<LoginWindowViewModel>();
             var loginWindow = new LoginWindow(loginVm);
             var loggedIn = loginWindow.ShowDialog();
@@ -105,7 +111,7 @@ namespace BatteryAging.ViewModels
                 return;
             }
 
-            // µÇÂ¼³É¹¦ºóË¢ÐÂÖ÷´°¿Ú×´Ì¬
+            // ï¿½ï¿½Â¼ï¿½É¹ï¿½ï¿½ï¿½Ë¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬
             CurrentSession = _auth.CurrentSession;
             CurrentUser = $"{CurrentSession.DisplayName}  [{CurrentSession.RoleName}]";
             CurrentPage = _services.GetRequiredService<TestExecutionPage>();

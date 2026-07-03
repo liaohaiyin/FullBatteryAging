@@ -109,7 +109,23 @@
                                 <ctrl:VsIcon Kind="{StaticResource Icon.ServerNetwork}" Width="18" Height="18" VerticalAlignment="Center"/>
                                 <TextBlock Text="{DynamicResource Main_Nav_UserMgmt}" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
                             </StackPanel>
-                        </Button>                        
+                        </Button>
+                        <Button Style="{StaticResource VsFlatButton}" HorizontalContentAlignment="Left"
+                                Padding="16,8" Command="{Binding NavCalibrationCommand}"
+                                Visibility="{Binding CanCalibration, Converter={StaticResource BoolVisCv}}">
+                            <StackPanel Orientation="Horizontal">
+                                <ctrl:VsIcon Kind="{StaticResource Icon.CogOutline}" Width="18" Height="18" VerticalAlignment="Center"/>
+                                <TextBlock Text="{DynamicResource Main_Nav_Calibration}" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Style="{StaticResource VsFlatButton}" HorizontalContentAlignment="Left"
+                                Padding="16,8" Command="{Binding NavAuditLogCommand}"
+                                Visibility="{Binding CanAuditLog, Converter={StaticResource BoolVisCv}}">
+                            <StackPanel Orientation="Horizontal">
+                                <ctrl:VsIcon Kind="{StaticResource Icon.InformationOutline}" Width="18" Height="18" VerticalAlignment="Center"/>
+                                <TextBlock Text="{DynamicResource Main_Nav_AuditLog}" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
+                            </StackPanel>
+                        </Button>
                         <Button Style="{StaticResource VsFlatButton}" HorizontalContentAlignment="Left"
                                 Padding="16,8" Command="{Binding NavLogoutCommand}">
                             <StackPanel Orientation="Horizontal">

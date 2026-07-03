@@ -124,6 +124,7 @@
     <sys:String x:Key="UserManagement_Perm_TestExecution_ClearFault">Clear protection/fault</sys:String>
     <sys:String x:Key="UserManagement_Perm_TestExecution_EmergencyStop">Emergency stop</sys:String>
     <sys:String x:Key="UserManagement_Perm_TestExecution_ExportLive">Export live data</sys:String>
+    <sys:String x:Key="UserManagement_Perm_TestExecution_ManageQueue">Manage task queue</sys:String>
     <sys:String x:Key="UserManagement_Perm_FlowEditor_View">View flows</sys:String>
     <sys:String x:Key="UserManagement_Perm_FlowEditor_New">New flow</sys:String>
     <sys:String x:Key="UserManagement_Perm_FlowEditor_Edit">Edit steps</sys:String>
@@ -143,6 +144,8 @@
     <sys:String x:Key="UserManagement_Perm_Settings_UserManagement">User management</sys:String>
     <sys:String x:Key="UserManagement_Perm_Settings_RoleManagement">Role management</sys:String>
     <sys:String x:Key="UserManagement_Perm_Settings_SystemConfig">System parameters</sys:String>
+    <sys:String x:Key="UserManagement_Perm_Settings_Calibration">Calibration management</sys:String>
+    <sys:String x:Key="UserManagement_Perm_Settings_AuditLog">View audit log</sys:String>
 
     <!-- ── Pages & Windows ── -->
     <sys:String x:Key="Main_Title">Lithium Battery Aging Host</sys:String>
@@ -153,6 +156,8 @@
     <sys:String x:Key="Main_Nav_Compare">Comparison</sys:String>
     <sys:String x:Key="Main_Nav_Cabinet">Cabinet Management</sys:String>
     <sys:String x:Key="Main_Nav_UserMgmt">User Management</sys:String>
+    <sys:String x:Key="Main_Nav_Calibration">Calibration</sys:String>
+    <sys:String x:Key="Main_Nav_AuditLog">Audit Log</sys:String>
     <sys:String x:Key="Main_Nav_Logout">Logout</sys:String>
     <sys:String x:Key="Main_Nav_About">About</sys:String>
     <sys:String x:Key="Main_Nav_Error">Error</sys:String>
@@ -370,4 +375,46 @@
     <sys:String x:Key="DataQuery_PrevPage">Prev</sys:String>
     <sys:String x:Key="DataQuery_NextPage">Next</sys:String>
     <sys:String x:Key="DataQuery_LastPage">Last</sys:String>
+
+    <!-- ── Audit Log ── -->
+    <sys:String x:Key="AuditLog_StartDate">Start Date</sys:String>
+    <sys:String x:Key="AuditLog_EndDate">End Date</sys:String>
+    <sys:String x:Key="AuditLog_User">User</sys:String>
+    <sys:String x:Key="AuditLog_EntityType">Entity Type</sys:String>
+    <sys:String x:Key="AuditLog_Query">Query</sys:String>
+    <sys:String x:Key="AuditLog_List">Operation Log</sys:String>
+    <sys:String x:Key="AuditLog_Col_Time">Time</sys:String>
+    <sys:String x:Key="AuditLog_Col_User">User</sys:String>
+    <sys:String x:Key="AuditLog_Col_Action">Action</sys:String>
+    <sys:String x:Key="AuditLog_Col_EntityType">Entity Type</sys:String>
+    <sys:String x:Key="AuditLog_Col_EntityId">Entity Id</sys:String>
+    <sys:String x:Key="AuditLog_Col_Detail">Detail</sys:String>
+
+    <!-- ── Calibration ── -->
+    <sys:String x:Key="Calibration_List">Calibration Records</sys:String>
+    <sys:String x:Key="Calibration_DueSoon">Due soon:</sys:String>
+    <sys:String x:Key="Calibration_Overdue">Overdue:</sys:String>
+    <sys:String x:Key="Calibration_New">New</sys:String>
+    <sys:String x:Key="Calibration_Delete">Delete</sys:String>
+    <sys:String x:Key="Calibration_Form">Calibration Entry</sys:String>
+    <sys:String x:Key="Calibration_Cabinet">Cabinet</sys:String>
+    <sys:String x:Key="Calibration_Channel">Channel</sys:String>
+    <sys:String x:Key="Calibration_Date">Calibration Date</sys:String>
+    <sys:String x:Key="Calibration_DueDate">Next Due Date</sys:String>
+    <sys:String x:Key="Calibration_RefVoltage">Ref Voltage (V)</sys:String>
+    <sys:String x:Key="Calibration_MeasuredVoltage">Measured Voltage (V)</sys:String>
+    <sys:String x:Key="Calibration_RefCurrent">Ref Current (A)</sys:String>
+    <sys:String x:Key="Calibration_MeasuredCurrent">Measured Current (A)</sys:String>
+    <sys:String x:Key="Calibration_Tolerance">Tolerance (%)</sys:String>
+    <sys:String x:Key="Calibration_Technician">Technician</sys:String>
+    <sys:String x:Key="Calibration_Remark">Remark</sys:String>
+    <sys:String x:Key="Calibration_Save">Save</sys:String>
+    <sys:String x:Key="Calibration_Col_Date">Date</sys:String>
+    <sys:String x:Key="Calibration_Col_Cabinet">Cabinet</sys:String>
+    <sys:String x:Key="Calibration_Col_Channel">Channel</sys:String>
+    <sys:String x:Key="Calibration_Col_VDev">V Dev</sys:String>
+    <sys:String x:Key="Calibration_Col_IDev">I Dev</sys:String>
+    <sys:String x:Key="Calibration_Col_Result">Passed</sys:String>
+    <sys:String x:Key="Calibration_Col_DueDate">Due Date</sys:String>
+    <sys:String x:Key="Calibration_Col_Technician">Technician</sys:String>
 </ResourceDictionary>

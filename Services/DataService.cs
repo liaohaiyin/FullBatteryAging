@@ -39,6 +39,16 @@ namespace BatteryAging.Services
         Task<List<DcirResult>> GetDcirAsync(int recordId);
         Task SaveBmsDataPointsAsync(IEnumerable<BmsDataPoint> points);
         Task<List<BmsDataPoint>> GetBmsDataPointsAsync(int recordId);
+
+        // ── 审计日志 ──
+        Task LogAuditAsync(AuditLog log);
+        Task<(List<AuditLog> Logs, int TotalCount)> QueryAuditLogsPagedAsync(
+            DateTime? start, DateTime? end, string username, string entityType, int page, int pageSize);
+
+        // ── 设备校准 ──
+        Task<List<CalibrationRecord>> GetCalibrationsAsync(string cabinetId = null);
+        Task SaveCalibrationAsync(CalibrationRecord record);
+        Task DeleteCalibrationAsync(string id);
     }
 
     public class DataService : IDataService
@@ -269,6 +279,59 @@ namespace BatteryAging.Services
                 .Where(d => d.TestRecordId == recordId)
                 .OrderBy(d => d.Timestamp)
                 .ToListAsync();
+        }
+
+        // ──────────────── 审计日志 ────────────────
+        public async Task LogAuditAsync(AuditLog log)
+        {
+            if (log == null) return;
+            await using var db = await _factory.CreateDbContextAsync();
+            db.AuditLogs.Add(log);
+            await db.SaveChangesAsync();
+        }
+
+        public async Task<(List<AuditLog> Logs, int TotalCount)> QueryAuditLogsPagedAsync(
+            DateTime? start, DateTime? end, string username, string entityType, int page, int pageSize)
+        {
+            await using var db = await _factory.CreateDbContextAsync();
+            var q = db.AuditLogs.AsQueryable();
+            if (start.HasValue) q = q.Where(a => a.Timestamp >= start.Value);
+            if (end.HasValue) q = q.Where(a => a.Timestamp <= end.Value);
+            if (!string.IsNullOrWhiteSpace(username)) q = q.Where(a => a.Username.Contains(username));
+            if (!string.IsNullOrWhiteSpace(entityType)) q = q.Where(a => a.EntityType == entityType);
+
+            var total = await q.CountAsync();
+            if (page < 1) page = 1;
+            var logs = await q.OrderByDescending(a => a.Timestamp)
+                               .Skip((page - 1) * pageSize)
+                               .Take(pageSize)
+                               .ToListAsync();
+            return (logs, total);
+        }
+
+        // ──────────────── 设备校准 ────────────────
+        public async Task<List<CalibrationRecord>> GetCalibrationsAsync(string cabinetId = null)
+        {
+            await using var db = await _factory.CreateDbContextAsync();
+            var q = db.CalibrationRecords.AsQueryable();
+            if (!string.IsNullOrEmpty(cabinetId)) q = q.Where(c => c.CabinetId == cabinetId);
+            return await q.OrderByDescending(c => c.CalibrationDate).ToListAsync();
+        }
+
+        public async Task SaveCalibrationAsync(CalibrationRecord record)
+        {
+            await using var db = await _factory.CreateDbContextAsync();
+            var existing = await db.CalibrationRecords.FindAsync(record.Id);
+            if (existing == null) db.CalibrationRecords.Add(record);
+            else db.Entry(existing).CurrentValues.SetValues(record);
+            await db.SaveChangesAsync();
+        }
+
+        public async Task DeleteCalibrationAsync(string id)
+        {
+            await using var db = await _factory.CreateDbContextAsync();
+            var c = await db.CalibrationRecords.FindAsync(id);
+            if (c != null) { db.CalibrationRecords.Remove(c); await db.SaveChangesAsync(); }
         }
     }
 }

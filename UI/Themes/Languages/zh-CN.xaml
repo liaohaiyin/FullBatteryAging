@@ -123,6 +123,7 @@
     <sys:String x:Key="UserManagement_Perm_TestExecution_ClearFault">清除保护/故障</sys:String>
     <sys:String x:Key="UserManagement_Perm_TestExecution_EmergencyStop">急停</sys:String>
     <sys:String x:Key="UserManagement_Perm_TestExecution_ExportLive">导出实时数据</sys:String>
+    <sys:String x:Key="UserManagement_Perm_TestExecution_ManageQueue">任务队列管理</sys:String>
     <sys:String x:Key="UserManagement_Perm_FlowEditor_View">查看流程</sys:String>
     <sys:String x:Key="UserManagement_Perm_FlowEditor_New">新建流程</sys:String>
     <sys:String x:Key="UserManagement_Perm_FlowEditor_Edit">编辑步骤</sys:String>
@@ -142,6 +143,8 @@
     <sys:String x:Key="UserManagement_Perm_Settings_UserManagement">用户管理</sys:String>
     <sys:String x:Key="UserManagement_Perm_Settings_RoleManagement">角色管理</sys:String>
     <sys:String x:Key="UserManagement_Perm_Settings_SystemConfig">系统参数</sys:String>
+    <sys:String x:Key="UserManagement_Perm_Settings_Calibration">设备校准管理</sys:String>
+    <sys:String x:Key="UserManagement_Perm_Settings_AuditLog">查看审计日志</sys:String>
 
     <!-- ── 各页面 / 窗口（Pages & Windows）── -->
     <sys:String x:Key="Main_Title">锂电池充放电老化上位机</sys:String>
@@ -152,6 +155,8 @@
     <sys:String x:Key="Main_Nav_Compare">对比分析</sys:String>
     <sys:String x:Key="Main_Nav_Cabinet">机柜管理</sys:String>
     <sys:String x:Key="Main_Nav_UserMgmt">用户管理</sys:String>
+    <sys:String x:Key="Main_Nav_Calibration">设备校准</sys:String>
+    <sys:String x:Key="Main_Nav_AuditLog">审计日志</sys:String>
     <sys:String x:Key="Main_Nav_Logout">退出登录</sys:String>
     <sys:String x:Key="Main_Nav_About">关于</sys:String>
     <sys:String x:Key="Main_Status_Sim">模拟模式 · 运行中</sys:String>
@@ -369,4 +374,46 @@
     <sys:String x:Key="DataQuery_PrevPage">上一页</sys:String>
     <sys:String x:Key="DataQuery_NextPage">下一页</sys:String>
     <sys:String x:Key="DataQuery_LastPage">末页</sys:String>
+
+    <!-- ── 审计日志 ── -->
+    <sys:String x:Key="AuditLog_StartDate">开始日期</sys:String>
+    <sys:String x:Key="AuditLog_EndDate">结束日期</sys:String>
+    <sys:String x:Key="AuditLog_User">用户</sys:String>
+    <sys:String x:Key="AuditLog_EntityType">对象类型</sys:String>
+    <sys:String x:Key="AuditLog_Query">查询</sys:String>
+    <sys:String x:Key="AuditLog_List">操作日志</sys:String>
+    <sys:String x:Key="AuditLog_Col_Time">时间</sys:String>
+    <sys:String x:Key="AuditLog_Col_User">用户</sys:String>
+    <sys:String x:Key="AuditLog_Col_Action">操作</sys:String>
+    <sys:String x:Key="AuditLog_Col_EntityType">对象类型</sys:String>
+    <sys:String x:Key="AuditLog_Col_EntityId">对象标识</sys:String>
+    <sys:String x:Key="AuditLog_Col_Detail">详情</sys:String>
+
+    <!-- ── 设备校准 ── -->
+    <sys:String x:Key="Calibration_List">校准记录</sys:String>
+    <sys:String x:Key="Calibration_DueSoon">即将到期:</sys:String>
+    <sys:String x:Key="Calibration_Overdue">已过期:</sys:String>
+    <sys:String x:Key="Calibration_New">新建</sys:String>
+    <sys:String x:Key="Calibration_Delete">删除</sys:String>
+    <sys:String x:Key="Calibration_Form">校准录入</sys:String>
+    <sys:String x:Key="Calibration_Cabinet">机柜</sys:String>
+    <sys:String x:Key="Calibration_Channel">通道号</sys:String>
+    <sys:String x:Key="Calibration_Date">校准日期</sys:String>
+    <sys:String x:Key="Calibration_DueDate">下次到期日期</sys:String>
+    <sys:String x:Key="Calibration_RefVoltage">基准电压 (V)</sys:String>
+    <sys:String x:Key="Calibration_MeasuredVoltage">实测电压 (V)</sys:String>
+    <sys:String x:Key="Calibration_RefCurrent">基准电流 (A)</sys:String>
+    <sys:String x:Key="Calibration_MeasuredCurrent">实测电流 (A)</sys:String>
+    <sys:String x:Key="Calibration_Tolerance">允许偏差 (%)</sys:String>
+    <sys:String x:Key="Calibration_Technician">校准人员</sys:String>
+    <sys:String x:Key="Calibration_Remark">备注</sys:String>
+    <sys:String x:Key="Calibration_Save">保存</sys:String>
+    <sys:String x:Key="Calibration_Col_Date">校准日期</sys:String>
+    <sys:String x:Key="Calibration_Col_Cabinet">机柜</sys:String>
+    <sys:String x:Key="Calibration_Col_Channel">通道</sys:String>
+    <sys:String x:Key="Calibration_Col_VDev">电压偏差</sys:String>
+    <sys:String x:Key="Calibration_Col_IDev">电流偏差</sys:String>
+    <sys:String x:Key="Calibration_Col_Result">合格</sys:String>
+    <sys:String x:Key="Calibration_Col_DueDate">到期日期</sys:String>
+    <sys:String x:Key="Calibration_Col_Technician">校准人员</sys:String>
 </ResourceDictionary>

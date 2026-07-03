@@ -1,0 +1,165 @@
+<Page x:Class="BatteryAging.UI.Pages.CalibrationPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ctrl="clr-namespace:BatteryAging.UI.Controls"
+      Title="{DynamicResource Main_Nav_Calibration}"
+      Background="{DynamicResource VsBgDeepBrush}">
+
+    <Page.Resources>
+        <Style x:Key="FieldLabel" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource VsTextSecondaryBrush}"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Margin" Value="0,8,0,2"/>
+        </Style>
+    </Page.Resources>
+
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="320"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- 左：校准记录列表 -->
+        <Border Grid.Column="0" Style="{StaticResource VsCardStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" Background="{DynamicResource VsBgHeaderBrush}"
+                        BorderBrush="{StaticResource VsBorderBrush}" BorderThickness="0,0,0,1" Padding="12,6">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{DynamicResource Calibration_List}" Foreground="{StaticResource VsTextPrimaryBrush}" FontWeight="SemiBold"/>
+                        <TextBlock Margin="16,0,0,0" Foreground="{StaticResource VsAmberBrush}">
+                            <Run Text="{DynamicResource Calibration_DueSoon}"/>
+                            <Run Text="{Binding DueSoonCount, Mode=OneWay}"/>
+                        </TextBlock>
+                        <TextBlock Margin="16,0,0,0" Foreground="{StaticResource VsErrorBrush}">
+                            <Run Text="{DynamicResource Calibration_Overdue}"/>
+                            <Run Text="{Binding OverdueCount, Mode=OneWay}"/>
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
+
+                <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="8,8,8,4">
+                    <Button Style="{StaticResource VsOutlinedButton}" Command="{Binding NewRecordCommand}" Padding="8,4" Margin="0,0,6,0">
+                        <StackPanel Orientation="Horizontal">
+                            <ctrl:VsIcon Kind="{StaticResource Icon.Plus}" Width="14" Height="14" VerticalAlignment="Center"/>
+                            <TextBlock Text="{DynamicResource Calibration_New}" Margin="4,0,0,0"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource VsOutlinedButton}" Command="{Binding DeleteRecordCommand}" Padding="8,4">
+                        <StackPanel Orientation="Horizontal">
+                            <ctrl:VsIcon Kind="{StaticResource Icon.DeleteOutline}" Width="14" Height="14" VerticalAlignment="Center"/>
+                            <TextBlock Text="{DynamicResource Calibration_Delete}" Margin="4,0,0,0"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+                <DataGrid Grid.Row="2"
+                          ItemsSource="{Binding Records}"
+                          SelectedItem="{Binding SelectedRecord}"
+                          AutoGenerateColumns="False"
+                          CanUserAddRows="False"
+                          CanUserDeleteRows="False"
+                          IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="{DynamicResource Calibration_Col_Date}" Binding="{Binding CalibrationDate, StringFormat={}{0:yyyy-MM-dd}}" Width="100"/>
+                        <DataGridTextColumn Header="{DynamicResource Calibration_Col_Cabinet}" Binding="{Binding CabinetName}" Width="120"/>
+                        <DataGridTextColumn Header="{DynamicResource Calibration_Col_Channel}" Binding="{Binding ChannelIndex}" Width="60"/>
+                        <DataGridTextColumn Header="{DynamicResource Calibration_Col_VDev}" Binding="{Binding VoltageDeviation, StringFormat={}{0:F2}%}" Width="80"/>
+                        <DataGridTextColumn Header="{DynamicResource Calibration_Col_IDev}" Binding="{Binding CurrentDeviation, StringFormat={}{0:F2}%}" Width="80"/>
+                        <DataGridTextColumn Header="{DynamicResource Calibration_Col_Result}" Binding="{Binding IsPassed}" Width="70"/>
+                        <DataGridTextColumn Header="{DynamicResource Calibration_Col_DueDate}" Binding="{Binding NextDueDate, StringFormat={}{0:yyyy-MM-dd}}" Width="100"/>
+                        <DataGridTextColumn Header="{DynamicResource Calibration_Col_Technician}" Binding="{Binding Technician}" Width="90"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+
+        <!-- 右：校准录入表单 -->
+        <Border Grid.Column="1" Style="{StaticResource VsCardStyle}" Margin="10,0,0,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Border Grid.Row="0" Background="{DynamicResource VsBgHeaderBrush}"
+                        BorderBrush="{StaticResource VsBorderBrush}" BorderThickness="0,0,0,1" Padding="12,6">
+                    <TextBlock Text="{DynamicResource Calibration_Form}" Foreground="{StaticResource VsTextPrimaryBrush}" FontWeight="SemiBold"/>
+                </Border>
+
+                <ScrollViewer Grid.Row="1" Padding="14" VerticalScrollBarVisibility="Auto">
+                    <StackPanel DataContext="{Binding SelectedRecord}">
+                        <TextBlock Text="{DynamicResource Calibration_Cabinet}" Style="{StaticResource FieldLabel}"/>
+                        <ComboBox ItemsSource="{Binding DataContext.Cabinets, RelativeSource={RelativeSource AncestorType=Page}}"
+                                  DisplayMemberPath="Name" SelectedValuePath="Id"
+                                  SelectedValue="{Binding CabinetId}"/>
+
+                        <TextBlock Text="{DynamicResource Calibration_Channel}" Style="{StaticResource FieldLabel}"/>
+                        <TextBox Text="{Binding ChannelIndex, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <TextBlock Text="{DynamicResource Calibration_Date}" Style="{StaticResource FieldLabel}"/>
+                        <DatePicker SelectedDate="{Binding CalibrationDate}"/>
+
+                        <TextBlock Text="{DynamicResource Calibration_DueDate}" Style="{StaticResource FieldLabel}"/>
+                        <DatePicker SelectedDate="{Binding NextDueDate}"/>
+
+                        <Border Height="1" Background="{DynamicResource VsBorderBrush}" Margin="0,10,0,10"/>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0,0,6,0">
+                                <TextBlock Text="{DynamicResource Calibration_RefVoltage}" Style="{StaticResource FieldLabel}"/>
+                                <TextBox Text="{Binding RefVoltage, UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Margin="6,0,0,0">
+                                <TextBlock Text="{DynamicResource Calibration_MeasuredVoltage}" Style="{StaticResource FieldLabel}"/>
+                                <TextBox Text="{Binding MeasuredVoltage, UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0,0,6,0">
+                                <TextBlock Text="{DynamicResource Calibration_RefCurrent}" Style="{StaticResource FieldLabel}"/>
+                                <TextBox Text="{Binding RefCurrent, UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Margin="6,0,0,0">
+                                <TextBlock Text="{DynamicResource Calibration_MeasuredCurrent}" Style="{StaticResource FieldLabel}"/>
+                                <TextBox Text="{Binding MeasuredCurrent, UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <TextBlock Text="{DynamicResource Calibration_Tolerance}" Style="{StaticResource FieldLabel}"/>
+                        <TextBox Text="{Binding ToleragePercent, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <TextBlock Text="{DynamicResource Calibration_Technician}" Style="{StaticResource FieldLabel}"/>
+                        <TextBox Text="{Binding Technician, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <TextBlock Text="{DynamicResource Calibration_Remark}" Style="{StaticResource FieldLabel}"/>
+                        <TextBox Text="{Binding Remark, UpdateSourceTrigger=PropertyChanged}"
+                                 TextWrapping="Wrap" AcceptsReturn="True" MinHeight="40"/>
+
+                        <Button Style="{StaticResource VsAccentButton}"
+                                Command="{Binding DataContext.SaveRecordCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                Margin="0,14,0,0" Padding="8,6" HorizontalAlignment="Right">
+                            <StackPanel Orientation="Horizontal">
+                                <ctrl:VsIcon Kind="{StaticResource Icon.ContentSave}" Width="14" Height="14" VerticalAlignment="Center"/>
+                                <TextBlock Text="{DynamicResource Calibration_Save}" Margin="6,0,0,0"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+    </Grid>
+</Page>

@@ -24,6 +24,10 @@ namespace BatteryAging.Data.Context
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
 
+        // ── 审计 / 校准 ──────────────────────────────────────────────────
+        public DbSet<AuditLog> AuditLogs { get; set; }
+        public DbSet<CalibrationRecord> CalibrationRecords { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<TestRecipe>(e =>
@@ -112,6 +116,20 @@ namespace BatteryAging.Data.Context
                     a => (double[])a.Clone());
                 e.Property(d => d.CellVoltages).HasConversion(conv, cmp);
                 e.Property(d => d.Temperatures).HasConversion(conv, cmp);
+            });
+
+            modelBuilder.Entity<AuditLog>(e =>
+            {
+                e.HasKey(a => a.Id);
+                e.HasIndex(a => a.Timestamp);
+                e.HasIndex(a => new { a.EntityType, a.EntityId });
+            });
+
+            modelBuilder.Entity<CalibrationRecord>(e =>
+            {
+                e.HasKey(c => c.Id);
+                e.HasIndex(c => new { c.CabinetId, c.ChannelIndex });
+                e.HasIndex(c => c.NextDueDate);
             });
 
             base.OnModelCreating(modelBuilder);

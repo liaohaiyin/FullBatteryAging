@@ -18,6 +18,7 @@ namespace BatteryAging.ViewModels
     {
         private readonly IDataService _data;
         private readonly IDialogService _dialog;
+        private readonly IAuthService _auth;
 
         public ObservableCollection<Cabinet> Cabinets { get; } = new();
         public List<EnumDisplayItem<DriverType>> DriverTypes { get; }
@@ -44,10 +45,11 @@ namespace BatteryAging.ViewModels
         public IAsyncRelayCommand DeleteCabinetCommand { get; }
         public IAsyncRelayCommand TestConnectionCommand { get; }
 
-        public CabinetManagerViewModel(IDataService data, IDialogService dialog)
+        public CabinetManagerViewModel(IDataService data, IDialogService dialog, IAuthService auth)
         {
             _data = data;
             _dialog = dialog;
+            _auth = auth;
 
             LoadCommand = new AsyncRelayCommand(LoadAsync);
             NewCabinetCommand = new RelayCommand(NewCabinet);
@@ -166,6 +168,7 @@ namespace BatteryAging.ViewModels
             try
             {
                 await _data.SaveCabinetAsync(SelectedCabinet);
+                await LogAsync("Update", "Cabinet", SelectedCabinet.Id, $"保存机柜配置: {SelectedCabinet.Name}");
                 _dialog.ShowMessage("机柜配置已保存\n重启程序后生效");
             }
             catch (Exception ex)
@@ -180,7 +183,10 @@ namespace BatteryAging.ViewModels
             if (!_dialog.Confirm($"确定删除机柜 '{SelectedCabinet.Name}' 吗?")) return;
             try
             {
-                await _data.DeleteCabinetAsync(SelectedCabinet.Id);
+                var name = SelectedCabinet.Name;
+                var id = SelectedCabinet.Id;
+                await _data.DeleteCabinetAsync(id);
+                await LogAsync("Delete", "Cabinet", id, $"删除机柜: {name}");
                 Cabinets.Remove(SelectedCabinet);
                 SelectedCabinet = Cabinets.FirstOrDefault();
             }
@@ -188,6 +194,24 @@ namespace BatteryAging.ViewModels
             {
                 _dialog.ShowError($"删除失败: {ex.Message}");
             }
+        }
+
+        private async Task LogAsync(string action, string entityType, string entityId, string detail)
+        {
+            try
+            {
+                var s = _auth.CurrentSession;
+                await _data.LogAuditAsync(new AuditLog
+                {
+                    UserId = s.UserId,
+                    Username = s.IsAuthenticated ? s.Username : "system",
+                    Action = action,
+                    EntityType = entityType,
+                    EntityId = entityId,
+                    Detail = detail
+                });
+            }
+            catch { /* 审计日志失败不应阻断主业务操作 */ }
         }
     }
 }

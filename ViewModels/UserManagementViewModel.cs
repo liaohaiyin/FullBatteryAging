@@ -15,6 +15,7 @@ namespace BatteryAging.ViewModels
         private readonly IDialogService _dialogService;
         private readonly ILanguageService _languageService;
         private readonly ILicenseService _license;
+        private readonly IDataService _dataService;
 
         public ObservableCollection<User> Users { get; } = new();
         public ObservableCollection<Role> Roles { get; } = new();
@@ -149,12 +150,14 @@ namespace BatteryAging.ViewModels
             IAuthService authService,
             IDialogService dialogService,
             ILanguageService languageService,
-            ILicenseService license)
+            ILicenseService license,
+            IDataService dataService)
         {
             _authService = authService;
             _dialogService = dialogService;
             _languageService = languageService;
             _license = license;
+            _dataService = dataService;
 
             LoadCommand = new AsyncRelayCommand(LoadAsync);
             NewUserCommand = new RelayCommand(NewUser);
@@ -220,6 +223,7 @@ namespace BatteryAging.ViewModels
                     (Permission.TestExecution_ClearFault,    "UserManagement_Perm_TestExecution_ClearFault"),
                     (Permission.TestExecution_EmergencyStop, "UserManagement_Perm_TestExecution_EmergencyStop"),
                     (Permission.TestExecution_ExportLive,    "UserManagement_Perm_TestExecution_ExportLive"),
+                    (Permission.TestExecution_ManageQueue,   "UserManagement_Perm_TestExecution_ManageQueue"),
                 }),
                 ("UserManagement_PermGroup_FlowEditor", new[]
                 {
@@ -251,6 +255,8 @@ namespace BatteryAging.ViewModels
                     (Permission.Settings_UserManagement, "UserManagement_Perm_Settings_UserManagement"),
                     (Permission.Settings_RoleManagement, "UserManagement_Perm_Settings_RoleManagement"),
                     (Permission.Settings_SystemConfig,   "UserManagement_Perm_Settings_SystemConfig"),
+                    (Permission.Settings_Calibration,    "UserManagement_Perm_Settings_Calibration"),
+                    (Permission.Settings_AuditLog,       "UserManagement_Perm_Settings_AuditLog"),
                 }),
             };
 
@@ -329,12 +335,14 @@ namespace BatteryAging.ViewModels
                 var (ok, msg) = await _authService.CreateUserAsync(
                     EditUsername, EditPassword, EditDisplayName, EditEmail, EditRole.Id);
                 if (!ok) { FormError = msg; return; }
+                await LogAuditAsync("Create", "User", EditUsername, $"创建用户: {EditUsername} ({EditDisplayName})");
             }
             else
             {
                 var (ok, msg) = await _authService.UpdateUserAsync(
                     SelectedUser.Id, EditDisplayName, EditEmail, EditRole.Id, EditIsActive);
                 if (!ok) { FormError = msg; return; }
+                await LogAuditAsync("Update", "User", SelectedUser.Id.ToString(), $"更新用户: {SelectedUser.Username}");
 
                 if (!string.IsNullOrEmpty(EditPassword))
                 {
@@ -345,6 +353,7 @@ namespace BatteryAging.ViewModels
                     }
                     var (pwOk, pwMsg) = await _authService.ChangePasswordAsync(SelectedUser.Id, EditPassword);
                     if (!pwOk) { FormError = pwMsg; return; }
+                    await LogAuditAsync("Update", "User", SelectedUser.Id.ToString(), $"重置密码: {SelectedUser.Username}");
                 }
             }
 
@@ -362,8 +371,11 @@ namespace BatteryAging.ViewModels
 
             if (!_dialogService.Confirm(confirmMsg, confirmTitle)) return;
 
-            var (ok, msg) = await _authService.DeleteUserAsync(SelectedUser.Id);
+            var username = SelectedUser.Username;
+            var userId = SelectedUser.Id;
+            var (ok, msg) = await _authService.DeleteUserAsync(userId);
             if (!ok) { _dialogService.ShowError(msg); return; }
+            await LogAuditAsync("Delete", "User", userId.ToString(), $"删除用户: {username}");
             await LoadAsync();
         }
 
@@ -417,12 +429,14 @@ namespace BatteryAging.ViewModels
             {
                 var (ok, msg) = await _authService.CreateRoleAsync(EditRoleName, EditRoleDescription, permissions);
                 if (!ok) { RoleFormError = msg; return; }
+                await LogAuditAsync("Create", "Role", EditRoleName, $"创建角色: {EditRoleName}");
             }
             else
             {
                 var (ok, msg) = await _authService.UpdateRoleAsync(
                     SelectedRole.Id, EditRoleName, EditRoleDescription, permissions);
                 if (!ok) { RoleFormError = msg; return; }
+                await LogAuditAsync("Update", "Role", SelectedRole.Id.ToString(), $"更新角色权限: {EditRoleName}");
             }
 
             IsEditingRole = false;
@@ -439,9 +453,30 @@ namespace BatteryAging.ViewModels
 
             if (!_dialogService.Confirm(confirmMsg, confirmTitle)) return;
 
-            var (ok, msg) = await _authService.DeleteRoleAsync(SelectedRole.Id);
-            if (!ok) _dialogService.ShowError(msg);
-            else await LoadAsync();
+            var roleId = SelectedRole.Id;
+            var roleName = SelectedRole.Name;
+            var (ok, msg) = await _authService.DeleteRoleAsync(roleId);
+            if (!ok) { _dialogService.ShowError(msg); return; }
+            await LogAuditAsync("Delete", "Role", roleId.ToString(), $"删除角色: {roleName}");
+            await LoadAsync();
+        }
+
+        private async Task LogAuditAsync(string action, string entityType, string entityId, string detail)
+        {
+            try
+            {
+                var s = _authService.CurrentSession;
+                await _dataService.LogAuditAsync(new AuditLog
+                {
+                    UserId = s.UserId,
+                    Username = s.IsAuthenticated ? s.Username : "system",
+                    Action = action,
+                    EntityType = entityType,
+                    EntityId = entityId,
+                    Detail = detail
+                });
+            }
+            catch { /* 审计日志失败不应阻断主业务操作 */ }
         }
 
         /// <summary>

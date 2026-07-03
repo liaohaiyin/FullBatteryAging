@@ -53,6 +53,11 @@ namespace BatteryAging.Core.Models
         Settings_RoleManagement = 1L << 21,
         Settings_SystemConfig = 1L << 22,
 
+        // ── 审计 / 校准 / 任务队列（高位追加）────────────────────────────
+        Settings_AuditLog = 1L << 32,  // 查看操作审计日志
+        Settings_Calibration = 1L << 33,  // 设备校准记录管理
+        TestExecution_ManageQueue = 1L << 34,  // 批量任务队列管理
+
         // ── 预定义角色权限集合 ───────────────────────────────────────────
         /// <summary>观察者：只读查看</summary>
         Role_Viewer =
@@ -72,10 +77,11 @@ namespace BatteryAging.Core.Models
             TestExecution_StopAll |
             TestExecution_SyncStart |
             TestExecution_EmergencyStop |
+            TestExecution_ManageQueue |
             FlowEditor_View |
             DataQuery_Report,
 
-        /// <summary>工程师：操作员 + 流程编辑（除删除）+ 数据导出 + 机柜配置</summary>
+        /// <summary>工程师：操作员 + 流程编辑（除删除）+ 数据导出 + 机柜配置 + 校准/审计</summary>
         Role_Engineer =
             Role_Operator |
             TestExecution_SkipStep |
@@ -90,7 +96,9 @@ namespace BatteryAging.Core.Models
             FlowEditor_Simulate |
             DataQuery_Export |
             Statistics_Export |
-            Settings_CommConfig,
+            Settings_CommConfig |
+            Settings_Calibration |
+            Settings_AuditLog,
 
         /// <summary>管理员：全部权限</summary>
         Role_Admin = ~None,
