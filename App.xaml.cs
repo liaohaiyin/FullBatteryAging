@@ -133,7 +133,8 @@ namespace BatteryAging
 
             services.AddSingleton<IDataService, DataService>();
             services.AddSingleton<IDialogService, DialogService>();
-            services.AddSingleton<IBatteryAnalyticsService, BatteryAnalyticsService>();                      
+            services.AddSingleton<IBatteryAnalyticsService, BatteryAnalyticsService>();
+            services.AddSingleton<IReportExportService, ReportExportService>();
             services.AddSingleton<IAuthService, AuthService>();
             services.AddSingleton<ILanguageService, LanguageService>();
             services.AddSingleton<ILicenseService, LicenseService>();

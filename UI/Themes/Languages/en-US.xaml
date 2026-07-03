@@ -257,6 +257,8 @@
     <sys:String x:Key="DataQuery_Channel">Channel:</sys:String>
     <sys:String x:Key="DataQuery_Query">Query</sys:String>
     <sys:String x:Key="DataQuery_ExportCsv">Export CSV</sys:String>
+    <sys:String x:Key="DataQuery_ExportExcel">Export Excel</sys:String>
+    <sys:String x:Key="DataQuery_ExportPdf">Export PDF</sys:String>
     <sys:String x:Key="DataQuery_Records">Test Records</sys:String>
     <sys:String x:Key="DataQuery_HistoryCurve">History Curve</sys:String>
     <sys:String x:Key="DataQuery_DataPoints">Data Points</sys:String>

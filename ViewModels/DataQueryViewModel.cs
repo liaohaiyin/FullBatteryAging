@@ -17,6 +17,7 @@ namespace BatteryAging.ViewModels
         private readonly IDialogService _dialogService;
         private readonly IAuthService _auth;
         private readonly IBatteryAnalyticsService _analytics;
+        private readonly IReportExportService _reportExport;
 
         public ObservableCollection<TestRecord> Records { get; } = new();
         public ObservableCollection<DataPoint> DataPoints { get; } = new();
@@ -32,6 +33,8 @@ namespace BatteryAging.ViewModels
 
         public IAsyncRelayCommand QueryCommand { get; }
         public IAsyncRelayCommand ExportCommand { get; }
+        public IAsyncRelayCommand ExportExcelCommand { get; }
+        public IAsyncRelayCommand ExportPdfCommand { get; }
         public IAsyncRelayCommand LoadDataPointsCommand { get; }
 
         /// <summary>
@@ -64,15 +67,18 @@ namespace BatteryAging.ViewModels
 
 
         public DataQueryViewModel(IDataService dataService, IDialogService dialogService, IAuthService auth,
-            IBatteryAnalyticsService analytics)
+            IBatteryAnalyticsService analytics, IReportExportService reportExport)
         {
             _dataService = dataService;
             _dialogService = dialogService;
             _auth = auth;
             _analytics = analytics;
+            _reportExport = reportExport;
 
             QueryCommand = new AsyncRelayCommand(QueryAsync);
             ExportCommand = new AsyncRelayCommand(ExportAsync,() => _auth.HasPermission(Permission.DataQuery_Export));
+            ExportExcelCommand = new AsyncRelayCommand(ExportExcelAsync, () => _auth.HasPermission(Permission.DataQuery_Export));
+            ExportPdfCommand = new AsyncRelayCommand(ExportPdfAsync, () => _auth.HasPermission(Permission.DataQuery_Report));
             LoadDataPointsCommand = new AsyncRelayCommand(LoadDataPointsAsync);
 
             _firstPageCommand = new RelayCommand(() => CurrentPage = 1, () => CurrentPage > 1);
@@ -173,6 +179,50 @@ namespace BatteryAging.ViewModels
                 }
                 await File.WriteAllTextAsync(path, sb.ToString(), Encoding.UTF8);
                 _dialogService.ShowMessage($"已导出 {pts.Count} 个数据点到\n{path}");
+            }
+            catch (Exception ex)
+            {
+                _dialogService.ShowError($"导出失败: {ex.Message}");
+            }
+        }
+
+        private async Task ExportExcelAsync()
+        {
+            if (SelectedRecord == null) { _dialogService.ShowWarning("请先选择一条记录"); return; }
+            var path = _dialogService.SaveFileDialog(
+                "Excel 文件|*.xlsx",
+                $"BatteryReport_CH{SelectedRecord.ChannelIndex}_{SelectedRecord.StartTime:yyyyMMdd_HHmmss}.xlsx",
+                "导出 Excel 报表");
+            if (string.IsNullOrEmpty(path)) return;
+
+            try
+            {
+                var pts = await _dataService.GetDataPointsAsync(SelectedRecord.Id);
+                var cycles = await _dataService.GetCycleDataAsync(SelectedRecord.Id);
+                await Task.Run(() => _reportExport.ExportRecordToExcel(SelectedRecord, pts, cycles, path));
+                _dialogService.ShowMessage($"已导出 Excel 报表到\n{path}");
+            }
+            catch (Exception ex)
+            {
+                _dialogService.ShowError($"导出失败: {ex.Message}");
+            }
+        }
+
+        private async Task ExportPdfAsync()
+        {
+            if (SelectedRecord == null) { _dialogService.ShowWarning("请先选择一条记录"); return; }
+            var path = _dialogService.SaveFileDialog(
+                "PDF 文件|*.pdf",
+                $"BatteryReport_CH{SelectedRecord.ChannelIndex}_{SelectedRecord.StartTime:yyyyMMdd_HHmmss}.pdf",
+                "导出 PDF 报表");
+            if (string.IsNullOrEmpty(path)) return;
+
+            try
+            {
+                var pts = await _dataService.GetDataPointsAsync(SelectedRecord.Id);
+                var cycles = await _dataService.GetCycleDataAsync(SelectedRecord.Id);
+                await Task.Run(() => _reportExport.ExportRecordToPdf(SelectedRecord, pts, cycles, path));
+                _dialogService.ShowMessage($"已导出 PDF 报表到\n{path}");
             }
             catch (Exception ex)
             {

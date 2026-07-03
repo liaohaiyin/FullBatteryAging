@@ -256,6 +256,8 @@
     <sys:String x:Key="DataQuery_Channel">通道:</sys:String>
     <sys:String x:Key="DataQuery_Query">查询</sys:String>
     <sys:String x:Key="DataQuery_ExportCsv">导出 CSV</sys:String>
+    <sys:String x:Key="DataQuery_ExportExcel">导出 Excel</sys:String>
+    <sys:String x:Key="DataQuery_ExportPdf">导出 PDF</sys:String>
     <sys:String x:Key="DataQuery_Records">测试记录</sys:String>
     <sys:String x:Key="DataQuery_HistoryCurve">历史曲线</sys:String>
     <sys:String x:Key="DataQuery_DataPoints">数据点</sys:String>

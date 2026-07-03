@@ -64,6 +64,24 @@
                             <TextBlock Text="{DynamicResource DataQuery_ExportCsv}" Margin="6,0,0,0"/>
                         </StackPanel>
                     </Button>
+                    <Button Style="{StaticResource VsOutlinedButton}"
+                            Command="{Binding ExportExcelCommand}"
+                            Margin="4,0">
+                        <StackPanel Orientation="Horizontal">
+                            <ctrl:VsIcon Kind="{StaticResource Icon.FileExportOutline}" Width="13" Height="13"
+                                         Foreground="{StaticResource VsAccentBrush}"/>
+                            <TextBlock Text="{DynamicResource DataQuery_ExportExcel}" Margin="6,0,0,0"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource VsOutlinedButton}"
+                            Command="{Binding ExportPdfCommand}"
+                            Margin="4,0">
+                        <StackPanel Orientation="Horizontal">
+                            <ctrl:VsIcon Kind="{StaticResource Icon.FileExportOutline}" Width="13" Height="13"
+                                         Foreground="{StaticResource VsAccentBrush}"/>
+                            <TextBlock Text="{DynamicResource DataQuery_ExportPdf}" Margin="6,0,0,0"/>
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
             </Grid>
         </Border>
