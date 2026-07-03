@@ -186,6 +186,18 @@
     <sys:String x:Key="TestExec_DischargeEnergy">Discharge Energy</sys:String>
     <sys:String x:Key="TestExec_Log">Log</sys:String>
     <sys:String x:Key="TestExec_ClearLog">Clear</sys:String>
+    <sys:String x:Key="TestExec_Queue">Batch Job Queue (idle channels auto-pick up)</sys:String>
+    <sys:String x:Key="TestExec_QueueTargetChannel">Target Channel</sys:String>
+    <sys:String x:Key="TestExec_QueueTargetChannelTip">0 = any idle channel, or specify a channel number</sys:String>
+    <sys:String x:Key="TestExec_QueueBatchCount">Count</sys:String>
+    <sys:String x:Key="TestExec_QueueAdd">Enqueue</sys:String>
+    <sys:String x:Key="TestExec_QueueCancel">Cancel Selected</sys:String>
+    <sys:String x:Key="TestExec_QueueClear">Clear Queue</sys:String>
+    <sys:String x:Key="TestExec_QueueCol_Recipe">Recipe</sys:String>
+    <sys:String x:Key="TestExec_QueueCol_Target">Target</sys:String>
+    <sys:String x:Key="TestExec_QueueCol_BarCode">Bar Code</sys:String>
+    <sys:String x:Key="TestExec_QueueCol_Status">Status</sys:String>
+    <sys:String x:Key="TestExec_QueueCol_EnqueuedTime">Enqueued</sys:String>
     <sys:String x:Key="Recipe_TestRecipe">Test Recipes</sys:String>
     <sys:String x:Key="Recipe_NewTip">New recipe</sys:String>
     <sys:String x:Key="Recipe_SaveTip">Save</sys:String>

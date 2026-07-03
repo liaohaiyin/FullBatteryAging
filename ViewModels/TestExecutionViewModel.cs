@@ -25,10 +25,16 @@ namespace BatteryAging.ViewModels
         public ObservableCollection<ChannelViewModel> Channels { get; } = new();
         public ObservableCollection<TestRecipe> AvailableRecipes { get; } = new();
 
+        /// <summary>批量任务队列 —— 通道空闲时自动领取下一条匹配任务</summary>
+        public ObservableCollection<TestJob> JobQueue { get; } = new();
+
         [ObservableProperty] private ChannelViewModel _selectedChannel;
         [ObservableProperty] private TestRecipe _selectedRecipe;
         [ObservableProperty] private string _logText = "";
         [ObservableProperty] private string _barCode = "";
+        [ObservableProperty] private TestJob _selectedJob;
+        [ObservableProperty] private int _queueTargetChannel = 0;   // 0 = 任意空闲通道
+        [ObservableProperty] private int _queueBatchCount = 1;
 
         public IAsyncRelayCommand LoadRecipesCommand { get; }
         public IAsyncRelayCommand StartChannelCommand { get; }
@@ -39,6 +45,9 @@ namespace BatteryAging.ViewModels
         public IAsyncRelayCommand SyncStartAllCommand { get; }
         public IRelayCommand StopAllCommand { get; }
         public IRelayCommand ClearLogCommand { get; }
+        public IRelayCommand EnqueueJobCommand { get; }
+        public IRelayCommand CancelJobCommand { get; }
+        public IRelayCommand ClearQueueCommand { get; }
 
         public TestExecutionViewModel(
             ChannelManager channelManager,
@@ -105,6 +114,13 @@ namespace BatteryAging.ViewModels
             StopAllCommand = new RelayCommand(StopAll,
                 () => _auth.HasPermission(Permission.TestExecution_StopAll));
             ClearLogCommand = new RelayCommand(() => LogText = "");
+            EnqueueJobCommand = new RelayCommand(EnqueueJobs,
+                () => _auth.HasPermission(Permission.TestExecution_ManageQueue) && SelectedRecipe != null);
+            CancelJobCommand = new RelayCommand(CancelJob,
+                () => _auth.HasPermission(Permission.TestExecution_ManageQueue) && SelectedJob?.Status == TestJobStatus.Queued);
+            ClearQueueCommand = new RelayCommand(
+                () => { foreach (var j in JobQueue.Where(j => j.Status == TestJobStatus.Queued).ToList()) JobQueue.Remove(j); },
+                () => _auth.HasPermission(Permission.TestExecution_ManageQueue));
 
             _ = LoadRecipesAsync();
             _ = CheckInterruptedRecordsAsync();
@@ -113,6 +129,8 @@ namespace BatteryAging.ViewModels
         }
 
         partial void OnSelectedChannelChanged(ChannelViewModel value) => RefreshCommands();
+        partial void OnSelectedRecipeChanged(TestRecipe value) => RefreshCommands();
+        partial void OnSelectedJobChanged(TestJob value) => RefreshCommands();
 
         private void RefreshCommands()
         {
@@ -123,6 +141,9 @@ namespace BatteryAging.ViewModels
             ((AsyncRelayCommand)StartAllCommand)?.NotifyCanExecuteChanged();
             ((AsyncRelayCommand)SyncStartAllCommand)?.NotifyCanExecuteChanged();
             ((RelayCommand)StopAllCommand)?.NotifyCanExecuteChanged();
+            ((RelayCommand)EnqueueJobCommand)?.NotifyCanExecuteChanged();
+            ((RelayCommand)CancelJobCommand)?.NotifyCanExecuteChanged();
+            ((RelayCommand)ClearQueueCommand)?.NotifyCanExecuteChanged();
         }
 
         private async Task LoadRecipesAsync()
@@ -372,6 +393,71 @@ namespace BatteryAging.ViewModels
 
         private void StopAll() { _channelManager.StopAll(); RefreshCommands(); }
 
+        // ── 批量任务队列 ──────────────────────────────────────────────────
+        private void EnqueueJobs()
+        {
+            if (SelectedRecipe == null) return;
+            var count = Math.Max(1, QueueBatchCount);
+            for (int i = 0; i < count; i++)
+            {
+                JobQueue.Add(new TestJob
+                {
+                    RecipeId = SelectedRecipe.Id,
+                    RecipeName = SelectedRecipe.Name,
+                    TargetChannelIndex = QueueTargetChannel,
+                    BarCode = BarCode,
+                });
+            }
+            AppendLog($"队列: 新增 {count} 条任务 [{SelectedRecipe.Name}] → {(QueueTargetChannel > 0 ? $"通道{QueueTargetChannel}" : "任意空闲通道")}");
+            TryDispatchQueue();
+            RefreshCommands();
+        }
+
+        private void CancelJob()
+        {
+            if (SelectedJob == null || SelectedJob.Status != TestJobStatus.Queued) return;
+            SelectedJob.Status = TestJobStatus.Cancelled;
+            JobQueue.Remove(SelectedJob);
+            RefreshCommands();
+        }
+
+        /// <summary>把队列中排队的任务派发给当前空闲的通道（通道刚变空闲/入队时调用）</summary>
+        private void TryDispatchQueue()
+        {
+            if (JobQueue.Count == 0) return;
+
+            foreach (var ch in Channels)
+            {
+                if (ch.Status != ChannelStatus.Idle && ch.Status != ChannelStatus.Completed
+                    && ch.Status != ChannelStatus.Stopped)
+                    continue;   // 通道仍在运行/暂停/故障，不派发
+
+                var job = JobQueue.FirstOrDefault(j => j.Status == TestJobStatus.Queued &&
+                    (j.TargetChannelIndex == 0 || j.TargetChannelIndex == ch.ChannelIndex));
+                if (job == null) continue;
+
+                var recipe = AvailableRecipes.FirstOrDefault(r => r.Id == job.RecipeId);
+                if (recipe == null)
+                {
+                    AppendLog($"队列: 方案 {job.RecipeName} 已不存在，任务作废");
+                    job.Status = TestJobStatus.Cancelled;
+                    JobQueue.Remove(job);
+                    continue;
+                }
+
+                job.Status = TestJobStatus.Running;
+                job.StartedTime = DateTime.Now;
+                JobQueue.Remove(job);
+                AppendLog($"队列: 通道{ch.ChannelIndex} 领取任务 [{job.RecipeName}]");
+
+                // 复用 StartOneAsync 既有逻辑（含条码回填、MES 过站等），临时借用共享 BarCode 字段传入该任务的条码
+                var savedBarCode = BarCode;
+                BarCode = job.BarCode ?? "";
+                _ = StartOneAsync(ch, recipe);
+                BarCode = savedBarCode;
+            }
+        }
+
         // ── 数据采样 ──
         private void OnDataSampled(object sender, DataSampleEventArgs e)
         {
@@ -404,6 +490,11 @@ namespace BatteryAging.ViewModels
                     || e.Status == ChannelStatus.Protected || e.Status == ChannelStatus.Error)
                 {
                     _ = FinalizeRecordAsync(e.ChannelIndex, e.Status, e.Protection, e.Message);
+                }
+                if (e.Status == ChannelStatus.Completed || e.Status == ChannelStatus.Stopped
+                    || e.Status == ChannelStatus.Idle)
+                {
+                    TryDispatchQueue();
                 }
             });
         }

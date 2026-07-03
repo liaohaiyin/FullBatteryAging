@@ -185,6 +185,18 @@
     <sys:String x:Key="TestExec_DischargeEnergy">放电能量</sys:String>
     <sys:String x:Key="TestExec_Log">运行日志</sys:String>
     <sys:String x:Key="TestExec_ClearLog">清空</sys:String>
+    <sys:String x:Key="TestExec_Queue">批量任务队列（空闲通道自动领取）</sys:String>
+    <sys:String x:Key="TestExec_QueueTargetChannel">目标通道</sys:String>
+    <sys:String x:Key="TestExec_QueueTargetChannelTip">0 = 任意空闲通道，也可指定具体通道号</sys:String>
+    <sys:String x:Key="TestExec_QueueBatchCount">数量</sys:String>
+    <sys:String x:Key="TestExec_QueueAdd">加入队列</sys:String>
+    <sys:String x:Key="TestExec_QueueCancel">取消所选</sys:String>
+    <sys:String x:Key="TestExec_QueueClear">清空排队</sys:String>
+    <sys:String x:Key="TestExec_QueueCol_Recipe">方案</sys:String>
+    <sys:String x:Key="TestExec_QueueCol_Target">目标</sys:String>
+    <sys:String x:Key="TestExec_QueueCol_BarCode">条码</sys:String>
+    <sys:String x:Key="TestExec_QueueCol_Status">状态</sys:String>
+    <sys:String x:Key="TestExec_QueueCol_EnqueuedTime">入队时间</sys:String>
     <sys:String x:Key="Recipe_TestRecipe">测试方案</sys:String>
     <sys:String x:Key="Recipe_NewTip">新建方案</sys:String>
     <sys:String x:Key="Recipe_SaveTip">保存</sys:String>

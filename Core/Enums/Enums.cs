@@ -281,7 +281,18 @@ namespace BatteryAging.Core.Enums
         Module,
         [Description("PACK柜")]  //多个模组
         Pack,
-        [Description("温箱")] 
+        [Description("温箱")]
         Chamber
+    }
+
+    /// <summary>批量任务队列中一个任务的状态（运行时内存态，不落库）</summary>
+    public enum TestJobStatus
+    {
+        [Description("排队中")]
+        Queued,
+        [Description("运行中")]
+        Running,
+        [Description("已取消")]
+        Cancelled
     }
 }
