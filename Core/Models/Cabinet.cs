@@ -57,5 +57,14 @@ namespace BatteryAging.Core.Models
         public int BmsPort { get; set; } = 502;
         public int CellCount { get; set; } = 0;        // 每 PACK 单体数（0=非PACK）
         public int TempPointCount { get; set; } = 0;   // 温度采集点数
+
+        // ── 标准化驱动适配层（见 Drivers/Adapters/DeviceAdapterRegistry）──
+        public CommProtocol Protocol { get; set; } = CommProtocol.Simulator;   // 统一协议分类，驱动可视化配置界面
+        public string AdapterId { get; set; }          // 适配层中选定的品牌/型号 id；留空则按 DriverType/ConnectionType 自动匹配（兼容旧数据）
+
+        // ── CAN 连接参数（主设备下发指令 / 采集遥测共用）──
+        public int CanDeviceIndex { get; set; } = 0;    // CAN 卡设备序号（多卡时区分）
+        public int CanChannelIndex { get; set; } = 0;   // 卡内通道号（0/1...）
+        public string CanBaudRate { get; set; } = "500000";
     }
 }

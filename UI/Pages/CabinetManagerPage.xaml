@@ -139,6 +139,18 @@
 
                         <TextBlock Text="{DynamicResource Cabinet_DriverComm}" FontWeight="Medium" FontSize="14"
                                    Foreground="{StaticResource AccentCyanBrush}" Margin="0,0,0,8"/>
+
+                        <TextBlock Text="{DynamicResource Cabinet_Adapter}" Style="{StaticResource FieldLabel}"/>
+                        <ComboBox x:Name="AdapterCombo"
+                                  ItemsSource="{Binding DataContext.Adapters, RelativeSource={RelativeSource AncestorType=Page}}"
+                                  DisplayMemberPath="DisplayName" SelectedValuePath="Id"
+                                  SelectedValue="{Binding AdapterId}"
+                                  SelectionChanged="AdapterCombo_SelectionChanged"
+                                  Margin="0,0,0,4"/>
+                        <TextBlock Text="{Binding SelectedItem.Description, ElementName=AdapterCombo}"
+                                   Foreground="{StaticResource TextMutedBrush}" FontSize="11"
+                                   TextWrapping="Wrap" Margin="0,0,0,12"/>
+
                         <Grid Margin="0,0,0,12">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -146,68 +158,114 @@
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Margin="0,0,8,0">
                                 <TextBlock Text="{DynamicResource Cabinet_Vendor}" Style="{StaticResource FieldLabel}"/>
-                                <ComboBox ItemsSource="{Binding DataContext.DriverTypes, RelativeSource={RelativeSource AncestorType=Page}}"
+                                <ComboBox x:Name="DriverTypeCombo"
+                                          ItemsSource="{Binding DataContext.DriverTypes, RelativeSource={RelativeSource AncestorType=Page}}"
                                           DisplayMemberPath="DisplayName"
                                           SelectedValuePath="Value"
-                                          SelectedValue="{Binding DriverType}"/>
+                                          SelectedValue="{Binding DriverType}"
+                                          IsEnabled="False"/>
                             </StackPanel>
                             <StackPanel Grid.Column="1" Margin="8,0,0,0">
                                 <TextBlock Text="{DynamicResource Cabinet_ConnType}" Style="{StaticResource FieldLabel}"/>
-                                <ComboBox ItemsSource="{Binding DataContext.ConnectionTypes, RelativeSource={RelativeSource AncestorType=Page}}"
+                                <ComboBox x:Name="ConnectionTypeCombo"
+                                          ItemsSource="{Binding DataContext.ConnectionTypes, RelativeSource={RelativeSource AncestorType=Page}}"
                                           DisplayMemberPath="DisplayName"
                                           SelectedValuePath="Value"
-                                          SelectedValue="{Binding ConnectionType}"/>
+                                          SelectedValue="{Binding ConnectionType}"
+                                          IsEnabled="False"/>
                             </StackPanel>
                         </Grid>
 
-                        <TextBlock Text="{DynamicResource Cabinet_TcpParams}" Style="{StaticResource FieldLabel}"
-                                   FontWeight="Medium"/>
-                        <Grid Margin="0,0,0,12">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0" Margin="0,0,8,0">
-                                <TextBlock Text="{DynamicResource Cabinet_Ip}" Style="{StaticResource FieldLabel}"/>
-                                <TextBox Text="{Binding IpAddress, UpdateSourceTrigger=PropertyChanged}"/>
-                            </StackPanel>
-                            <StackPanel Grid.Column="1" Margin="8,0,0,0">
-                                <TextBlock Text="{DynamicResource Cabinet_TcpPort}" Style="{StaticResource FieldLabel}"/>
-                                <TextBox Text="{Binding TcpPort, UpdateSourceTrigger=PropertyChanged}"/>
-                            </StackPanel>
-                        </Grid>
+                        <StackPanel x:Name="TcpParamsPanel">
+                            <TextBlock Text="{DynamicResource Cabinet_TcpParams}" Style="{StaticResource FieldLabel}"
+                                       FontWeight="Medium"/>
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                                    <TextBlock Text="{DynamicResource Cabinet_Ip}" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding IpAddress, UpdateSourceTrigger=PropertyChanged}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                    <TextBlock Text="{DynamicResource Cabinet_TcpPort}" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding TcpPort, UpdateSourceTrigger=PropertyChanged}"/>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
 
-                        <TextBlock Text="{DynamicResource Cabinet_SerialParams}" Style="{StaticResource FieldLabel}"
-                                   FontWeight="Medium"/>
-                        <Grid Margin="0,0,0,12">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0" Margin="0,0,4,0">
-                                <TextBlock Text="{DynamicResource Cabinet_SerialPort}" Style="{StaticResource FieldLabel}"/>
-                                <TextBox Text="{Binding SerialPort, UpdateSourceTrigger=PropertyChanged}"/>
-                            </StackPanel>
-                            <StackPanel Grid.Column="1" Margin="4,0">
-                                <TextBlock Text="{DynamicResource Cabinet_BaudRate}" Style="{StaticResource FieldLabel}"/>
-                                <TextBox Text="{Binding BaudRate, UpdateSourceTrigger=PropertyChanged}"/>
-                            </StackPanel>
-                            <StackPanel Grid.Column="2" Margin="4,0">
-                                <TextBlock Text="{DynamicResource Cabinet_DataBits}" Style="{StaticResource FieldLabel}"/>
-                                <TextBox Text="{Binding DataBits, UpdateSourceTrigger=PropertyChanged}"/>
-                            </StackPanel>
-                            <StackPanel Grid.Column="3" Margin="4,0">
-                                <TextBlock Text="{DynamicResource Cabinet_StopBits}" Style="{StaticResource FieldLabel}"/>
-                                <TextBox Text="{Binding StopBits, UpdateSourceTrigger=PropertyChanged}"/>
-                            </StackPanel>
-                            <StackPanel Grid.Column="4" Margin="4,0,0,0">
-                                <TextBlock Text="{DynamicResource Cabinet_Parity}" Style="{StaticResource FieldLabel}"/>
-                                <TextBox Text="{Binding Parity, UpdateSourceTrigger=PropertyChanged}"/>
-                            </StackPanel>
-                        </Grid>
+                        <StackPanel x:Name="SerialParamsPanel">
+                            <TextBlock Text="{DynamicResource Cabinet_SerialParams}" Style="{StaticResource FieldLabel}"
+                                       FontWeight="Medium"/>
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Margin="0,0,4,0">
+                                    <TextBlock Text="{DynamicResource Cabinet_SerialPort}" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding SerialPort, UpdateSourceTrigger=PropertyChanged}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="4,0">
+                                    <TextBlock Text="{DynamicResource Cabinet_BaudRate}" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding BaudRate, UpdateSourceTrigger=PropertyChanged}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2" Margin="4,0">
+                                    <TextBlock Text="{DynamicResource Cabinet_DataBits}" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding DataBits, UpdateSourceTrigger=PropertyChanged}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="3" Margin="4,0">
+                                    <TextBlock Text="{DynamicResource Cabinet_StopBits}" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding StopBits, UpdateSourceTrigger=PropertyChanged}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="4" Margin="4,0,0,0">
+                                    <TextBlock Text="{DynamicResource Cabinet_Parity}" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding Parity, UpdateSourceTrigger=PropertyChanged}"/>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+
+                        <StackPanel x:Name="CanParamsPanel">
+                            <TextBlock Text="{DynamicResource Cabinet_CanParams}" Style="{StaticResource FieldLabel}"
+                                       FontWeight="Medium"/>
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                                    <TextBlock Text="{DynamicResource Cabinet_CanDeviceIndex}" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding CanDeviceIndex, UpdateSourceTrigger=PropertyChanged}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="8,0">
+                                    <TextBlock Text="{DynamicResource Cabinet_CanChannelIndex}" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding CanChannelIndex, UpdateSourceTrigger=PropertyChanged}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2" Margin="8,0,0,0">
+                                    <TextBlock Text="{DynamicResource Cabinet_CanBaudRate}" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding CanBaudRate, UpdateSourceTrigger=PropertyChanged}"/>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                            <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                    Command="{Binding DataContext.TestConnectionCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                    Foreground="{StaticResource AccentCyanBrush}" Padding="8,4">
+                                <StackPanel Orientation="Horizontal">
+                                    <ctrl:VsIcon Kind="{StaticResource Icon.ServerNetwork}" Width="14" Height="14" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{DynamicResource Cabinet_TestConnection}" Margin="6,0,0,0"/>
+                                </StackPanel>
+                            </Button>
+                            <TextBlock Text="{Binding DataContext.ConnectionTestResult, RelativeSource={RelativeSource AncestorType=Page}}"
+                                       VerticalAlignment="Center" Margin="10,0,0,0" FontSize="12"
+                                       Foreground="{StaticResource TextSecondaryBrush}"/>
+                        </StackPanel>
 
                         <Border Height="1" Background="{DynamicResource BorderDimBrush}" Margin="0,4,0,12"/>
 

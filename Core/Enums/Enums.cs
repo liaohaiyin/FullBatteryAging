@@ -187,7 +187,11 @@ namespace BatteryAging.Core.Enums
         [Description("Modbus")]
         Modbus,              // =1
         [Description("Socket")]
-        GenericSocket        // =2
+        GenericSocket,       // =2
+        [Description("串口通用协议")]
+        GenericSerial,       // =3 RS232/RS485 通用 ASCII 协议
+        [Description("CAN")]
+        Can                  // =4 CAN 总线（充放电指令 + 遥测）
     }
 
     /// <summary>
@@ -196,9 +200,29 @@ namespace BatteryAging.Core.Enums
     public enum ConnectionType
     {
         [Description("TCP/IP")]
-        Tcp,  
+        Tcp,
         [Description("串口")]
-        Serial
+        Serial,
+        [Description("CAN")]
+        Can
+    }
+
+    /// <summary>
+    /// 标准化通讯协议分类 —— 驱动适配层向上层暴露的统一协议选择项。
+    /// 类似"USB 兼容驱动"：用户只需选协议 + 品牌型号，适配层负责向下对接具体链路（DriverType/ConnectionType）。
+    /// </summary>
+    public enum CommProtocol
+    {
+        [Description("模拟器")]
+        Simulator,
+        [Description("Modbus (RTU/TCP)")]
+        Modbus,
+        [Description("RS232 / RS485 串口")]
+        Serial,
+        [Description("TCP/IP")]
+        TcpIp,
+        [Description("CAN 总线")]
+        Can
     }
 
     /// <summary>BMS 采集驱动类型</summary>

@@ -78,23 +78,15 @@ namespace BatteryAging.Drivers
         public void Dispose() { try { _master.Dispose(); } catch { } }
     }
 
-    /// <summary>BMS 驱动工厂</summary>
+    /// <summary>
+    /// BMS 驱动工厂 —— 委托给标准化驱动适配层（<see cref="Adapters.DeviceAdapterRegistry"/>）按 BmsDriverType 解析并创建。
+    /// </summary>
     public static class BmsDriverFactory
     {
-        public static IBmsDriver Create(Core.Models.Cabinet cab) => cab.BmsDriverType switch
+        public static IBmsDriver Create(Core.Models.Cabinet cab)
         {
-            Core.Enums.BmsDriverType.Modbus =>
-                new ModbusBmsDriver(cab.BmsIp, cab.BmsPort, cab.CellCount, cab.TempPointCount),
-            // CAN 需厂商 SDK（PCAN/Kvaser/ZLG 等），暂回退模拟器，避免初始化崩溃
-            Core.Enums.BmsDriverType.Can =>
-                new Can.ZlgBmsDriver(new Can.ZlgBmsCanMap
-                {
-                    CellCount = cab.CellCount,
-                    TempCount = cab.TempPointCount
-                }),
-            Core.Enums.BmsDriverType.Simulator =>
-                new SimulatorBmsDriver(cab.CellCount, cab.TempPointCount),
-            _ => new SimulatorBmsDriver(cab.CellCount, cab.TempPointCount),
-        };
+            var adapter = Adapters.DeviceAdapterRegistry.ResolveBms(cab);
+            return adapter.CreateBmsDriver(cab);
+        }
     }
 }

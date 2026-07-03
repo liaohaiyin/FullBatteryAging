@@ -301,6 +301,7 @@
     <sys:String x:Key="Cabinet_Index">Cabinet No.</sys:String>
     <sys:String x:Key="Cabinet_Type">Cabinet Type</sys:String>
     <sys:String x:Key="Cabinet_DriverComm">Driver / Comm</sys:String>
+    <sys:String x:Key="Cabinet_Adapter">Device Adapter (Brand/Protocol)</sys:String>
     <sys:String x:Key="Cabinet_Vendor">Comm Type</sys:String>
     <sys:String x:Key="Cabinet_ConnType">Connection</sys:String>
     <sys:String x:Key="Cabinet_TcpParams">TCP / IP Params</sys:String>
@@ -312,6 +313,11 @@
     <sys:String x:Key="Cabinet_DataBits">Data Bits</sys:String>
     <sys:String x:Key="Cabinet_StopBits">Stop Bits</sys:String>
     <sys:String x:Key="Cabinet_Parity">Parity</sys:String>
+    <sys:String x:Key="Cabinet_CanParams">CAN Params</sys:String>
+    <sys:String x:Key="Cabinet_CanDeviceIndex">Device Index</sys:String>
+    <sys:String x:Key="Cabinet_CanChannelIndex">CAN Channel</sys:String>
+    <sys:String x:Key="Cabinet_CanBaudRate">CAN Baud Rate</sys:String>
+    <sys:String x:Key="Cabinet_TestConnection">Test Connection</sys:String>
     <sys:String x:Key="Cabinet_ChannelConfig">Channel Config</sys:String>
     <sys:String x:Key="Cabinet_ChannelStart">Start Channel</sys:String>
     <sys:String x:Key="Cabinet_ChannelCount">Channel Count</sys:String>

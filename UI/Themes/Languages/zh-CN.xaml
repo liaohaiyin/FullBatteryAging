@@ -300,6 +300,7 @@
     <sys:String x:Key="Cabinet_Index">机柜编号</sys:String>
     <sys:String x:Key="Cabinet_Type">机柜类型</sys:String>
     <sys:String x:Key="Cabinet_DriverComm">驱动 / 通讯</sys:String>
+    <sys:String x:Key="Cabinet_Adapter">设备适配器（品牌/协议）</sys:String>
     <sys:String x:Key="Cabinet_Vendor">通信类型</sys:String>
     <sys:String x:Key="Cabinet_ConnType">通讯方式</sys:String>
     <sys:String x:Key="Cabinet_TcpParams">TCP / IP 参数</sys:String>
@@ -311,6 +312,11 @@
     <sys:String x:Key="Cabinet_DataBits">数据位</sys:String>
     <sys:String x:Key="Cabinet_StopBits">停止位</sys:String>
     <sys:String x:Key="Cabinet_Parity">校验</sys:String>
+    <sys:String x:Key="Cabinet_CanParams">CAN 参数</sys:String>
+    <sys:String x:Key="Cabinet_CanDeviceIndex">设备序号</sys:String>
+    <sys:String x:Key="Cabinet_CanChannelIndex">CAN 通道号</sys:String>
+    <sys:String x:Key="Cabinet_CanBaudRate">CAN 波特率</sys:String>
+    <sys:String x:Key="Cabinet_TestConnection">测试连接</sys:String>
     <sys:String x:Key="Cabinet_ChannelConfig">通道配置</sys:String>
     <sys:String x:Key="Cabinet_ChannelStart">起始通道号</sys:String>
     <sys:String x:Key="Cabinet_ChannelCount">通道数</sys:String>

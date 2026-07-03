@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,6 +8,8 @@ using CommunityToolkit.Mvvm.Input;
 using BatteryAging.Core;
 using BatteryAging.Core.Enums;
 using BatteryAging.Core.Models;
+using BatteryAging.Drivers;
+using BatteryAging.Drivers.Adapters;
 using BatteryAging.Services;
 
 namespace BatteryAging.ViewModels
@@ -21,17 +24,25 @@ namespace BatteryAging.ViewModels
             = EnumHelper.GetItems<DriverType>();
         public List<EnumDisplayItem<ConnectionType>> ConnectionTypes { get; }
             = EnumHelper.GetItems<ConnectionType>();
-        public List<EnumDisplayItem<CabinetType>> CabinetTypes { get; } = 
+        public List<EnumDisplayItem<CabinetType>> CabinetTypes { get; } =
             EnumHelper.GetItems<CabinetType>();
         public List<EnumDisplayItem<BmsDriverType>> BmsDriverTypes { get; }
             = EnumHelper.GetItems<BmsDriverType>();
 
+        /// <summary>标准化驱动适配层中所有支持主设备的品牌/协议适配器，供设备配置界面选择</summary>
+        public List<DeviceAdapterDescriptor> Adapters { get; }
+            = DeviceAdapterRegistry.All.Where(a => a.SupportsMainDriver).ToList();
+
         [ObservableProperty] private Cabinet _selectedCabinet;
+        [ObservableProperty] private string _connectionTestResult;
+        [ObservableProperty] private bool _connectionTestOk;
+        [ObservableProperty] private bool _isTestingConnection;
 
         public IAsyncRelayCommand LoadCommand { get; }
         public IRelayCommand NewCabinetCommand { get; }
         public IAsyncRelayCommand SaveCabinetCommand { get; }
         public IAsyncRelayCommand DeleteCabinetCommand { get; }
+        public IAsyncRelayCommand TestConnectionCommand { get; }
 
         public CabinetManagerViewModel(IDataService data, IDialogService dialog)
         {
@@ -42,6 +53,7 @@ namespace BatteryAging.ViewModels
             NewCabinetCommand = new RelayCommand(NewCabinet);
             SaveCabinetCommand = new AsyncRelayCommand(SaveAsync, () => SelectedCabinet != null);
             DeleteCabinetCommand = new AsyncRelayCommand(DeleteAsync, () => SelectedCabinet != null);
+            TestConnectionCommand = new AsyncRelayCommand(TestConnectionAsync, () => SelectedCabinet != null && !IsTestingConnection);
 
             _ = LoadAsync();
         }
@@ -50,6 +62,50 @@ namespace BatteryAging.ViewModels
         {
             SaveCabinetCommand.NotifyCanExecuteChanged();
             DeleteCabinetCommand.NotifyCanExecuteChanged();
+            TestConnectionCommand.NotifyCanExecuteChanged();
+            ConnectionTestResult = null;
+        }
+
+        /// <summary>
+        /// 按当前机柜选中的适配器，短接创建一次驱动并尝试连接/心跳，验证参数是否正确 —— 无需重启整个程序。
+        /// </summary>
+        private async Task TestConnectionAsync()
+        {
+            if (SelectedCabinet == null) return;
+
+            IsTestingConnection = true;
+            TestConnectionCommand.NotifyCanExecuteChanged();
+            ConnectionTestResult = null;
+            IDeviceDriver driver = null;
+            try
+            {
+                var adapter = DeviceAdapterRegistry.ResolveMain(SelectedCabinet);
+                var sampleMs = SelectedCabinet.SamplingIntervalMs > 0 ? SelectedCabinet.SamplingIntervalMs : 1000;
+                driver = adapter.CreateDriver(SelectedCabinet, sampleMs);
+
+                var connected = await driver.ConnectAsync();
+                if (connected) connected = await driver.PingAsync();
+
+                ConnectionTestOk = connected;
+                ConnectionTestResult = connected
+                    ? $"[{adapter.DisplayName}] 连接成功"
+                    : $"[{adapter.DisplayName}] 连接失败，请检查参数";
+            }
+            catch (Exception ex)
+            {
+                ConnectionTestOk = false;
+                ConnectionTestResult = $"连接测试异常: {ex.Message}";
+            }
+            finally
+            {
+                if (driver != null)
+                {
+                    try { await driver.DisconnectAsync(); } catch { }
+                    try { driver.Dispose(); } catch { }
+                }
+                IsTestingConnection = false;
+                TestConnectionCommand.NotifyCanExecuteChanged();
+            }
         }
 
         private async Task LoadAsync()
@@ -58,7 +114,13 @@ namespace BatteryAging.ViewModels
             {
                 var list = await _data.GetAllCabinetsAsync();
                 Cabinets.Clear();
-                foreach (var c in list) Cabinets.Add(c);
+                foreach (var c in list)
+                {
+                    // 历史数据没有 AdapterId：按 DriverType/ConnectionType 自动回填，使适配器下拉框正确回显选中项
+                    if (string.IsNullOrEmpty(c.AdapterId))
+                        c.AdapterId = DeviceAdapterRegistry.ResolveMain(c).Id;
+                    Cabinets.Add(c);
+                }
                 if (Cabinets.Count == 0)
                 {
                     // 首次：插入一个默认模拟机柜
@@ -68,6 +130,7 @@ namespace BatteryAging.ViewModels
                         CabinetIndex = 1,
                         DriverType = DriverType.Simulator,
                         ConnectionType = ConnectionType.Tcp,
+                        AdapterId = DeviceAdapterRegistry.SimulatorId,
                         ChannelStartIndex = 1,
                         ChannelCount = 8,
                         IsEnabled = true
@@ -89,6 +152,7 @@ namespace BatteryAging.ViewModels
             {
                 Name = $"机柜{Cabinets.Count + 1}",
                 CabinetIndex = Cabinets.Count + 1,
+                AdapterId = DeviceAdapterRegistry.SimulatorId,
                 ChannelStartIndex = Cabinets.Sum(c => c.ChannelCount) + 1,
                 ChannelCount = 8
             };

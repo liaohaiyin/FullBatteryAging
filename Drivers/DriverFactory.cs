@@ -1,43 +1,20 @@
 using System;
-using BatteryAging.Core.Enums;
 using BatteryAging.Core.Models;
+using BatteryAging.Drivers.Adapters;
 
 namespace BatteryAging.Drivers
 {
     /// <summary>
-    /// 驱动工厂：ConnectionType 决定"用哪条链路"，DriverType 决定"说什么协议"，二者正交组合。
+    /// 驱动工厂 —— 委托给标准化驱动适配层（<see cref="DeviceAdapterRegistry"/>）解析并创建具体驱动。
+    /// 新增品牌/协议无需修改本类，向 DeviceAdapterRegistry 注册新的 DeviceAdapterDescriptor 即可。
     /// </summary>
     public static class DriverFactory
     {
         public static IDeviceDriver Create(Cabinet cabinet, int samplingIntervalMs)
         {
             if (cabinet == null) throw new ArgumentNullException(nameof(cabinet));
-
-            bool isTcp = cabinet.ConnectionType == ConnectionType.Tcp;
-
-            return cabinet.DriverType switch
-            {
-                DriverType.Simulator =>
-                    new SimulatorDriver(cabinet.ChannelCount, samplingIntervalMs),
-
-                DriverType.Modbus => isTcp
-                    ? new ModbusDeviceDriver(cabinet.IpAddress, cabinet.TcpPort, BuildModbusMap(cabinet))
-                    : new ModbusDeviceDriver(cabinet.SerialPort, cabinet.BaudRate,
-                                             cabinet.DataBits, cabinet.StopBits, cabinet.Parity, BuildModbusMap(cabinet)),
-
-                // 通用 Socket 仅适用于 TCP；串口组合矛盾，回退模拟器避免初始化崩溃
-                DriverType.GenericSocket => isTcp
-                    ? new SocketDeviceDriver(cabinet.IpAddress, cabinet.TcpPort)
-                    : new SimulatorDriver(cabinet.ChannelCount, samplingIntervalMs),
-
-                _ => new SimulatorDriver(cabinet.ChannelCount, samplingIntervalMs)
-            };
+            var adapter = DeviceAdapterRegistry.ResolveMain(cabinet);
+            return adapter.CreateDriver(cabinet, samplingIntervalMs);
         }
-
-        private static ModbusRegisterMap BuildModbusMap(Cabinet cab) => new ModbusRegisterMap
-        {
-            // TODO: 按设备《Modbus 协议手册》调整。默认值仅为占位。
-            UnitIdBase = 1,
-        };
     }
 }

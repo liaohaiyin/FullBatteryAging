@@ -41,6 +41,13 @@ namespace BatteryAging.Drivers.Can
             public ulong timestamp;        // 微秒
         }
 
+        [StructLayout(LayoutKind.Sequential)]
+        public struct ZCAN_Transmit_Data
+        {
+            public ZCAN_CAN_FRAME frame;
+            public uint transmit_type;     // 0=正常发送
+        }
+
         // 通道初始化配置（不同 SDK 版本字段差异较大，这里给最常用字段；以手册为准）
         [StructLayout(LayoutKind.Sequential)]
         public struct ZCAN_CHANNEL_INIT_CONFIG
@@ -82,5 +89,10 @@ namespace BatteryAging.Drivers.Can
         [DllImport(Dll, CallingConvention = CallingConvention.StdCall)]
         public static extern uint ZCAN_Receive(IntPtr channel_handle,
             [Out] ZCAN_Receive_Data[] data, uint len, int wait_time_ms);
+
+        // 批量发帧（下发充放电指令用）
+        [DllImport(Dll, CallingConvention = CallingConvention.StdCall)]
+        public static extern uint ZCAN_Transmit(IntPtr channel_handle,
+            [In] ZCAN_Transmit_Data[] data, uint len);
     }
 }
