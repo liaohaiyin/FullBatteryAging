@@ -174,7 +174,10 @@ namespace BatteryAging.Core.Enums
         [Description("BMS通讯中断")]
         BmsCommunicationLost,
         [Description("BMS上报故障")]
-        BmsFault
+        BmsFault,
+        // 新增保护类型请追加在末尾，切勿插入中间——ProtectionTrigger 按枚举序号持久化，插入会错位已存数据
+        [Description("温升速率异常")]
+        RapidTempRise
     }
 
     /// <summary>

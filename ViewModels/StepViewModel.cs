@@ -33,6 +33,7 @@ namespace BatteryAging.ViewModels
             _protectionTimeSeconds = step.ProtectionTimeSeconds;
             _reversePolarityCheck = step.ReversePolarityCheck;
             _maxVoltageDropRate = step.MaxVoltageDropRate;
+            _maxTempRiseRate = step.MaxTempRiseRate;
             _remark = step.Remark;
             _power = step.Power;
             _resistance = step.Resistance;
@@ -111,6 +112,9 @@ namespace BatteryAging.ViewModels
 
         [ObservableProperty] private double _maxVoltageDropRate;
         partial void OnMaxVoltageDropRateChanged(double value) => _step.MaxVoltageDropRate = value;
+
+        [ObservableProperty] private double _maxTempRiseRate;
+        partial void OnMaxTempRiseRateChanged(double value) => _step.MaxTempRiseRate = value;
 
         [ObservableProperty] private string _remark;
         partial void OnRemarkChanged(string value) => _step.Remark = value;

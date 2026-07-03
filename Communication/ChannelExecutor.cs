@@ -74,6 +74,10 @@ namespace BatteryAging.Communication
         private double _lastVoltage = double.NaN;
         private DateTime _lastVoltageTime;
 
+        // ── dT/dt 温升速率检测（早于绝对温度阈值发现潜在热失控趋势）──
+        private double _lastTempForRate = double.NaN;
+        private DateTime _lastTempRateTime;
+
         // ── 通讯丢失检测 ──
         private int _consecutiveCommErrors = 0;
         private const int MaxConsecutiveCommErrors = 5;
@@ -141,6 +145,7 @@ namespace BatteryAging.Communication
 
             _consecutiveCommErrors = 0;
             _lastVoltage = double.NaN;
+            _lastTempForRate = double.NaN;
             _cts = new CancellationTokenSource();
             if (_driver is SimulatorDriver sim)
                 sim.SetNominalCapacity(LocalChannelIndex, recipe.NominalCapacity);
@@ -331,6 +336,7 @@ namespace BatteryAging.Communication
             Energy = 0;
             StepElapsedSeconds = 0;
             _lastVoltage = double.NaN;
+            _lastTempForRate = double.NaN;
 
             var dtSec = SamplingIntervalMs / 1000.0;
 
@@ -610,6 +616,20 @@ namespace BatteryAging.Communication
             }
             _lastVoltage = m.Voltage;
             _lastVoltageTime = m.Timestamp;
+
+            // dT/dt 温升速率检测：即使还没到绝对温度上限，升温过快也可能是热失控前兆
+            if (step.MaxTempRiseRate > 0 && !double.IsNaN(_lastTempForRate))
+            {
+                var dt = (m.Timestamp - _lastTempRateTime).TotalSeconds;
+                if (dt > 0)
+                {
+                    var riseRatePerMin = (m.Temperature - _lastTempForRate) / dt * 60.0;
+                    if (riseRatePerMin > step.MaxTempRiseRate)
+                        return ProtectionType.RapidTempRise;
+                }
+            }
+            _lastTempForRate = m.Temperature;
+            _lastTempRateTime = m.Timestamp;
 
             return ProtectionType.None;
         }

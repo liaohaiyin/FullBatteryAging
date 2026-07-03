@@ -395,6 +395,10 @@
                                 <TextBlock Text="{DynamicResource Recipe_ProtTime}" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
                                 <TextBox Text="{Binding ProtectionTimeSeconds, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F0}}"/>
                             </StackPanel>
+                            <StackPanel Grid.Row="2" Grid.Column="1" Margin="4,0,0,0">
+                                <TextBlock Text="{DynamicResource Recipe_MaxTempRiseRate}" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                                <TextBox Text="{Binding MaxTempRiseRate, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F1}}"/>
+                            </StackPanel>
                         </Grid>
 
                         <Separator Margin="0,8,0,8"/>

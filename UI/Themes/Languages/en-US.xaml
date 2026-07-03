@@ -247,6 +247,7 @@
     <sys:String x:Key="Recipe_OverI">Over-current (A)</sys:String>
     <sys:String x:Key="Recipe_OverT">Over-temp (°C)</sys:String>
     <sys:String x:Key="Recipe_ProtTime">Protection Time (s)</sys:String>
+    <sys:String x:Key="Recipe_MaxTempRiseRate">Max Temp Rise Rate (°C/min, 0=off)</sys:String>
     <sys:String x:Key="Recipe_Chamber">Chamber Linkage</sys:String>
     <sys:String x:Key="Recipe_TargetTemp">Target Temp (°C, blank=off)</sys:String>
     <sys:String x:Key="Recipe_WaitStable">Wait for temp stable</sys:String>

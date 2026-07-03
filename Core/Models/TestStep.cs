@@ -56,6 +56,7 @@ namespace BatteryAging.Core.Models
         // ── 增强保护（P1/P2 新增） ──
         public bool ReversePolarityCheck { get; set; } = true;   // 启动时反接检测
         public double MaxVoltageDropRate { get; set; } = 0.0;    // 电压跌落速率阈值 (V/s)，0=不检测
+        public double MaxTempRiseRate { get; set; } = 0.0;       // 温升速率阈值 (℃/min)，0=不检测；早于绝对温度阈值发现潜在热失控趋势
 
         // ── 环境仓联动 ──
         public double? TargetTemperature { get; set; } = null; // 该工步目标温度(℃)，null不控温
