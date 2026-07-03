@@ -111,7 +111,7 @@ namespace BatteryAging.Services
                 {
                     page.Size(PageSizes.A4);
                     page.Margin(30);
-                    page.DefaultTextStyle(x => x.FontSize(10));
+                    page.DefaultTextStyle(x => x.FontFamily("Microsoft YaHei").FontSize(10));
 
                     page.Header().Text("电池测试报告").FontSize(18).Bold();
 
