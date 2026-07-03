@@ -259,6 +259,7 @@
     <sys:String x:Key="DataQuery_Records">Test Records</sys:String>
     <sys:String x:Key="DataQuery_HistoryCurve">History Curve</sys:String>
     <sys:String x:Key="DataQuery_DataPoints">Data Points</sys:String>
+    <sys:String x:Key="DataQuery_Rul">RUL Prediction:</sys:String>
     <sys:String x:Key="DataQuery_Col_ID">ID</sys:String>
     <sys:String x:Key="DataQuery_Col_Channel">Channel</sys:String>
     <sys:String x:Key="DataQuery_Col_BarCode">Barcode</sys:String>

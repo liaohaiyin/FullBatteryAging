@@ -16,6 +16,7 @@ namespace BatteryAging.ViewModels
         private readonly IDataService _dataService;
         private readonly IDialogService _dialogService;
         private readonly IAuthService _auth;
+        private readonly IBatteryAnalyticsService _analytics;
 
         public ObservableCollection<TestRecord> Records { get; } = new();
         public ObservableCollection<DataPoint> DataPoints { get; } = new();
@@ -27,6 +28,7 @@ namespace BatteryAging.ViewModels
         [ObservableProperty] private string _barCode;
         [ObservableProperty] private int? _channelFilter;
         [ObservableProperty] private string _statusText = "";
+        [ObservableProperty] private string _rulSummaryText = "";
 
         public IAsyncRelayCommand QueryCommand { get; }
         public IAsyncRelayCommand ExportCommand { get; }
@@ -61,11 +63,13 @@ namespace BatteryAging.ViewModels
         public IRelayCommand LastPageCommand => _lastPageCommand;
 
 
-        public DataQueryViewModel(IDataService dataService, IDialogService dialogService, IAuthService auth)
+        public DataQueryViewModel(IDataService dataService, IDialogService dialogService, IAuthService auth,
+            IBatteryAnalyticsService analytics)
         {
             _dataService = dataService;
             _dialogService = dialogService;
             _auth = auth;
+            _analytics = analytics;
 
             QueryCommand = new AsyncRelayCommand(QueryAsync);
             ExportCommand = new AsyncRelayCommand(ExportAsync,() => _auth.HasPermission(Permission.DataQuery_Export));
@@ -89,6 +93,7 @@ namespace BatteryAging.ViewModels
             {
                 DataPoints.Clear();
                 CycleData.Clear();
+                RulSummaryText = "";
             }
         }
 
@@ -133,6 +138,10 @@ namespace BatteryAging.ViewModels
                 CycleData.Clear();
                 foreach (var c in cycles) CycleData.Add(c);
                 StatusText = $"加载 {DataPoints.Count} 个数据点，{CycleData.Count} 个循环数据";
+
+                var nominal = SelectedRecord.NominalCapacity > 0 ? SelectedRecord.NominalCapacity : MaxCapacityOr(cycles);
+                var rul = _analytics.EstimateRul(cycles, nominal);
+                RulSummaryText = nominal > 0 ? rul.Summary : "标称容量未知，无法预测寿命";
             }
             catch (Exception ex)
             {
@@ -170,6 +179,10 @@ namespace BatteryAging.ViewModels
                 _dialogService.ShowError($"导出失败: {ex.Message}");
             }
         }
+
+        /// <summary>记录未冗余标称容量时的兜底：取历史循环中出现过的最大放电容量近似标称值</summary>
+        private static double MaxCapacityOr(System.Collections.Generic.IEnumerable<CycleData> cycles)
+            => cycles.Select(c => c.DischargeCapacity).DefaultIfEmpty(0).Max();
 
         partial void OnTotalPagesChanged(int value) => UpdatePagingCommands();
 

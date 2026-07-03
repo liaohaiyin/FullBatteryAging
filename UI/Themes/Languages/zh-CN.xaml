@@ -258,6 +258,7 @@
     <sys:String x:Key="DataQuery_Records">测试记录</sys:String>
     <sys:String x:Key="DataQuery_HistoryCurve">历史曲线</sys:String>
     <sys:String x:Key="DataQuery_DataPoints">数据点</sys:String>
+    <sys:String x:Key="DataQuery_Rul">寿命预测:</sys:String>
     <sys:String x:Key="DataQuery_Col_ID">ID</sys:String>
     <sys:String x:Key="DataQuery_Col_Channel">通道</sys:String>
     <sys:String x:Key="DataQuery_Col_BarCode">条码</sys:String>

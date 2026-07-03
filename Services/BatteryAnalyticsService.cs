@@ -28,6 +28,38 @@ namespace BatteryAging.Services
         public double MaxCapacity { get; set; }
     }
 
+    /// <summary>
+    /// 剩余循环寿命（RUL）预测结果 —— 对历史循环的容量衰减趋势做线性回归外推，
+    /// 估算达到寿命终止阈值（EOL，通常为标称容量的 80%）还需多少次循环。
+    /// </summary>
+    public class RulEstimate
+    {
+        public int SampleCount { get; set; }
+        public int CurrentCycle { get; set; }
+        public double CurrentCapacity { get; set; }
+        public double EndOfLifeCapacity { get; set; }
+
+        /// <summary>容量随循环次数的线性回归斜率（Ah/循环，衰减时为负）</summary>
+        public double Slope { get; set; }
+        public double Intercept { get; set; }
+        /// <summary>拟合优度 R²，越接近 1 说明衰减趋势越线性、预测越可信</summary>
+        public double RSquared { get; set; }
+
+        /// <summary>外推预计达到 EOL 的循环序号；样本不足或未见衰减趋势时为 null</summary>
+        public int? PredictedEndOfLifeCycle { get; set; }
+        /// <summary>剩余可用循环数 = PredictedEndOfLifeCycle - CurrentCycle</summary>
+        public int? RemainingUsefulCycles { get; set; }
+
+        /// <summary>样本量、拟合优度、衰减方向都达标时才认为预测可信</summary>
+        public bool IsReliable => SampleCount >= 5 && RSquared >= 0.5 && Slope < 0;
+
+        public string Summary => RemainingUsefulCycles.HasValue
+            ? $"预计还可循环 {RemainingUsefulCycles} 次（第 {PredictedEndOfLifeCycle} 次达到 EOL），R²={RSquared:F2}{(IsReliable ? "" : "（样本不足，仅供参考）")}"
+            : SampleCount < 3
+                ? "循环数据不足，无法预测"
+                : "容量未见明显衰减趋势，暂无法预测寿命终止点";
+    }
+
     public interface IBatteryAnalyticsService
     {
         /// <summary>SOH 估算（容量法）：实际放电容量 / 标称容量</summary>
@@ -45,6 +77,9 @@ namespace BatteryAging.Services
 
         /// <summary>默认分档规则（基于标称容量百分比）</summary>
         List<GradeBoundary> GetDefaultGradeBoundaries(double nominalCapacity);
+
+        /// <summary>基于历史循环容量数据线性外推剩余循环寿命（RUL）</summary>
+        RulEstimate EstimateRul(IEnumerable<CycleData> cycles, double nominalCapacity, double eolFraction = 0.8);
     }
 
     public class BatteryAnalyticsService : IBatteryAnalyticsService
@@ -114,6 +149,65 @@ namespace BatteryAging.Services
                 CvPercent = Math.Round(cv, 3),
                 IsConsistent = cv < 5.0
             };
+        }
+
+        public RulEstimate EstimateRul(IEnumerable<CycleData> cycles, double nominalCapacity, double eolFraction = 0.8)
+        {
+            var pts = (cycles ?? Enumerable.Empty<CycleData>())
+                .Where(c => c.CycleIndex > 0 && c.DischargeCapacity > 0)
+                .OrderBy(c => c.CycleIndex)
+                .Select(c => (X: (double)c.CycleIndex, Y: c.DischargeCapacity))
+                .ToList();
+
+            var result = new RulEstimate
+            {
+                SampleCount = pts.Count,
+                EndOfLifeCapacity = Math.Round(nominalCapacity * eolFraction, 5),
+            };
+            if (pts.Count == 0) return result;
+
+            result.CurrentCycle = (int)pts[^1].X;
+            result.CurrentCapacity = pts[^1].Y;
+            if (pts.Count < 3) return result;   // 样本太少，不做回归外推
+
+            // 最小二乘线性回归：y(容量) = slope * x(循环数) + intercept
+            double n = pts.Count;
+            double sumX = pts.Sum(p => p.X);
+            double sumY = pts.Sum(p => p.Y);
+            double sumXY = pts.Sum(p => p.X * p.Y);
+            double sumXX = pts.Sum(p => p.X * p.X);
+
+            double denom = n * sumXX - sumX * sumX;
+            if (Math.Abs(denom) < 1e-9) return result;
+
+            double slope = (n * sumXY - sumX * sumY) / denom;
+            double intercept = (sumY - slope * sumX) / n;
+
+            double meanY = sumY / n;
+            double ssTot = pts.Sum(p => (p.Y - meanY) * (p.Y - meanY));
+            double ssRes = pts.Sum(p => { var pred = slope * p.X + intercept; var e = p.Y - pred; return e * e; });
+            double rSquared = ssTot > 1e-9 ? 1.0 - ssRes / ssTot : 0;
+
+            result.Slope = slope;
+            result.Intercept = intercept;
+            result.RSquared = Math.Round(Math.Clamp(rSquared, 0, 1), 4);
+
+            if (slope < 0)
+            {
+                double eolCycle = (result.EndOfLifeCapacity - intercept) / slope;
+                if (eolCycle > result.CurrentCycle)
+                {
+                    result.PredictedEndOfLifeCycle = (int)Math.Ceiling(eolCycle);
+                    result.RemainingUsefulCycles = result.PredictedEndOfLifeCycle - result.CurrentCycle;
+                }
+                else
+                {
+                    // 回归线已越过 EOL 容量：认为已到寿命终止
+                    result.PredictedEndOfLifeCycle = result.CurrentCycle;
+                    result.RemainingUsefulCycles = 0;
+                }
+            }
+            return result;
         }
     }
 }
