@@ -37,7 +37,7 @@ namespace BatteryAging.UI.Helpers
 
             var plot = wpf.Plot;
 
-            _marker = plot.Add.Marker(new Coordinates(0, 0), MarkerShape.OpenCircle, 12, Colors.Yellow);
+            _marker = plot.Add.Marker(new Coordinates(0, 0), MarkerShape.OpenCircle, 8, Colors.Yellow);
             _marker.MarkerStyle.LineWidth = 2;
             _marker.Location = Hidden;
             _marker.IsVisible = false;
