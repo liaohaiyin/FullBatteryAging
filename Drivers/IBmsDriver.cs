@@ -37,11 +37,15 @@ namespace BatteryAging.Drivers
     /// </summary>
     public interface IBmsDriver : IDisposable
     {
+        /// <summary>是否已连接</summary>
         bool IsConnected { get; }
+        /// <summary>连接到 BMS</summary>
         Task<bool> ConnectAsync(CancellationToken token = default);
+        /// <summary>断开连接</summary>
         Task DisconnectAsync();
         /// <summary>读取指定 PACK（通道内 1-based）的一帧 BMS 数据</summary>
         Task<BmsReading> ReadAsync(int packIndex, CancellationToken token = default);
+        /// <summary>通讯异常事件</summary>
         event EventHandler<string> CommunicationError;
     }
 }
