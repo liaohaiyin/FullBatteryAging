@@ -79,7 +79,8 @@
             </Grid.RowDefinitions>
 
             <!-- 控制条 -->
-            <Border Grid.Row="0" Style="{StaticResource VsCardStyle}" Padding="5,5" Margin="0,0,0,8" HorizontalAlignment="Left">
+            <Border Grid.Row="0" Style="{StaticResource VsCardStyle}" Padding="5,5" Margin="0,0,0,8">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -188,6 +189,7 @@
                         </Button>
                     </StackPanel>
                 </Grid>
+                </ScrollViewer>
             </Border>
 
             <!-- 批量任务队列 -->
