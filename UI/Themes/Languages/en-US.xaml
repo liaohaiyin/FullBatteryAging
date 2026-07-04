@@ -492,4 +492,5 @@
     <sys:String x:Key="CellHeatmap_ScaleMin">Scale Min (V)</sys:String>
     <sys:String x:Key="CellHeatmap_ScaleMax">Scale Max (V)</sys:String>
     <sys:String x:Key="CellHeatmap_Legend">Low → High</sys:String>
+    <sys:String x:Key="CellHeatmap_Refresh">Refresh Now</sys:String>
 </ResourceDictionary>

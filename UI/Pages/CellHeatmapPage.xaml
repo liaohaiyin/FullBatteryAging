@@ -21,6 +21,7 @@
                     <ColumnDefinition Width="80"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="140"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
@@ -46,7 +47,16 @@
                     </Border>
                 </StackPanel>
 
-                <TextBlock Grid.Column="6" Text="{Binding StatusText}" VerticalAlignment="Center"
+                <Button Grid.Column="6" Style="{StaticResource VsOutlinedButton}"
+                        Command="{Binding RefreshCommand}"
+                        Margin="16,0,0,0" Padding="10,4">
+                    <StackPanel Orientation="Horizontal">
+                        <ctrl:VsIcon Kind="{StaticResource Icon.Magnify}" Width="13" Height="13" Foreground="{StaticResource VsAccentBrush}"/>
+                        <TextBlock Text="{DynamicResource CellHeatmap_Refresh}" Margin="6,0,0,0"/>
+                    </StackPanel>
+                </Button>
+
+                <TextBlock Grid.Column="7" Text="{Binding StatusText}" VerticalAlignment="Center"
                            HorizontalAlignment="Right" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
             </Grid>
         </Border>

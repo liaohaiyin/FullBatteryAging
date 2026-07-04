@@ -491,4 +491,5 @@
     <sys:String x:Key="CellHeatmap_ScaleMin">色阶下限 (V)</sys:String>
     <sys:String x:Key="CellHeatmap_ScaleMax">色阶上限 (V)</sys:String>
     <sys:String x:Key="CellHeatmap_Legend">低 → 高</sys:String>
+    <sys:String x:Key="CellHeatmap_Refresh">立即刷新</sys:String>
 </ResourceDictionary>
