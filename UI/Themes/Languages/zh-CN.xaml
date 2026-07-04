@@ -160,6 +160,7 @@
     <sys:String x:Key="Main_Nav_Calibration">设备校准</sys:String>
     <sys:String x:Key="Main_Nav_AuditLog">审计日志</sys:String>
     <sys:String x:Key="Main_Nav_WorkOrder">工单管理</sys:String>
+    <sys:String x:Key="Main_Nav_Utilization">稼动率/能耗统计</sys:String>
     <sys:String x:Key="Main_Nav_Logout">退出登录</sys:String>
     <sys:String x:Key="Main_Nav_About">关于</sys:String>
     <sys:String x:Key="Main_Status_Sim">模拟模式 · 运行中</sys:String>
@@ -460,4 +461,25 @@
     <sys:String x:Key="WorkOrder_Col_Qty">计划数量</sys:String>
     <sys:String x:Key="WorkOrder_Col_Status">状态</sys:String>
     <sys:String x:Key="WorkOrder_Col_CreateTime">创建时间</sys:String>
+
+    <!-- ── 稼动率 / 能耗统计 ── -->
+    <sys:String x:Key="Utilization_StartDate">开始日期</sys:String>
+    <sys:String x:Key="Utilization_EndDate">结束日期</sys:String>
+    <sys:String x:Key="Utilization_ElecPrice">电价 (元/kWh)</sys:String>
+    <sys:String x:Key="Utilization_FeedbackEff">回馈效率</sys:String>
+    <sys:String x:Key="Utilization_Analyze">统计</sys:String>
+    <sys:String x:Key="Utilization_OverallUtil">整体稼动率</sys:String>
+    <sys:String x:Key="Utilization_PassRate">整体良品率</sys:String>
+    <sys:String x:Key="Utilization_ChargeEnergy">总充电能量</sys:String>
+    <sys:String x:Key="Utilization_DischargeEnergy">总放电能量</sys:String>
+    <sys:String x:Key="Utilization_FeedbackSaving">回馈节电率</sys:String>
+    <sys:String x:Key="Utilization_Cost">预估电费成本</sys:String>
+    <sys:String x:Key="Utilization_ChannelDetail">分通道明细</sys:String>
+    <sys:String x:Key="Utilization_Col_Channel">通道</sys:String>
+    <sys:String x:Key="Utilization_Col_Occupied">占用时长</sys:String>
+    <sys:String x:Key="Utilization_Col_Window">统计窗口</sys:String>
+    <sys:String x:Key="Utilization_Col_Util">稼动率</sys:String>
+    <sys:String x:Key="Utilization_Col_Records">测试次数</sys:String>
+    <sys:String x:Key="Utilization_Col_Passed">合格数</sys:String>
+    <sys:String x:Key="Utilization_Col_PassRate">良品率</sys:String>
 </ResourceDictionary>

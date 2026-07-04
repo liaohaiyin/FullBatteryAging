@@ -154,6 +154,7 @@ namespace BatteryAging
             services.AddSingleton<AuditLogViewModel>();
             services.AddSingleton<CalibrationViewModel>();
             services.AddSingleton<WorkOrderViewModel>();
+            services.AddSingleton<UtilizationViewModel>();
             services.AddTransient<LicenseWindowViewModel>();
 
             services.AddTransient<MainWindow>();
@@ -167,6 +168,7 @@ namespace BatteryAging
             services.AddTransient<AuditLogPage>();
             services.AddTransient<CalibrationPage>();
             services.AddTransient<WorkOrderPage>();
+            services.AddTransient<UtilizationPage>();
         }
 
         public static void UIDispatch(Action action)

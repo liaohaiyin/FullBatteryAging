@@ -161,6 +161,7 @@
     <sys:String x:Key="Main_Nav_Calibration">Calibration</sys:String>
     <sys:String x:Key="Main_Nav_AuditLog">Audit Log</sys:String>
     <sys:String x:Key="Main_Nav_WorkOrder">Work Orders</sys:String>
+    <sys:String x:Key="Main_Nav_Utilization">Utilization / Energy</sys:String>
     <sys:String x:Key="Main_Nav_Logout">Logout</sys:String>
     <sys:String x:Key="Main_Nav_About">About</sys:String>
     <sys:String x:Key="Main_Nav_Error">Error</sys:String>
@@ -461,4 +462,25 @@
     <sys:String x:Key="WorkOrder_Col_Qty">Planned Qty</sys:String>
     <sys:String x:Key="WorkOrder_Col_Status">Status</sys:String>
     <sys:String x:Key="WorkOrder_Col_CreateTime">Created</sys:String>
+
+    <!-- ── Utilization / Energy ── -->
+    <sys:String x:Key="Utilization_StartDate">Start Date</sys:String>
+    <sys:String x:Key="Utilization_EndDate">End Date</sys:String>
+    <sys:String x:Key="Utilization_ElecPrice">Price (¥/kWh)</sys:String>
+    <sys:String x:Key="Utilization_FeedbackEff">Feedback Eff.</sys:String>
+    <sys:String x:Key="Utilization_Analyze">Analyze</sys:String>
+    <sys:String x:Key="Utilization_OverallUtil">Overall Utilization</sys:String>
+    <sys:String x:Key="Utilization_PassRate">Overall Pass Rate</sys:String>
+    <sys:String x:Key="Utilization_ChargeEnergy">Total Charge Energy</sys:String>
+    <sys:String x:Key="Utilization_DischargeEnergy">Total Discharge Energy</sys:String>
+    <sys:String x:Key="Utilization_FeedbackSaving">Feedback Saving</sys:String>
+    <sys:String x:Key="Utilization_Cost">Estimated Cost</sys:String>
+    <sys:String x:Key="Utilization_ChannelDetail">Per-Channel Detail</sys:String>
+    <sys:String x:Key="Utilization_Col_Channel">Channel</sys:String>
+    <sys:String x:Key="Utilization_Col_Occupied">Occupied</sys:String>
+    <sys:String x:Key="Utilization_Col_Window">Window</sys:String>
+    <sys:String x:Key="Utilization_Col_Util">Utilization</sys:String>
+    <sys:String x:Key="Utilization_Col_Records">Records</sys:String>
+    <sys:String x:Key="Utilization_Col_Passed">Passed</sys:String>
+    <sys:String x:Key="Utilization_Col_PassRate">Pass Rate</sys:String>
 </ResourceDictionary>

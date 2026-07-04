@@ -135,6 +135,14 @@
                             </StackPanel>
                         </Button>
                         <Button Style="{StaticResource VsFlatButton}" HorizontalContentAlignment="Left"
+                                Padding="16,8" Command="{Binding NavUtilizationCommand}"
+                                Visibility="{Binding CanUtilization, Converter={StaticResource BoolVisCv}}">
+                            <StackPanel Orientation="Horizontal">
+                                <ctrl:VsIcon Kind="{StaticResource Icon.GaugeFull}" Width="18" Height="18" VerticalAlignment="Center"/>
+                                <TextBlock Text="{DynamicResource Main_Nav_Utilization}" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="13"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Style="{StaticResource VsFlatButton}" HorizontalContentAlignment="Left"
                                 Padding="16,8" Command="{Binding NavLogoutCommand}">
                             <StackPanel Orientation="Horizontal">
                                 <ctrl:VsIcon Kind="{StaticResource Icon.Logout}" Width="18" Height="18" VerticalAlignment="Center"/>

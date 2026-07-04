@@ -54,6 +54,10 @@ namespace BatteryAging.Services
         Task<List<WorkOrder>> GetWorkOrdersAsync();
         Task SaveWorkOrderAsync(WorkOrder order);
         Task DeleteWorkOrderAsync(string id);
+
+        // ── 运营统计（稼动率 / 能耗）──
+        /// <summary>查询与给定时间窗口有交集的测试记录（StartTime &lt; end 且 EndTime(或至今) &gt; start）</summary>
+        Task<List<TestRecord>> GetRecordsInRangeAsync(DateTime start, DateTime end);
     }
 
     public class DataService : IDataService
@@ -362,6 +366,17 @@ namespace BatteryAging.Services
             await using var db = await _factory.CreateDbContextAsync();
             var w = await db.WorkOrders.FindAsync(id);
             if (w != null) { db.WorkOrders.Remove(w); await db.SaveChangesAsync(); }
+        }
+
+        // ──────────────── 运营统计 ────────────────
+        public async Task<List<TestRecord>> GetRecordsInRangeAsync(DateTime start, DateTime end)
+        {
+            await using var db = await _factory.CreateDbContextAsync();
+            var now = DateTime.Now;
+            return await db.TestRecords
+                .Where(r => r.StartTime < end && (r.EndTime ?? now) > start)
+                .OrderBy(r => r.ChannelIndex).ThenBy(r => r.StartTime)
+                .ToListAsync();
         }
     }
 }

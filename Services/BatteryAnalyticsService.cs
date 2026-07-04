@@ -67,6 +67,45 @@ namespace BatteryAging.Services
         public double DqDv { get; set; }
     }
 
+    /// <summary>单个通道在统计窗口内的稼动情况</summary>
+    public class ChannelUtilization
+    {
+        public int ChannelIndex { get; set; }
+        public double OccupiedHours { get; set; }
+        public double WindowHours { get; set; }
+        public double UtilizationPercent { get; set; }
+        public int TotalRecords { get; set; }
+        public int PassedRecords { get; set; }
+        public double PassRatePercent { get; set; }
+    }
+
+    /// <summary>设备 OEE 稼动率统计报告（简化版：可用率 × 良品率，缺乏理论节拍时间故不含性能因子）</summary>
+    public class UtilizationReport
+    {
+        public DateTime WindowStart { get; set; }
+        public DateTime WindowEnd { get; set; }
+        public List<ChannelUtilization> Channels { get; set; } = new();
+        public double OverallUtilizationPercent { get; set; }
+        public double OverallPassRatePercent { get; set; }
+    }
+
+    /// <summary>
+    /// EMS 能耗回馈/电费成本核算 —— 基于已有充放电能量数据汇总，
+    /// 放电能量按回馈效率折算为"回馈电量"，冲抵充电能耗后估算净耗电与电费成本。
+    /// </summary>
+    public class EnergyCostReport
+    {
+        public double TotalChargeEnergyWh { get; set; }
+        public double TotalDischargeEnergyWh { get; set; }
+        public double FeedbackEfficiency { get; set; } = 0.85;
+        public double ElectricityPricePerKwh { get; set; }
+
+        public double FeedbackEnergyWh => TotalDischargeEnergyWh * FeedbackEfficiency;
+        public double NetEnergyWh => Math.Max(0, TotalChargeEnergyWh - FeedbackEnergyWh);
+        public double FeedbackSavingPercent => TotalChargeEnergyWh > 0 ? FeedbackEnergyWh / TotalChargeEnergyWh * 100 : 0;
+        public double EstimatedCost => NetEnergyWh / 1000.0 * ElectricityPricePerKwh;
+    }
+
     public interface IBatteryAnalyticsService
     {
         /// <summary>SOH 估算（容量法）：实际放电容量 / 标称容量</summary>
@@ -90,6 +129,12 @@ namespace BatteryAging.Services
 
         /// <summary>按电压分箱统计容量增量，计算 dQ/dV 微分容量曲线（用于识别相变/衰减机理）</summary>
         List<DqDvPoint> ComputeDifferentialCapacity(IEnumerable<DataPoint> points, int voltageBins = 100);
+
+        /// <summary>按通道统计给定时间窗口内的占用时长/稼动率/良品率（设备 OEE 简化版）</summary>
+        UtilizationReport ComputeUtilization(IEnumerable<TestRecord> records, DateTime windowStart, DateTime windowEnd);
+
+        /// <summary>基于已有充放电能量数据核算回馈节电率与电费成本</summary>
+        EnergyCostReport ComputeEnergyCost(IEnumerable<TestRecord> records, double electricityPricePerKwh, double feedbackEfficiency = 0.85);
     }
 
     public class BatteryAnalyticsService : IBatteryAnalyticsService
@@ -268,6 +313,65 @@ namespace BatteryAging.Services
                 smoothed.Add(new DqDvPoint { Voltage = raw[i].Voltage, DqDv = Math.Round(sum / n, 4) });
             }
             return smoothed;
+        }
+
+        public UtilizationReport ComputeUtilization(IEnumerable<TestRecord> records, DateTime windowStart, DateTime windowEnd)
+        {
+            var windowHours = Math.Max(0.0001, (windowEnd - windowStart).TotalHours);
+            var report = new UtilizationReport { WindowStart = windowStart, WindowEnd = windowEnd };
+
+            var byChannel = (records ?? Enumerable.Empty<TestRecord>())
+                .Where(r => r.StartTime < windowEnd && (r.EndTime ?? DateTime.Now) > windowStart)
+                .GroupBy(r => r.ChannelIndex);
+
+            double totalOccupied = 0;
+            int totalRecords = 0, totalPassed = 0;
+
+            foreach (var g in byChannel.OrderBy(g => g.Key))
+            {
+                double occupiedHours = 0;
+                foreach (var r in g)
+                {
+                    var s = r.StartTime > windowStart ? r.StartTime : windowStart;
+                    var e = (r.EndTime ?? DateTime.Now) < windowEnd ? (r.EndTime ?? DateTime.Now) : windowEnd;
+                    if (e > s) occupiedHours += (e - s).TotalHours;
+                }
+
+                var recordsCount = g.Count();
+                var passedCount = g.Count(r => r.Grade != CapacityGrade.Reject);
+
+                totalOccupied += occupiedHours;
+                totalRecords += recordsCount;
+                totalPassed += passedCount;
+
+                report.Channels.Add(new ChannelUtilization
+                {
+                    ChannelIndex = g.Key,
+                    OccupiedHours = Math.Round(occupiedHours, 3),
+                    WindowHours = Math.Round(windowHours, 3),
+                    UtilizationPercent = Math.Round(Math.Clamp(occupiedHours / windowHours * 100, 0, 100), 2),
+                    TotalRecords = recordsCount,
+                    PassedRecords = passedCount,
+                    PassRatePercent = recordsCount > 0 ? Math.Round((double)passedCount / recordsCount * 100, 2) : 0
+                });
+            }
+
+            var channelCount = Math.Max(1, report.Channels.Count);
+            report.OverallUtilizationPercent = Math.Round(Math.Clamp(totalOccupied / (windowHours * channelCount) * 100, 0, 100), 2);
+            report.OverallPassRatePercent = totalRecords > 0 ? Math.Round((double)totalPassed / totalRecords * 100, 2) : 0;
+            return report;
+        }
+
+        public EnergyCostReport ComputeEnergyCost(IEnumerable<TestRecord> records, double electricityPricePerKwh, double feedbackEfficiency = 0.85)
+        {
+            var list = (records ?? Enumerable.Empty<TestRecord>()).ToList();
+            return new EnergyCostReport
+            {
+                TotalChargeEnergyWh = Math.Round(list.Sum(r => r.TotalChargeEnergy), 4),
+                TotalDischargeEnergyWh = Math.Round(list.Sum(r => r.TotalDischargeEnergy), 4),
+                FeedbackEfficiency = feedbackEfficiency,
+                ElectricityPricePerKwh = electricityPricePerKwh
+            };
         }
     }
 }
