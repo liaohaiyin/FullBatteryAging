@@ -11,6 +11,11 @@ using BatteryAging.Data.Context;
 
 namespace BatteryAging.Services
 {
+    /// <summary>
+    /// 鉴权服务：登录/登出、密码哈希与校验、失败次数锁定、用户与角色 CRUD。
+    /// 权限本身按位存于 Permission（见 Core/Models/Permission.cs），角色只是权限位的命名组合，
+    /// 登录成功后把角色的权限掩码整体拷贝进 UserSession，运行期鉴权只查内存里的 Session，不再查库。
+    /// </summary>
     public class AuthService : IAuthService
     {
         private readonly IDbContextFactory<BatteryDbContext> _dbFactory;
@@ -28,6 +33,8 @@ namespace BatteryAging.Services
         private const int LockMinutes = 30;
         private const int PbkdfIterations = 100_000;
 
+        // 内置开发者账号：不查库、固定拥有 Role_Admin 全部权限，用于现场调试/售后免建库排障。
+        // 修改此密码或移除该后门前请确认不会影响既有的现场支持流程。
         private const string DeveloperUsername = "developer";
         private const string DeveloperPassword = "dev@BatteryAging#2026";
         public AuthService(IDbContextFactory<BatteryDbContext> dbFactory, ILogger<AuthService> logger)
@@ -460,6 +467,7 @@ namespace BatteryAging.Services
             return Convert.ToBase64String(bytes);
         }
 
+        /// <summary>PBKDF2-HMAC-SHA256，10万次迭代 + 每用户随机盐，输出 256 位派生密钥</summary>
         private static string HashPassword(string password, string salt)
         {
             var hash = Rfc2898DeriveBytes.Pbkdf2(

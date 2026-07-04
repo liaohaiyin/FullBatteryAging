@@ -192,6 +192,10 @@ namespace BatteryAging.Drivers.Can
 
         private int _statusSoc, _statusSoh, _statusFault;
 
+        // 单体电压/温度是分多帧陆续收到的，ParseFrame 只是把收到的字段逐步填进 _cells/_temps
+        // 这两个"正在拼装中"的数组；PublishSnapshot 在每批帧处理完后才对外发布一次克隆快照，
+        // 这样 ReadAsync 读到的要么是上一次完整的快照，要么是这一次完整的快照，
+        // 不会读到"只更新了一半单体、其余还是上一轮旧值"的中间态。
         private void PublishSnapshot()
         {
             lock (_lock)

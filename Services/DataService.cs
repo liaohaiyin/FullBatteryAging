@@ -104,6 +104,10 @@ namespace BatteryAging.Services
             }
             else
             {
+                // 更新已有方案时不逐条 diff 工步，而是整批删除旧工步再按传入顺序重新插入
+                // （重新生成 Id，避免与被删记录的旧 Id 冲突）。方案编辑器每次保存都是把
+                // 完整工步列表整体提交，这样处理更简单可靠，且工步数量通常不大，
+                // 删除重建的开销可以接受。
                 db.Entry(existing).CurrentValues.SetValues(recipe);
                 db.TestSteps.RemoveRange(existing.Steps);
                 await db.SaveChangesAsync();
@@ -255,6 +259,10 @@ namespace BatteryAging.Services
                 .OrderBy(c => c.CycleIndex)
                 .ToListAsync();
         }
+        // DcirResult.ResistanceByTime 是 Dictionary<double,double>（脉冲各采样时刻的内阻值），
+        // EF Core 无法直接把字典映射成关系型列，所以落库时手动序列化成 JSON 存进
+        // 一个不在实体类里出现的"影子属性" ResistanceJson（配置见 BatteryDbContext），
+        // 读取时再反序列化回填到 ResistanceByTime，对上层调用者屏蔽这个存储细节。
         public async Task SaveDcirAsync(DcirResult r)
         {
             await using var db = await _factory.CreateDbContextAsync();

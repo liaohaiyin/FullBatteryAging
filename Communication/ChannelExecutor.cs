@@ -11,8 +11,11 @@ using BatteryAging.Drivers;
 namespace BatteryAging.Communication
 {
     /// <summary>
-    /// 单通道执行器
-    /// 通过 IDeviceDriver 与设备交互，按工步流程执行充放电测试
+    /// 单通道执行器 —— 一个通道对应一个后台任务(<see cref="RunLoop"/>)，
+    /// 按 TestRecipe.Steps 顺序逐工步下发设定值、采样、判断截止条件，
+    /// 直到方案跑完或触发保护。所有状态变化通过事件向外广播，
+    /// UI 层（ChannelViewModel）和持久化层（TestExecutionViewModel）都是事件订阅者，
+    /// 本类本身不直接操作数据库/UI。
     /// </summary>
     public class ChannelExecutor
     {
@@ -24,9 +27,14 @@ namespace BatteryAging.Communication
         private CancellationTokenSource _cts;
         private Task _runningTask;
         // ── 条件跳转 ──
+        // 触发条件命中且配置了 JumpTargetIndex 时（见 CheckTrigger），本步结束后不是顺序 +1
+        // 而是跳到 _jumpRequest 指定的工步；_jumpGuard 统计跳转次数，超过 MaxJumps 视为
+        // 方案配置错误导致的死循环（例如跳转目标又跳回自身），主动报错而不是无限执行下去。
         private int _jumpRequest = -1;
-        private int _jumpGuard = 0;                       // 防止死循环的跳转计数
+        private int _jumpGuard = 0;
         private const int MaxJumps = 100000;
+        // 每次进入 Loop 工步结算一圈时，把当前累计充放电量/能量存为下一圈的起点，
+        // 这样 CycleCompleted 事件里报告的才是"本圈"增量，而不是从测试开始累计的总量。
         private double _cycBaseChgCap, _cycBaseDisCap, _cycBaseChgEng, _cycBaseDisEng;
         private int _completedCycles = 0;
 
@@ -181,7 +189,9 @@ namespace BatteryAging.Communication
         }
 
         // ════════════════════════════════════════════════════════════
-        //  主循环
+        //  主循环 —— 工步状态机：顺序推进 CurrentStepIndex，
+        //  Loop 类型改写索引实现循环体重跑，End 类型终止方案，
+        //  其余类型交给 ExecuteStepAsync 实际下发/采样/判定截止。
         // ════════════════════════════════════════════════════════════
         private async Task RunLoop(CancellationToken token)
         {
@@ -265,7 +275,9 @@ namespace BatteryAging.Communication
                         }
                         catch { /* 温箱异常不阻断主流程，按需改为保护 */ }
                     }
-                    // ── DCIR 工步 ──
+                    // ── DCIR 工步：内阻脉冲测量走独立流程，不复用常规 ExecuteStepAsync ──
+                    // 因为它需要"静置稳压 → 施加脉冲 → 按固定时间点采样电压降"这套专用序列
+                    // 来计算内阻，而不是按普通截止条件（时长/容量/电压）跑到底。
                     if (step.Type == StepType.DCIR)
                     {
                         var profile = new Services.DcirProfile
@@ -335,7 +347,13 @@ namespace BatteryAging.Communication
             }
         }
 
-        /// <summary>执行单个工步直到截止条件满足</summary>
+        /// <summary>
+        /// 执行单个工步直到截止条件满足：先一次性下发设定值(<see cref="StepSetpoint"/>)，
+        /// 然后按 SamplingIntervalMs 周期循环采样，每个周期都做容量/能量累计、
+        /// 落一条 DataPoint 采样事件、跑一遍保护阈值检查，直到 IsStepFinished 命中
+        /// 或触发保护为止。Waveform 类型工步是例外：设定值需要在这个采样循环内
+        /// 逐 tick 按已过时间重新插值下发（见下方波形分支），而不是只在进入工步时下发一次。
+        /// </summary>
         private async Task<ProtectionType> ExecuteStepAsync(TestStep step, CancellationToken token)
         {
             Capacity = 0;
@@ -468,6 +486,8 @@ namespace BatteryAging.Communication
                 Capacity += dAh;
                 Energy += dWh;
 
+                // Pulse/Waveform 工步内电流方向会来回切换（充/放交替），不能按工步的
+                // "名义类型"归类充放电量，只能按每次采样瞬间的实际电流符号分别累计。
                 if (step.Type == StepType.Pulse || step.Type == StepType.Waveform)
                 {
                     if (m.Current > 0) { TotalChargeCapacity += dAh; TotalChargeEnergy += dWh; }
@@ -571,6 +591,9 @@ namespace BatteryAging.Communication
                 case StepType.CV_Charge:
                 case StepType.CCCV_Charge:
                     {
+                        // 标准恒压充电"尾流截止"：电压已基本到达目标值（留 5mV 余量防抖），
+                        // 且电流已衰减到截止电流以下，说明电池接近满充，此时结束比死等
+                        // DurationSeconds 超时更准确，也是行业通用的 CV 阶段终止判据。
                         var cvTarget = step.Voltage > 0 ? step.Voltage : step.CutoffVoltage;
                         if (step.CutoffCurrent > 0 && cvTarget > 0
                             && Voltage >= cvTarget - 0.005
@@ -622,6 +645,11 @@ namespace BatteryAging.Communication
             return last.Current;
         }
 
+        /// <summary>
+        /// 通用多阈值触发判断（电压/电流/容量/能量/温度/时间任一条件达标即命中），
+        /// 对应工艺编辑里的"触发条件跳转"：命中后若配置了 JumpTargetIndex 则记录
+        /// 跳转目标供 RunLoop 处理，否则仅表示"本工步应当结束"。
+        /// </summary>
         private bool CheckTrigger(TestStep step)
         {
             double actual = step.TriggerType switch
@@ -651,6 +679,11 @@ namespace BatteryAging.Communication
             return hit;                                     // 命中即结束本步
         }
 
+        /// <summary>
+        /// 每次采样都跑一遍的软件级保护阈值检查。电压/电流的比较都额外加了一点余量
+        /// （+0.05V / +0.1A）而不是严格按阈值触发，用来吸收传感器噪声导致的瞬时抖动，
+        /// 避免刚好卡在阈值附近时被误判保护、频繁打断正常测试。
+        /// </summary>
         private ProtectionType CheckProtection(TestStep step, DeviceMeasurement m)
         {
             // 反接（运行中也可能因接触不良发生）
@@ -658,6 +691,8 @@ namespace BatteryAging.Communication
 
             if (step.MaxVoltage > 0 && m.Voltage > step.MaxVoltage + 0.05)
                 return ProtectionType.OverVoltage;
+            // 欠压判断要求电流不接近 0：静置/未接负载时端电压本就可能低于阈值，
+            // 只有在确实有电流通过（说明处于充放电中）时低电压才代表真实的欠压风险。
             if (step.MinVoltage > 0 && m.Voltage < step.MinVoltage - 0.05 && Math.Abs(m.Current) > 0.001)
                 return ProtectionType.UnderVoltage;
             if (step.MaxCurrent > 0 && Math.Abs(m.Current) > step.MaxCurrent + 0.1)

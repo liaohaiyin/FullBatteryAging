@@ -165,6 +165,9 @@ namespace BatteryAging.Drivers
         }
 
         // —— 内部工具 ——
+        // 两种常见的多通道 Modbus 布局，二选一（由 RegisterStridePerChannel 是否大于 0 决定）：
+        // 第一种，每通道一个独立从站地址（unit id 依次递增），寄存器偏移固定为 0；
+        // 第二种，所有通道共用同一个从站，靠寄存器地址按固定跨度 stride 错开区分通道。
         private (byte unit, ushort off) Resolve(int channelIndex)
         {
             if (_map.RegisterStridePerChannel > 0)
@@ -176,6 +179,12 @@ namespace BatteryAging.Drivers
 
         private ushort Scale(double engValue) => (ushort)Math.Round(engValue * _map.SetValueScaleInv);
 
+        /// <summary>
+        /// 读寄存器并按配置的位宽/字序/符号/缩放系数还原成工程值。
+        /// 32 位量占用 2 个连续寄存器，不同厂商把高低字的先后顺序放得不一样
+        /// （ABCD 大端字序 vs CDAB 小端字序），BigEndianWord 就是用来适配这个差异的；
+        /// 有符号量要先按对应位宽转换成 int/short 再乘 scale，否则负值会被读成一个很大的正数。
+        /// </summary>
         private double ReadVal(byte unit, ushort addr, bool is32, bool signed, double scale)
         {
             var regs = _master.ReadHolding(unit, addr, (ushort)(is32 ? 2 : 1));
@@ -258,6 +267,7 @@ namespace BatteryAging.Drivers
             return buf;
         }
 
+        /// <summary>标准 Modbus CRC-16 (多项式 0xA001，低字节在前) 校验和，RTU 帧末尾必带</summary>
         private static byte[] AppendCrc(byte[] data)
         {
             ushort crc = 0xFFFF;
@@ -312,6 +322,9 @@ namespace BatteryAging.Drivers
             Transact(unit, body.ToArray());
         }
 
+        // Modbus TCP 用 MBAP 头代替 RTU 的 CRC 做帧定界：
+        // [事务号 2B][协议号固定 0 2B][后续字节长度 2B][从站单元号 1B] + PDU。
+        // 事务号 _tx 每次自增，主要用于日志排查，读响应时并未做匹配校验（简化实现）。
         private byte[] Transact(byte unit, byte[] pdu)
         {
             _tx++;

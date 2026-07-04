@@ -70,6 +70,9 @@ namespace BatteryAging.Communication
 
                 for (int local = 1; local <= cab.ChannelCount; local++)
                 {
+                    // 全局通道号 = 机柜起始号 + 机柜内本地号(1-based) - 1，
+                    // 用于跨机柜时把所有通道映射到一个不重叠的连续编号空间，
+                    // UI/数据库都按这个 global 索引区分通道，driver 通信仍用 local。
                     int global = cab.ChannelStartIndex + local - 1;
                     var executor = new ChannelExecutor(global, driver, cab.Id, local)
                     {
@@ -124,7 +127,12 @@ namespace BatteryAging.Communication
         public IEnumerable<ChannelExecutor> GetByCabinet(string cabinetId)
             => _channels.Values.Where(c => c.CabinetId == cabinetId);
 
-        /// <summary>多通道同步启动 - 用 Barrier 让通道在同一时刻开始</summary>
+        /// <summary>
+        /// 多通道同步启动 —— 每个通道各自的 RunLoop 一启动就先在 Barrier.SignalAndWait 上
+        /// 阻塞（见 ChannelExecutor.RunLoop 开头），等所有目标通道都到达这个点后 Barrier
+        /// 才一次性放行，从而让它们在同一时刻真正开始下发第一个工步，而不是按线程调度
+        /// 顺序先后启动、导致各通道计时基准略有偏差。
+        /// </summary>
         public Task SyncStartAsync(IEnumerable<(ChannelExecutor exec, TestRecipe recipe, TestRecord record)> jobs)
         {
             var list = jobs.ToList();

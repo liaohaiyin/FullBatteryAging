@@ -106,7 +106,8 @@ namespace BatteryAging.Core.Models
             Statistics_Utilization |
             TestExecution_CellHeatmap,
 
-        /// <summary>管理员：全部权限</summary>
+        /// <summary>管理员：全部权限 —— ~None 是按位取反，None=0 取反后全部位为 1，
+        /// 天然覆盖包括未来新增权限位在内的所有权限，无需每加一个权限就手动加进这里</summary>
         Role_Admin = ~None,
     }
 

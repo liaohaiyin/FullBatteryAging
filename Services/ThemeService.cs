@@ -8,6 +8,14 @@ using Microsoft.Extensions.Configuration;
 
 namespace BatteryAging.Services
 {
+    /// <summary>
+    /// 主题切换服务。大部分 XAML 用 StaticResource 引用画刷（性能更好，但只在首次加载时解析一次，
+    /// 后续换主题不会自动刷新）。这里换主题时不是替换字典条目，而是拿到已存在的 SolidColorBrush
+    /// 实例本身、原地改它的 .Color 属性 —— 因为 StaticResource 拿到的就是这个实例的引用，
+    /// 改它的属性能让所有已渲染的 UI 立即重绘，等价于低成本实现了 DynamicResource 的效果。
+    /// 前提是这些画刷不能是 Frozen（WPF 默认会冻结用 XAML 字面量声明的画刷以优化性能），
+    /// 所以启动时先用 <see cref="ThawBrushes"/> 把它们换成可写克隆。
+    /// </summary>
     public class ThemeService : IThemeService
     {
         private readonly IConfiguration _config;

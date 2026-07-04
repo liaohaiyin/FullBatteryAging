@@ -27,6 +27,9 @@ namespace BatteryAging.Drivers
             _samplingIntervalMs = samplingIntervalMs;
             for (int i = 1; i <= channelCount; i++)
             {
+                // 各通道给一个错开的初始 SOC（20%~60% 循环分布）而不是全部相同，
+                // 纯粹是为了让模拟环境下多通道界面看起来更真实、便于演示/测试多通道场景，
+                // 与实际电芯状态无关；真实容量/内阻会在 StartAsync 时按方案覆盖。
                 _batteries[i] = new BatteryCellSimulator(
                     initialSoc: 0.2 + (i * 0.05) % 0.4,
                     nominalCapacity: 2.6, internalResistance: 0.15);
@@ -83,6 +86,13 @@ namespace BatteryAging.Drivers
             });
         }
 
+        /// <summary>
+        /// 按当前工步类型把"设定值"换算成模拟电池实际要通过的电流：
+        /// CC 直接用设定电流；CV/CP/CR 需要结合电池当前 OCV 反推电流；
+        /// Pulse 靠已过时间在导通/间歇区间之间来回切换。这一层就是模拟器对
+        /// 真实设备"恒压/恒功率/恒阻"闭环控制的近似还原，好让上层 ChannelExecutor
+        /// 采到的电压/电流曲线跟真实充放电台架的行为一致。
+        /// </summary>
         private double ComputeCurrent(StepSetpoint sp, BatteryCellSimulator battery, int chIdx)
         {
             if (sp == null) return 0;

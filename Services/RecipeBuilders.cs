@@ -9,6 +9,12 @@ namespace BatteryAging.Services
     // ════════════════════════════════════════════════════════════════════
     //  老化测试方案构建器（生成 TestRecipe，可直接保存/运行）
     //  依赖 TestStep 新增字段：TargetTemperature / WaitForTempStable / SubRecipeId
+    //  三个 Builder 分别对应行业里最常用的三类标准测试模板：
+    //    CalendarAgingBuilder —— 日历寿命：定温存放 + 周期性容量标定(RPT)，考察搁置衰减
+    //    HppcBuilder          —— HPPC 脉冲功率特性：逐 SOC 点做充放脉冲，配合 DcirCalculator 求内阻/功率能力
+    //    MaxEnergyBuilder     —— 最大能量：单次满充满放，直接读放电能量
+    //  这里只是把常见参数（电流倍率/截止电压/存放天数等）组装成具体工步序列，
+    //  生成结果仍是普通 TestRecipe，用户在方案编辑器里可以继续手工微调。
     // ════════════════════════════════════════════════════════════════════
 
     public class CalendarAgingOptions
@@ -154,6 +160,9 @@ namespace BatteryAging.Services
     // ════════════════════════════════════════════════════════════════════
     //  子程序调用：把 StepType.SubCall 引用的子方案就地展开成扁平工步列表，
     //  并自动修正 Loop/Jump 的索引偏移，运行引擎无需改动循环逻辑。
+    //  这样设计是为了让 ChannelExecutor 的主循环（RunLoop）只需要认识
+    //  "顺序执行 + Loop 跳转"这一种模型，完全不知道 SubCall 的存在——
+    //  子程序引用在执行前就已经被递归展开成一份完整的、自包含的工步列表。
     // ════════════════════════════════════════════════════════════════════
     public static class RecipeFlattener
     {

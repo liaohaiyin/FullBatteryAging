@@ -10,6 +10,14 @@ using Microsoft.Extensions.Logging;
 
 namespace BatteryAging.Services.Mes
 {
+    /// <summary>
+    /// 通用 REST/JSON MES 对接实现。不同工厂的 MES 系统接口路径、字段命名、认证方式都不一样，
+    /// 这里不为每家 MES 写专用代码，而是把"过站校验/结果上传"这两个动作抽象成固定的中性字段
+    /// （见 Map 方法），通过配置里的 FieldMap 把中性字段名翻译成对方系统要求的实际字段名，
+    /// 再叠加 ExtraFields 里配置的固定附加字段（如产线编号、密钥等）。换一家 MES 通常只需改配置，
+    /// 不需要改代码。CheckInAsync 在 MES 不可达时的行为（拦停还是放行）也由 BlockOnCheckFail
+    /// 配置项决定，避免 MES 系统故障时把产线全部堵死。
+    /// </summary>
     public class RestMesService : IMesService
     {
         private readonly MesConfig _cfg;

@@ -140,6 +140,11 @@ namespace BatteryAging.Drivers
             finally { _ioGate.Release(); }
         }
 
+        /// <summary>
+        /// 逐字节读取直到遇到 \r 或 \n —— 因为响应长度取决于数值位数，与 Modbus
+        /// 那种"先读固定字节数的帧头再知道剩余长度"的二进制协议不同，ASCII
+        /// 行协议只能靠终止符判断一行是否结束，读多了会连累下一条命令的响应。
+        /// </summary>
         private async Task<string> ReadLineAsync(CancellationToken token)
         {
             var sb = new StringBuilder();
