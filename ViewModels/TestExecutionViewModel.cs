@@ -275,6 +275,13 @@ namespace BatteryAging.ViewModels
                 AppendLog($"通道{ch.ChannelIndex} MES 过站通过");
             }
 
+            // ── 校准门禁：最近一次校准过期或不合格时提醒，用户可选择继续或取消 ──
+            if (!await CheckCalibrationGateAsync(ch))
+            {
+                AppendLog($"通道{ch.ChannelIndex}: 用户取消启动（校准提醒）");
+                return;
+            }
+
             try
             {
                 ch.Reset();
@@ -320,6 +327,36 @@ namespace BatteryAging.ViewModels
             catch (Exception ex) { _dialogService.ShowError($"启动失败: {ex.Message}"); }
         }
 
+        /// <summary>
+        /// 校准门禁：检查该通道最近一次校准记录是否过期或不合格。
+        /// 未登记过校准记录时不拦截；检查本身异常也不应阻断测试。
+        /// </summary>
+        private async Task<bool> CheckCalibrationGateAsync(ChannelViewModel ch)
+        {
+            try
+            {
+                var records = await _dataService.GetCalibrationsAsync(ch.Executor.CabinetId);
+                var latest = records
+                    .Where(r => r.ChannelIndex == ch.ChannelIndex)
+                    .OrderByDescending(r => r.CalibrationDate)
+                    .FirstOrDefault();
+                if (latest == null || (!latest.IsOverdue && latest.IsPassed)) return true;
+
+                var reason = latest.IsOverdue ? "已过期" : "未通过（偏差超出容差）";
+                var dueText = latest.NextDueDate.HasValue ? $"，到期日 {latest.NextDueDate:yyyy-MM-dd}" : "";
+                return _dialogService.Confirm(
+                    $"通道{ch.ChannelIndex} 最近一次校准记录{reason}\n" +
+                    $"校准日期 {latest.CalibrationDate:yyyy-MM-dd}{dueText}\n\n" +
+                    "是否仍要继续启动测试？",
+                    "校准提醒");
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"通道{ch.ChannelIndex} 校准检查失败: {ex.Message}");
+                return true;
+            }
+        }
+
         private void StopChannel() { SelectedChannel?.Executor.Stop(); RefreshCommands(); }
         private void PauseChannel() { SelectedChannel?.Executor.Pause(); RefreshCommands(); }
         private void ResumeChannel() { SelectedChannel?.Executor.Resume(); RefreshCommands(); }
@@ -339,9 +376,18 @@ namespace BatteryAging.ViewModels
         private async Task SyncStartAllAsync()
         {
             if (SelectedRecipe == null) { _dialogService.ShowWarning("请先选择测试方案"); return; }
-            var targets = Channels.Where(c =>
+            var candidates = Channels.Where(c =>
                 c.Status == ChannelStatus.Idle || c.Status == ChannelStatus.Completed ||
                 c.Status == ChannelStatus.Stopped).ToList();
+            if (candidates.Count == 0) return;
+
+            // ── 校准门禁：逐个确认，被取消的通道不参与本次同步启动 ──
+            var targets = new List<ChannelViewModel>();
+            foreach (var ch in candidates)
+            {
+                if (await CheckCalibrationGateAsync(ch)) targets.Add(ch);
+                else AppendLog($"通道{ch.ChannelIndex}: 用户取消同步启动（校准提醒）");
+            }
             if (targets.Count == 0) return;
 
             // 先展开子程序（只做一次），所有通道共用同一份扁平化方案，避免污染绑定属性 SelectedRecipe
