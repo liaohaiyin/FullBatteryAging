@@ -53,10 +53,12 @@ namespace BatteryAging.Core.Models
         Settings_RoleManagement = 1L << 21,
         Settings_SystemConfig = 1L << 22,
 
-        // ── 审计 / 校准 / 任务队列（高位追加）────────────────────────────
+        // ── 审计 / 校准 / 任务队列 / 工单 / 运营统计（高位追加）───────────
         Settings_AuditLog = 1L << 32,  // 查看操作审计日志
         Settings_Calibration = 1L << 33,  // 设备校准记录管理
         TestExecution_ManageQueue = 1L << 34,  // 批量任务队列管理
+        Production_WorkOrder = 1L << 35,  // 工单管理
+        Statistics_Utilization = 1L << 36,  // 设备稼动率/能耗成本统计
 
         // ── 预定义角色权限集合 ───────────────────────────────────────────
         /// <summary>观察者：只读查看</summary>
@@ -98,7 +100,9 @@ namespace BatteryAging.Core.Models
             Statistics_Export |
             Settings_CommConfig |
             Settings_Calibration |
-            Settings_AuditLog,
+            Settings_AuditLog |
+            Production_WorkOrder |
+            Statistics_Utilization,
 
         /// <summary>管理员：全部权限</summary>
         Role_Admin = ~None,

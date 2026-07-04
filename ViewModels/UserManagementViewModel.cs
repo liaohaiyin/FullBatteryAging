@@ -248,6 +248,7 @@ namespace BatteryAging.ViewModels
                 {
                     (Permission.Statistics_View,   "UserManagement_Perm_Statistics_View"),
                     (Permission.Statistics_Export, "UserManagement_Perm_Statistics_Export"),
+                    (Permission.Statistics_Utilization, "UserManagement_Perm_Statistics_Utilization"),
                 }),
                 ("UserManagement_PermGroup_SystemSettings", new[]
                 {
@@ -257,6 +258,7 @@ namespace BatteryAging.ViewModels
                     (Permission.Settings_SystemConfig,   "UserManagement_Perm_Settings_SystemConfig"),
                     (Permission.Settings_Calibration,    "UserManagement_Perm_Settings_Calibration"),
                     (Permission.Settings_AuditLog,       "UserManagement_Perm_Settings_AuditLog"),
+                    (Permission.Production_WorkOrder,    "UserManagement_Perm_Production_WorkOrder"),
                 }),
             };
 

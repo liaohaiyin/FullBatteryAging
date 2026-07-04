@@ -21,7 +21,7 @@ namespace BatteryAging.Services
         Task UpdateRecordCheckpointAsync(int recordId, int stepIndex, int loopIndex,
             double totalElapsed, double chargeAh, double dischargeAh, double chargeWh, double dischargeWh);
         Task<(List<TestRecord> Records, int TotalCount)> QueryRecordsPagedAsync(
-            DateTime? start, DateTime? end, int? channel, string barCode, int page, int pageSize);
+            DateTime? start, DateTime? end, int? channel, string barCode, string workOrderNo, int page, int pageSize);
         Task<List<TestRecord>> GetInterruptedRecordsAsync();
         Task<List<DataPoint>> GetDataPointsAsync(int recordId);
         Task SaveDataPointsAsync(IEnumerable<DataPoint> points);
@@ -49,6 +49,11 @@ namespace BatteryAging.Services
         Task<List<CalibrationRecord>> GetCalibrationsAsync(string cabinetId = null);
         Task SaveCalibrationAsync(CalibrationRecord record);
         Task DeleteCalibrationAsync(string id);
+
+        // ── 工单 ──
+        Task<List<WorkOrder>> GetWorkOrdersAsync();
+        Task SaveWorkOrderAsync(WorkOrder order);
+        Task DeleteWorkOrderAsync(string id);
     }
 
     public class DataService : IDataService
@@ -149,7 +154,7 @@ namespace BatteryAging.Services
         }
 
         public async Task<(List<TestRecord> Records, int TotalCount)> QueryRecordsPagedAsync(
-             DateTime? start, DateTime? end, int? channel, string barCode, int page, int pageSize)
+             DateTime? start, DateTime? end, int? channel, string barCode, string workOrderNo, int page, int pageSize)
         {
             await using var db = await _factory.CreateDbContextAsync();
             var q = db.TestRecords.AsQueryable();
@@ -158,6 +163,8 @@ namespace BatteryAging.Services
             if (channel.HasValue) q = q.Where(r => r.ChannelIndex == channel.Value);
             if (!string.IsNullOrWhiteSpace(barCode))
                 q = q.Where(r => r.BarCode.Contains(barCode));
+            if (!string.IsNullOrWhiteSpace(workOrderNo))
+                q = q.Where(r => r.WorkOrderNo == workOrderNo);
 
             var total = await q.CountAsync();
             if (page < 1) page = 1;
@@ -332,6 +339,29 @@ namespace BatteryAging.Services
             await using var db = await _factory.CreateDbContextAsync();
             var c = await db.CalibrationRecords.FindAsync(id);
             if (c != null) { db.CalibrationRecords.Remove(c); await db.SaveChangesAsync(); }
+        }
+
+        // ──────────────── 工单 ────────────────
+        public async Task<List<WorkOrder>> GetWorkOrdersAsync()
+        {
+            await using var db = await _factory.CreateDbContextAsync();
+            return await db.WorkOrders.OrderByDescending(w => w.CreateTime).ToListAsync();
+        }
+
+        public async Task SaveWorkOrderAsync(WorkOrder order)
+        {
+            await using var db = await _factory.CreateDbContextAsync();
+            var existing = await db.WorkOrders.FindAsync(order.Id);
+            if (existing == null) db.WorkOrders.Add(order);
+            else db.Entry(existing).CurrentValues.SetValues(order);
+            await db.SaveChangesAsync();
+        }
+
+        public async Task DeleteWorkOrderAsync(string id)
+        {
+            await using var db = await _factory.CreateDbContextAsync();
+            var w = await db.WorkOrders.FindAsync(id);
+            if (w != null) { db.WorkOrders.Remove(w); await db.SaveChangesAsync(); }
         }
     }
 }

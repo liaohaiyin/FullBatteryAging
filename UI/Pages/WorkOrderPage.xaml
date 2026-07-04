@@ -1,0 +1,122 @@
+<Page x:Class="BatteryAging.UI.Pages.WorkOrderPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ctrl="clr-namespace:BatteryAging.UI.Controls"
+      Title="{DynamicResource Main_Nav_WorkOrder}"
+      Background="{DynamicResource VsBgDeepBrush}">
+
+    <Page.Resources>
+        <Style x:Key="FieldLabel" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource VsTextSecondaryBrush}"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Margin" Value="0,8,0,2"/>
+        </Style>
+    </Page.Resources>
+
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="320"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- 左：工单列表 -->
+        <Border Grid.Column="0" Style="{StaticResource VsCardStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" Background="{DynamicResource VsBgHeaderBrush}"
+                        BorderBrush="{StaticResource VsBorderBrush}" BorderThickness="0,0,0,1" Padding="12,6">
+                    <TextBlock Text="{DynamicResource WorkOrder_List}" Foreground="{StaticResource VsTextPrimaryBrush}" FontWeight="SemiBold"/>
+                </Border>
+
+                <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="8,8,8,4">
+                    <Button Style="{StaticResource VsOutlinedButton}" Command="{Binding NewOrderCommand}" Padding="8,4" Margin="0,0,6,0">
+                        <StackPanel Orientation="Horizontal">
+                            <ctrl:VsIcon Kind="{StaticResource Icon.Plus}" Width="14" Height="14" VerticalAlignment="Center"/>
+                            <TextBlock Text="{DynamicResource WorkOrder_New}" Margin="4,0,0,0"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource VsOutlinedButton}" Command="{Binding DeleteOrderCommand}" Padding="8,4">
+                        <StackPanel Orientation="Horizontal">
+                            <ctrl:VsIcon Kind="{StaticResource Icon.DeleteOutline}" Width="14" Height="14" VerticalAlignment="Center"/>
+                            <TextBlock Text="{DynamicResource WorkOrder_Delete}" Margin="4,0,0,0"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+                <DataGrid Grid.Row="2"
+                          ItemsSource="{Binding Orders}"
+                          SelectedItem="{Binding SelectedOrder}"
+                          AutoGenerateColumns="False"
+                          CanUserAddRows="False"
+                          CanUserDeleteRows="False"
+                          IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="{DynamicResource WorkOrder_Col_No}" Binding="{Binding WorkOrderNo}" Width="140"/>
+                        <DataGridTextColumn Header="{DynamicResource WorkOrder_Col_Batch}" Binding="{Binding BatchNo}" Width="110"/>
+                        <DataGridTextColumn Header="{DynamicResource WorkOrder_Col_Line}" Binding="{Binding ProductionLine}" Width="100"/>
+                        <DataGridTextColumn Header="{DynamicResource WorkOrder_Col_Operator}" Binding="{Binding Operator}" Width="90"/>
+                        <DataGridTextColumn Header="{DynamicResource WorkOrder_Col_Qty}" Binding="{Binding PlannedQuantity}" Width="70"/>
+                        <DataGridTextColumn Header="{DynamicResource WorkOrder_Col_Status}" Binding="{Binding Status}" Width="90"/>
+                        <DataGridTextColumn Header="{DynamicResource WorkOrder_Col_CreateTime}" Binding="{Binding CreateTime, StringFormat={}{0:yyyy-MM-dd HH:mm}}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+
+        <!-- 右：工单编辑表单 -->
+        <Border Grid.Column="1" Style="{StaticResource VsCardStyle}" Margin="10,0,0,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Border Grid.Row="0" Background="{DynamicResource VsBgHeaderBrush}"
+                        BorderBrush="{StaticResource VsBorderBrush}" BorderThickness="0,0,0,1" Padding="12,6">
+                    <TextBlock Text="{DynamicResource WorkOrder_Form}" Foreground="{StaticResource VsTextPrimaryBrush}" FontWeight="SemiBold"/>
+                </Border>
+
+                <ScrollViewer Grid.Row="1" Padding="14" VerticalScrollBarVisibility="Auto">
+                    <StackPanel DataContext="{Binding SelectedOrder}">
+                        <TextBlock Text="{DynamicResource WorkOrder_No}" Style="{StaticResource FieldLabel}"/>
+                        <TextBox Text="{Binding WorkOrderNo, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <TextBlock Text="{DynamicResource WorkOrder_Batch}" Style="{StaticResource FieldLabel}"/>
+                        <TextBox Text="{Binding BatchNo, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <TextBlock Text="{DynamicResource WorkOrder_Line}" Style="{StaticResource FieldLabel}"/>
+                        <TextBox Text="{Binding ProductionLine, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <TextBlock Text="{DynamicResource WorkOrder_Operator}" Style="{StaticResource FieldLabel}"/>
+                        <TextBox Text="{Binding Operator, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <TextBlock Text="{DynamicResource WorkOrder_Qty}" Style="{StaticResource FieldLabel}"/>
+                        <TextBox Text="{Binding PlannedQuantity, UpdateSourceTrigger=LostFocus}"/>
+
+                        <TextBlock Text="{DynamicResource WorkOrder_Status}" Style="{StaticResource FieldLabel}"/>
+                        <ComboBox ItemsSource="{Binding DataContext.StatusItems, RelativeSource={RelativeSource AncestorType=Page}}"
+                                  DisplayMemberPath="DisplayName" SelectedValuePath="Value"
+                                  SelectedValue="{Binding Status}"/>
+
+                        <TextBlock Text="{DynamicResource WorkOrder_Remark}" Style="{StaticResource FieldLabel}"/>
+                        <TextBox Text="{Binding Remark, UpdateSourceTrigger=PropertyChanged}"
+                                 TextWrapping="Wrap" AcceptsReturn="True" MinHeight="40"/>
+
+                        <Button Style="{StaticResource VsAccentButton}"
+                                Command="{Binding DataContext.SaveOrderCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                Margin="0,14,0,0" Padding="8,6" HorizontalAlignment="Right">
+                            <StackPanel Orientation="Horizontal">
+                                <ctrl:VsIcon Kind="{StaticResource Icon.ContentSave}" Width="14" Height="14" VerticalAlignment="Center"/>
+                                <TextBlock Text="{DynamicResource WorkOrder_Save}" Margin="6,0,0,0"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+    </Grid>
+</Page>

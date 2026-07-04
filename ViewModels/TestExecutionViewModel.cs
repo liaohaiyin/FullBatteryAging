@@ -32,6 +32,7 @@ namespace BatteryAging.ViewModels
         [ObservableProperty] private TestRecipe _selectedRecipe;
         [ObservableProperty] private string _logText = "";
         [ObservableProperty] private string _barCode = "";
+        [ObservableProperty] private string _workOrderNo = "";
         [ObservableProperty] private TestJob _selectedJob;
         [ObservableProperty] private int _queueTargetChannel = 0;   // 0 = 任意空闲通道
         [ObservableProperty] private int _queueBatchCount = 1;
@@ -293,7 +294,8 @@ namespace BatteryAging.ViewModels
                     NominalCapacity = recipe.NominalCapacity,
                     StartTime = DateTime.Now,
                     Status = ChannelStatus.Running,
-                    LastCheckpointTime = DateTime.Now
+                    LastCheckpointTime = DateTime.Now,
+                    WorkOrderNo = string.IsNullOrWhiteSpace(WorkOrderNo) ? null : WorkOrderNo
                 };
                 record = await _dataService.CreateRecordAsync(record);
                 ch.TestRecordId = record.Id;
@@ -379,7 +381,8 @@ namespace BatteryAging.ViewModels
                     NominalCapacity = runRecipe.NominalCapacity,
                     StartTime = DateTime.Now,
                     Status = ChannelStatus.Running,
-                    LastCheckpointTime = DateTime.Now
+                    LastCheckpointTime = DateTime.Now,
+                    WorkOrderNo = string.IsNullOrWhiteSpace(WorkOrderNo) ? null : WorkOrderNo
                 };
                 record = await _dataService.CreateRecordAsync(record);
                 ch.TestRecordId = record.Id;

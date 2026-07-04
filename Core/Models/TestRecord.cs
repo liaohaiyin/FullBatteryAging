@@ -54,5 +54,9 @@ namespace BatteryAging.Core.Models
         public DateTime LastCheckpointTime { get; set; }  // 最后一次检查点时间
 
         public string Operator { get; set; } = Environment.UserName;
+
+        // ── 工单关联（冗余，避免多一次联表查询）──
+        public string WorkOrderId { get; set; }
+        public string WorkOrderNo { get; set; }
     }
 }

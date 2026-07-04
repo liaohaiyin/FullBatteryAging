@@ -140,12 +140,14 @@
     <sys:String x:Key="UserManagement_Perm_DataQuery_Report">Generate report</sys:String>
     <sys:String x:Key="UserManagement_Perm_Statistics_View">View statistics</sys:String>
     <sys:String x:Key="UserManagement_Perm_Statistics_Export">Export report</sys:String>
+    <sys:String x:Key="UserManagement_Perm_Statistics_Utilization">Equipment utilization/energy stats</sys:String>
     <sys:String x:Key="UserManagement_Perm_Settings_CommConfig">Cabinet/comm config</sys:String>
     <sys:String x:Key="UserManagement_Perm_Settings_UserManagement">User management</sys:String>
     <sys:String x:Key="UserManagement_Perm_Settings_RoleManagement">Role management</sys:String>
     <sys:String x:Key="UserManagement_Perm_Settings_SystemConfig">System parameters</sys:String>
     <sys:String x:Key="UserManagement_Perm_Settings_Calibration">Calibration management</sys:String>
     <sys:String x:Key="UserManagement_Perm_Settings_AuditLog">View audit log</sys:String>
+    <sys:String x:Key="UserManagement_Perm_Production_WorkOrder">Work order management</sys:String>
 
     <!-- ── Pages & Windows ── -->
     <sys:String x:Key="Main_Title">Lithium Battery Aging Host</sys:String>
@@ -158,6 +160,7 @@
     <sys:String x:Key="Main_Nav_UserMgmt">User Management</sys:String>
     <sys:String x:Key="Main_Nav_Calibration">Calibration</sys:String>
     <sys:String x:Key="Main_Nav_AuditLog">Audit Log</sys:String>
+    <sys:String x:Key="Main_Nav_WorkOrder">Work Orders</sys:String>
     <sys:String x:Key="Main_Nav_Logout">Logout</sys:String>
     <sys:String x:Key="Main_Nav_About">About</sys:String>
     <sys:String x:Key="Main_Nav_Error">Error</sys:String>
@@ -166,6 +169,7 @@
     <sys:String x:Key="Main_About_Content">Lithium Battery Aging Host;Version: v1.0.0</sys:String>
     <sys:String x:Key="TestExec_Recipe">Test Recipe</sys:String>
     <sys:String x:Key="TestExec_BarCode">Barcode</sys:String>
+    <sys:String x:Key="TestExec_WorkOrder">Work Order</sys:String>
     <sys:String x:Key="TestExec_BarCodeHint">Select a channel first</sys:String>
     <sys:String x:Key="TestExec_StartTip">Start selected channel</sys:String>
     <sys:String x:Key="TestExec_StartAllTip">Start all idle channels</sys:String>
@@ -269,6 +273,7 @@
     <sys:String x:Key="DataQuery_EndDate">End Date:</sys:String>
     <sys:String x:Key="DataQuery_BarCode">Barcode:</sys:String>
     <sys:String x:Key="DataQuery_Channel">Channel:</sys:String>
+    <sys:String x:Key="DataQuery_WorkOrder">Work Order:</sys:String>
     <sys:String x:Key="DataQuery_Query">Query</sys:String>
     <sys:String x:Key="DataQuery_ExportCsv">Export CSV</sys:String>
     <sys:String x:Key="DataQuery_ExportExcel">Export Excel</sys:String>
@@ -435,4 +440,25 @@
     <sys:String x:Key="Calibration_Col_Result">Passed</sys:String>
     <sys:String x:Key="Calibration_Col_DueDate">Due Date</sys:String>
     <sys:String x:Key="Calibration_Col_Technician">Technician</sys:String>
+
+    <!-- ── Work Orders ── -->
+    <sys:String x:Key="WorkOrder_List">Work Orders</sys:String>
+    <sys:String x:Key="WorkOrder_New">New</sys:String>
+    <sys:String x:Key="WorkOrder_Delete">Delete</sys:String>
+    <sys:String x:Key="WorkOrder_Form">Work Order Editor</sys:String>
+    <sys:String x:Key="WorkOrder_No">Work Order No.</sys:String>
+    <sys:String x:Key="WorkOrder_Batch">Batch No.</sys:String>
+    <sys:String x:Key="WorkOrder_Line">Production Line</sys:String>
+    <sys:String x:Key="WorkOrder_Operator">Operator</sys:String>
+    <sys:String x:Key="WorkOrder_Qty">Planned Qty</sys:String>
+    <sys:String x:Key="WorkOrder_Status">Status</sys:String>
+    <sys:String x:Key="WorkOrder_Remark">Remark</sys:String>
+    <sys:String x:Key="WorkOrder_Save">Save</sys:String>
+    <sys:String x:Key="WorkOrder_Col_No">Work Order No.</sys:String>
+    <sys:String x:Key="WorkOrder_Col_Batch">Batch No.</sys:String>
+    <sys:String x:Key="WorkOrder_Col_Line">Line</sys:String>
+    <sys:String x:Key="WorkOrder_Col_Operator">Operator</sys:String>
+    <sys:String x:Key="WorkOrder_Col_Qty">Planned Qty</sys:String>
+    <sys:String x:Key="WorkOrder_Col_Status">Status</sys:String>
+    <sys:String x:Key="WorkOrder_Col_CreateTime">Created</sys:String>
 </ResourceDictionary>

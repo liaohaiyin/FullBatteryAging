@@ -46,6 +46,12 @@
                            Foreground="{StaticResource VsTextSecondaryBrush}"/>
                 <TextBox Grid.Column="7" Text="{Binding ChannelFilter, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}"/>
 
+                <StackPanel Grid.Column="8" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <TextBlock Text="{DynamicResource DataQuery_WorkOrder}" VerticalAlignment="Center" Margin="12,0,6,0"
+                               Foreground="{StaticResource VsTextSecondaryBrush}"/>
+                    <TextBox Width="120" Text="{Binding WorkOrderFilter, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+
                 <StackPanel Grid.Column="9" Orientation="Horizontal">
                     <Button Style="{StaticResource VsAccentButton}"
                             Command="{Binding QueryCommand}"

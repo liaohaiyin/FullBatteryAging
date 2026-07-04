@@ -34,6 +34,7 @@ namespace BatteryAging.ViewModels
         public bool CanUserMgmt => _auth.HasAnyPermission(Permission.Settings_UserManagement, Permission.Settings_RoleManagement);
         public bool CanAuditLog => _auth.HasPermission(Permission.Settings_AuditLog);
         public bool CanCalibration => _auth.HasPermission(Permission.Settings_Calibration);
+        public bool CanWorkOrder => _auth.HasPermission(Permission.Production_WorkOrder);
 
         public IRelayCommand NavExecutionCommand { get; }
         public IRelayCommand NavRecipeCommand { get; }
@@ -45,6 +46,7 @@ namespace BatteryAging.ViewModels
         public IRelayCommand NavUserMgmtCommand { get; }
         public IRelayCommand NavAuditLogCommand { get; }
         public IRelayCommand NavCalibrationCommand { get; }
+        public IRelayCommand NavWorkOrderCommand { get; }
         public IRelayCommand NavLogoutCommand { get; }
 
         public MainWindowViewModel(IServiceProvider services, ILanguageService language, IAuthService auth, IDialogService dialogService)
@@ -63,6 +65,7 @@ namespace BatteryAging.ViewModels
             NavUserMgmtCommand = new RelayCommand(() => CurrentPage = _services.GetRequiredService<UserManagementPage>());
             NavAuditLogCommand = new RelayCommand(() => CurrentPage = _services.GetRequiredService<AuditLogPage>());
             NavCalibrationCommand = new RelayCommand(() => CurrentPage = _services.GetRequiredService<CalibrationPage>());
+            NavWorkOrderCommand = new RelayCommand(() => CurrentPage = _services.GetRequiredService<WorkOrderPage>());
             NavLogoutCommand = new RelayCommand(Logout);
             NavAboutCommand = new RelayCommand(() =>
             {

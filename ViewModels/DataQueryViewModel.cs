@@ -29,6 +29,7 @@ namespace BatteryAging.ViewModels
         [ObservableProperty] private DateTime _endDate = DateTime.Today.AddDays(1);
         [ObservableProperty] private string _barCode;
         [ObservableProperty] private int? _channelFilter;
+        [ObservableProperty] private string _workOrderFilter;
         [ObservableProperty] private string _statusText = "";
         [ObservableProperty] private string _rulSummaryText = "";
 
@@ -118,7 +119,7 @@ namespace BatteryAging.ViewModels
                 }
 
                 var (list, total) = await _dataService.QueryRecordsPagedAsync(
-                    StartDate, EndDate, ChannelFilter, BarCode, _currentPage, PageSize);
+                    StartDate, EndDate, ChannelFilter, BarCode, WorkOrderFilter, _currentPage, PageSize);
 
                 Records.Clear();
                 foreach (var r in list) Records.Add(r);

@@ -28,6 +28,9 @@ namespace BatteryAging.Data.Context
         public DbSet<AuditLog> AuditLogs { get; set; }
         public DbSet<CalibrationRecord> CalibrationRecords { get; set; }
 
+        // ── 工单 ─────────────────────────────────────────────────────────
+        public DbSet<WorkOrder> WorkOrders { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<TestRecipe>(e =>
@@ -51,6 +54,7 @@ namespace BatteryAging.Data.Context
                 e.HasIndex(r => r.BarCode);
                 e.HasIndex(r => r.ChannelIndex);
                 e.HasIndex(r => r.Status);
+                e.HasIndex(r => r.WorkOrderId);
             });
 
             modelBuilder.Entity<DataPoint>(e =>
@@ -130,6 +134,13 @@ namespace BatteryAging.Data.Context
                 e.HasKey(c => c.Id);
                 e.HasIndex(c => new { c.CabinetId, c.ChannelIndex });
                 e.HasIndex(c => c.NextDueDate);
+            });
+
+            modelBuilder.Entity<WorkOrder>(e =>
+            {
+                e.HasKey(w => w.Id);
+                e.HasIndex(w => w.WorkOrderNo);
+                e.HasIndex(w => w.Status);
             });
 
             base.OnModelCreating(modelBuilder);

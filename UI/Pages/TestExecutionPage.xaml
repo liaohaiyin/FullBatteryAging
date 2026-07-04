@@ -108,6 +108,16 @@
                              Foreground="{StaticResource TextPrimaryBrush}"
                              FontSize="16"/>
 
+                    <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="{DynamicResource TestExec_WorkOrder}" VerticalAlignment="Center"
+                                   Foreground="{StaticResource VsTextSecondaryBrush}"
+                                   FontSize="12" Margin="18,0,10,0"/>
+                        <TextBox Width="140" Margin="0,5"
+                                 Text="{Binding WorkOrderNo, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource MaterialDesignTextBox}"
+                                 Foreground="{StaticResource TextPrimaryBrush}"/>
+                    </StackPanel>
+
                     <StackPanel Grid.Column="5" Orientation="Horizontal">
                         <Button Style="{StaticResource VsAccentButton}"
                                 Command="{Binding StartChannelCommand}"

@@ -285,6 +285,19 @@ namespace BatteryAging.Core.Enums
         Chamber
     }
 
+    /// <summary>工单状态</summary>
+    public enum WorkOrderStatus
+    {
+        [Description("待开始")]
+        Open,
+        [Description("进行中")]
+        InProgress,
+        [Description("已完成")]
+        Completed,
+        [Description("已取消")]
+        Cancelled
+    }
+
     /// <summary>批量任务队列中一个任务的状态（运行时内存态，不落库）</summary>
     public enum TestJobStatus
     {
