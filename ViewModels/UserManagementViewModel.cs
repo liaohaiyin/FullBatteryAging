@@ -224,6 +224,7 @@ namespace BatteryAging.ViewModels
                     (Permission.TestExecution_EmergencyStop, "UserManagement_Perm_TestExecution_EmergencyStop"),
                     (Permission.TestExecution_ExportLive,    "UserManagement_Perm_TestExecution_ExportLive"),
                     (Permission.TestExecution_ManageQueue,   "UserManagement_Perm_TestExecution_ManageQueue"),
+                    (Permission.TestExecution_CellHeatmap,   "UserManagement_Perm_TestExecution_CellHeatmap"),
                 }),
                 ("UserManagement_PermGroup_FlowEditor", new[]
                 {

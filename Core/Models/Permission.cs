@@ -59,6 +59,7 @@ namespace BatteryAging.Core.Models
         TestExecution_ManageQueue = 1L << 34,  // 批量任务队列管理
         Production_WorkOrder = 1L << 35,  // 工单管理
         Statistics_Utilization = 1L << 36,  // 设备稼动率/能耗成本统计
+        TestExecution_CellHeatmap = 1L << 37,  // 单体电压热力图（多通道矩阵）
 
         // ── 预定义角色权限集合 ───────────────────────────────────────────
         /// <summary>观察者：只读查看</summary>
@@ -102,7 +103,8 @@ namespace BatteryAging.Core.Models
             Settings_Calibration |
             Settings_AuditLog |
             Production_WorkOrder |
-            Statistics_Utilization,
+            Statistics_Utilization |
+            TestExecution_CellHeatmap,
 
         /// <summary>管理员：全部权限</summary>
         Role_Admin = ~None,

@@ -1,0 +1,100 @@
+<Page x:Class="BatteryAging.UI.Pages.CellHeatmapPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ctrl="clr-namespace:BatteryAging.UI.Controls"
+      Title="{DynamicResource Main_Nav_CellHeatmap}"
+      Background="{DynamicResource VsBgDeepBrush}">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- 工具栏：色阶范围 + 图例 + 状态 -->
+        <Border Grid.Row="0" Style="{StaticResource VsCardStyle}" Padding="10,8" Margin="0,0,0,8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="140"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="{DynamicResource CellHeatmap_ScaleMin}" VerticalAlignment="Center" Margin="0,0,6,0"
+                           Foreground="{StaticResource VsTextSecondaryBrush}"/>
+                <TextBox Grid.Column="1" Text="{Binding MinScaleVoltage, UpdateSourceTrigger=LostFocus, StringFormat={}{0:F3}}"/>
+
+                <TextBlock Grid.Column="2" Text="{DynamicResource CellHeatmap_ScaleMax}" VerticalAlignment="Center" Margin="12,0,6,0"
+                           Foreground="{StaticResource VsTextSecondaryBrush}"/>
+                <TextBox Grid.Column="3" Text="{Binding MaxScaleVoltage, UpdateSourceTrigger=LostFocus, StringFormat={}{0:F3}}"/>
+
+                <StackPanel Grid.Column="4" Orientation="Horizontal" Margin="16,0,0,0" VerticalAlignment="Center">
+                    <TextBlock Text="{DynamicResource CellHeatmap_Legend}" VerticalAlignment="Center" Margin="0,0,6,0"
+                               Foreground="{StaticResource VsTextSecondaryBrush}"/>
+                    <Border Width="120" Height="14" CornerRadius="2" VerticalAlignment="Center">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="#2196F3" Offset="0"/>
+                                <GradientStop Color="#4CAF50" Offset="0.5"/>
+                                <GradientStop Color="#E53935" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                    </Border>
+                </StackPanel>
+
+                <TextBlock Grid.Column="6" Text="{Binding StatusText}" VerticalAlignment="Center"
+                           HorizontalAlignment="Right" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+            </Grid>
+        </Border>
+
+        <!-- 热力矩阵：行=通道，列=单体序号 -->
+        <Border Grid.Row="1" Style="{StaticResource VsCardStyle}">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Padding="10">
+                <ItemsControl ItemsSource="{Binding Rows}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border BorderBrush="{StaticResource VsBorderBrush}" BorderThickness="0,0,0,1" Padding="0,6">
+                                <StackPanel Orientation="Horizontal">
+                                    <StackPanel Width="170" VerticalAlignment="Center" Margin="0,0,10,0">
+                                        <TextBlock Text="{Binding ChannelLabel}" FontWeight="SemiBold" FontSize="12"
+                                                   Foreground="{StaticResource VsTextPrimaryBrush}"/>
+                                        <TextBlock FontSize="10" Foreground="{StaticResource VsTextMutedBrush}">
+                                            <TextBlock.Text>
+                                                <MultiBinding StringFormat="Max {0:F3}  Min {1:F3}  ΔV {2:F3}">
+                                                    <Binding Path="MaxCellVoltage"/>
+                                                    <Binding Path="MinCellVoltage"/>
+                                                    <Binding Path="CellVoltageDelta"/>
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                    </StackPanel>
+                                    <ItemsControl ItemsSource="{Binding Cells}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Horizontal"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Width="28" Height="28" Margin="1" CornerRadius="2"
+                                                        Background="{Binding CellBrush}"
+                                                        ToolTip="{Binding Voltage, StringFormat=单体电压 {0:F4} V}">
+                                                    <TextBlock Text="{Binding Index}" FontSize="8" Foreground="White"
+                                                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</Page>

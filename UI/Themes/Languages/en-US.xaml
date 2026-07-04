@@ -125,6 +125,7 @@
     <sys:String x:Key="UserManagement_Perm_TestExecution_EmergencyStop">Emergency stop</sys:String>
     <sys:String x:Key="UserManagement_Perm_TestExecution_ExportLive">Export live data</sys:String>
     <sys:String x:Key="UserManagement_Perm_TestExecution_ManageQueue">Manage task queue</sys:String>
+    <sys:String x:Key="UserManagement_Perm_TestExecution_CellHeatmap">Cell voltage heatmap</sys:String>
     <sys:String x:Key="UserManagement_Perm_FlowEditor_View">View flows</sys:String>
     <sys:String x:Key="UserManagement_Perm_FlowEditor_New">New flow</sys:String>
     <sys:String x:Key="UserManagement_Perm_FlowEditor_Edit">Edit steps</sys:String>
@@ -162,6 +163,7 @@
     <sys:String x:Key="Main_Nav_AuditLog">Audit Log</sys:String>
     <sys:String x:Key="Main_Nav_WorkOrder">Work Orders</sys:String>
     <sys:String x:Key="Main_Nav_Utilization">Utilization / Energy</sys:String>
+    <sys:String x:Key="Main_Nav_CellHeatmap">Cell Voltage Heatmap</sys:String>
     <sys:String x:Key="Main_Nav_Logout">Logout</sys:String>
     <sys:String x:Key="Main_Nav_About">About</sys:String>
     <sys:String x:Key="Main_Nav_Error">Error</sys:String>
@@ -485,4 +487,9 @@
     <sys:String x:Key="Utilization_Col_Records">Records</sys:String>
     <sys:String x:Key="Utilization_Col_Passed">Passed</sys:String>
     <sys:String x:Key="Utilization_Col_PassRate">Pass Rate</sys:String>
+
+    <!-- Cell Voltage Heatmap -->
+    <sys:String x:Key="CellHeatmap_ScaleMin">Scale Min (V)</sys:String>
+    <sys:String x:Key="CellHeatmap_ScaleMax">Scale Max (V)</sys:String>
+    <sys:String x:Key="CellHeatmap_Legend">Low → High</sys:String>
 </ResourceDictionary>

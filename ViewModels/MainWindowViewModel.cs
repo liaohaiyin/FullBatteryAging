@@ -36,6 +36,7 @@ namespace BatteryAging.ViewModels
         public bool CanCalibration => _auth.HasPermission(Permission.Settings_Calibration);
         public bool CanWorkOrder => _auth.HasPermission(Permission.Production_WorkOrder);
         public bool CanUtilization => _auth.HasPermission(Permission.Statistics_Utilization);
+        public bool CanCellHeatmap => _auth.HasPermission(Permission.TestExecution_CellHeatmap);
 
         public IRelayCommand NavExecutionCommand { get; }
         public IRelayCommand NavRecipeCommand { get; }
@@ -49,6 +50,7 @@ namespace BatteryAging.ViewModels
         public IRelayCommand NavCalibrationCommand { get; }
         public IRelayCommand NavWorkOrderCommand { get; }
         public IRelayCommand NavUtilizationCommand { get; }
+        public IRelayCommand NavCellHeatmapCommand { get; }
         public IRelayCommand NavLogoutCommand { get; }
 
         public MainWindowViewModel(IServiceProvider services, ILanguageService language, IAuthService auth, IDialogService dialogService)
@@ -69,6 +71,7 @@ namespace BatteryAging.ViewModels
             NavCalibrationCommand = new RelayCommand(() => CurrentPage = _services.GetRequiredService<CalibrationPage>());
             NavWorkOrderCommand = new RelayCommand(() => CurrentPage = _services.GetRequiredService<WorkOrderPage>());
             NavUtilizationCommand = new RelayCommand(() => CurrentPage = _services.GetRequiredService<UtilizationPage>());
+            NavCellHeatmapCommand = new RelayCommand(() => CurrentPage = _services.GetRequiredService<CellHeatmapPage>());
             NavLogoutCommand = new RelayCommand(Logout);
             NavAboutCommand = new RelayCommand(() =>
             {
