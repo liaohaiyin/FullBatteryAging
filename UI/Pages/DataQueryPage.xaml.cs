@@ -19,14 +19,18 @@ namespace BatteryAging.UI.Pages
         private readonly List<double> _temp = new();
         private readonly List<double> _cycX = new();
         private readonly List<double> _cycY = new();
+        private readonly List<double> _dqdvX = new();
+        private readonly List<double> _dqdvY = new();
 
         private readonly ScottPlot.Plottables.Scatter _voltage;
         private readonly ScottPlot.Plottables.Scatter _current;
         private readonly ScottPlot.Plottables.Scatter _temperature;
         private readonly ScottPlot.Plottables.Scatter _cycleSeries;
+        private readonly ScottPlot.Plottables.Scatter _dqdvSeries;
 
         private ScatterHighlighter _historyHighlighter;
         private ScatterHighlighter _cycleHighlighter;
+        private ScatterHighlighter _dqdvHighlighter;
 
         public DataQueryPage(DataQueryViewModel vm)
         {
@@ -107,9 +111,28 @@ namespace BatteryAging.UI.Pages
             _cycleSeries.LegendText = "容量衰减";
             CyclePlot.Refresh();
 
+            // ── dQ/dV 微分容量 ──
+            var dp = DqDvPlot.Plot;
+            dp.FigureBackground.Color = Colors.Transparent;
+            dp.DataBackground.Color = Colors.Transparent;
+            dp.Axes.Bottom.Label.Text = "电压 (V)";
+            dp.Axes.Bottom.Label.ForeColor = labelColor;
+            dp.Axes.Bottom.Label.FontSize = 14;
+            dp.Axes.Bottom.Label.Bold = false;
+            dp.Axes.Left.Label.Text = "dQ/dV (Ah/V)";
+            dp.Axes.Left.Label.ForeColor = labelColor;
+            dp.Axes.Left.Label.FontSize = 14;
+            dp.Axes.Left.Label.Bold = false;
+            _dqdvSeries = dp.Add.Scatter(_dqdvX, _dqdvY);
+            _dqdvSeries.Color = Color.FromHex("#AB47BC");
+            _dqdvSeries.LineWidth = 1.4f; _dqdvSeries.MarkerSize = 0;
+            _dqdvSeries.LegendText = "dQ/dV";
+            DqDvPlot.Refresh();
+
             _vm.PropertyChanged += OnVmPropertyChanged;
             ((INotifyCollectionChanged)_vm.DataPoints).CollectionChanged += OnDataChanged;
             ((INotifyCollectionChanged)_vm.CycleData).CollectionChanged += OnCycleChanged;
+            ((INotifyCollectionChanged)_vm.DqDvCurve).CollectionChanged += OnDqDvChanged;
             Unloaded += OnPageUnloaded;
             _historyHighlighter = new ScatterHighlighter(HistoryPlot, new[] { _voltage, _current, _temperature },
             (c, s) =>
@@ -119,6 +142,7 @@ namespace BatteryAging.UI.Pages
                 return $"{c.X:F1}s   {c.Y:F4} V";
             });
             _cycleHighlighter = new ScatterHighlighter(CyclePlot, new[] { _cycleSeries }, (c, s) => $"循环 {c.X:F0}   {c.Y:F4} Ah");
+            _dqdvHighlighter = new ScatterHighlighter(DqDvPlot, new[] { _dqdvSeries }, (c, s) => $"{c.X:F3}V   {c.Y:F4} Ah/V");
         }
 
         private void OnVmPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -156,12 +180,26 @@ namespace BatteryAging.UI.Pages
             CyclePlot.Refresh();
         }
 
+        private void OnDqDvChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            _dqdvX.Clear(); _dqdvY.Clear();
+            foreach (var d in _vm.DqDvCurve)
+            {
+                _dqdvX.Add(d.Voltage);
+                _dqdvY.Add(d.DqDv);
+            }
+            DqDvPlot.Plot.Axes.AutoScale();
+            DqDvPlot.Refresh();
+        }
+
         private void ClearAllSeries()
         {
             _t.Clear(); _v.Clear(); _i.Clear(); _temp.Clear();
             HistoryPlot.Refresh();
             _cycX.Clear(); _cycY.Clear();
             CyclePlot.Refresh();
+            _dqdvX.Clear(); _dqdvY.Clear();
+            DqDvPlot.Refresh();
         }
 
         private void OnPageUnloaded(object sender, System.Windows.RoutedEventArgs e)
@@ -169,8 +207,10 @@ namespace BatteryAging.UI.Pages
             _vm.PropertyChanged -= OnVmPropertyChanged;
             ((INotifyCollectionChanged)_vm.DataPoints).CollectionChanged -= OnDataChanged;
             ((INotifyCollectionChanged)_vm.CycleData).CollectionChanged -= OnCycleChanged;
+            ((INotifyCollectionChanged)_vm.DqDvCurve).CollectionChanged -= OnDqDvChanged;
             _historyHighlighter?.Dispose();
             _cycleHighlighter?.Dispose();
+            _dqdvHighlighter?.Dispose();
         }
     }
 }

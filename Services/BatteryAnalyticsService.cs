@@ -60,6 +60,13 @@ namespace BatteryAging.Services
                 : "容量未见明显衰减趋势，暂无法预测寿命终止点";
     }
 
+    /// <summary>dQ/dV 微分容量曲线上的一个采样点</summary>
+    public class DqDvPoint
+    {
+        public double Voltage { get; set; }
+        public double DqDv { get; set; }
+    }
+
     public interface IBatteryAnalyticsService
     {
         /// <summary>SOH 估算（容量法）：实际放电容量 / 标称容量</summary>
@@ -80,6 +87,9 @@ namespace BatteryAging.Services
 
         /// <summary>基于历史循环容量数据线性外推剩余循环寿命（RUL）</summary>
         RulEstimate EstimateRul(IEnumerable<CycleData> cycles, double nominalCapacity, double eolFraction = 0.8);
+
+        /// <summary>按电压分箱统计容量增量，计算 dQ/dV 微分容量曲线（用于识别相变/衰减机理）</summary>
+        List<DqDvPoint> ComputeDifferentialCapacity(IEnumerable<DataPoint> points, int voltageBins = 100);
     }
 
     public class BatteryAnalyticsService : IBatteryAnalyticsService
@@ -208,6 +218,56 @@ namespace BatteryAging.Services
                 }
             }
             return result;
+        }
+
+        public List<DqDvPoint> ComputeDifferentialCapacity(IEnumerable<DataPoint> points, int voltageBins = 100)
+        {
+            var ordered = (points ?? Enumerable.Empty<DataPoint>())
+                .Where(p => p.Voltage > 0)
+                .OrderBy(p => p.Timestamp)
+                .ToList();
+            if (ordered.Count < 10 || voltageBins < 2) return new List<DqDvPoint>();
+
+            double vMin = ordered.Min(p => p.Voltage);
+            double vMax = ordered.Max(p => p.Voltage);
+            if (vMax - vMin < 0.01) return new List<DqDvPoint>();
+
+            double binWidth = (vMax - vMin) / voltageBins;
+            var binCapacity = new double[voltageBins];
+
+            for (int i = 1; i < ordered.Count; i++)
+            {
+                var dQ = ordered[i].Capacity - ordered[i - 1].Capacity;
+                if (dQ == 0) continue;
+                var vMid = (ordered[i].Voltage + ordered[i - 1].Voltage) / 2.0;
+                int bin = (int)((vMid - vMin) / binWidth);
+                if (bin < 0) bin = 0;
+                if (bin >= voltageBins) bin = voltageBins - 1;
+                // 同一工步内 |Capacity| 单调递增，跨工步边界重置为 0 会产生负跳变，取绝对值避免污染曲线
+                binCapacity[bin] += Math.Abs(dQ);
+            }
+
+            var raw = new List<DqDvPoint>();
+            for (int b = 0; b < voltageBins; b++)
+            {
+                if (binCapacity[b] <= 0) continue;
+                raw.Add(new DqDvPoint
+                {
+                    Voltage = Math.Round(vMin + (b + 0.5) * binWidth, 4),
+                    DqDv = binCapacity[b] / binWidth
+                });
+            }
+
+            // 三点滑动平均去噪
+            var smoothed = new List<DqDvPoint>(raw.Count);
+            for (int i = 0; i < raw.Count; i++)
+            {
+                double sum = raw[i].DqDv; int n = 1;
+                if (i > 0) { sum += raw[i - 1].DqDv; n++; }
+                if (i < raw.Count - 1) { sum += raw[i + 1].DqDv; n++; }
+                smoothed.Add(new DqDvPoint { Voltage = raw[i].Voltage, DqDv = Math.Round(sum / n, 4) });
+            }
+            return smoothed;
         }
     }
 }

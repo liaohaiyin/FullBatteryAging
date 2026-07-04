@@ -22,6 +22,7 @@ namespace BatteryAging.ViewModels
         public ObservableCollection<TestRecord> Records { get; } = new();
         public ObservableCollection<DataPoint> DataPoints { get; } = new();
         public ObservableCollection<CycleData> CycleData { get; } = new();
+        public ObservableCollection<DqDvPoint> DqDvCurve { get; } = new();
 
         [ObservableProperty] private TestRecord _selectedRecord;
         [ObservableProperty] private DateTime _startDate = DateTime.Today.AddDays(-7);
@@ -99,6 +100,7 @@ namespace BatteryAging.ViewModels
             {
                 DataPoints.Clear();
                 CycleData.Clear();
+                DqDvCurve.Clear();
                 RulSummaryText = "";
             }
         }
@@ -148,6 +150,10 @@ namespace BatteryAging.ViewModels
                 var nominal = SelectedRecord.NominalCapacity > 0 ? SelectedRecord.NominalCapacity : MaxCapacityOr(cycles);
                 var rul = _analytics.EstimateRul(cycles, nominal);
                 RulSummaryText = nominal > 0 ? rul.Summary : "标称容量未知，无法预测寿命";
+
+                var dqdv = _analytics.ComputeDifferentialCapacity(pts);
+                DqDvCurve.Clear();
+                foreach (var p in dqdv) DqDvCurve.Add(p);
             }
             catch (Exception ex)
             {
