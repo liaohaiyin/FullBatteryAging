@@ -53,6 +53,16 @@
                         <ctrl:VsIcon Kind="{StaticResource Icon.ChartBellCurve}" Width="14" Height="14"
                                      Foreground="{StaticResource VsSuccessBrush}"/>
                     </Button>
+                    <Button Style="{StaticResource VsFlatButton}" Command="{Binding ImportRecipeCommand}"
+                            ToolTip="{DynamicResource Recipe_ImportTip}" Padding="6">
+                        <ctrl:VsIcon Kind="{StaticResource Icon.FileDocumentOutline}" Width="14" Height="14"
+                                     Foreground="{StaticResource VsAccentBrush}"/>
+                    </Button>
+                    <Button Style="{StaticResource VsFlatButton}" Command="{Binding ExportRecipeCommand}"
+                            ToolTip="{DynamicResource Recipe_ExportTip}" Padding="6">
+                        <ctrl:VsIcon Kind="{StaticResource Icon.FileExportOutline}" Width="14" Height="14"
+                                     Foreground="{StaticResource VsAccentBrush}"/>
+                    </Button>
                 </StackPanel>
 
                 <ListBox Grid.Row="2"

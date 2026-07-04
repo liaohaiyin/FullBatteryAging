@@ -203,6 +203,8 @@
     <sys:String x:Key="Recipe_DeleteTip">删除</sys:String>
     <sys:String x:Key="Recipe_LoadSampleTip">加载示例方案</sys:String>
     <sys:String x:Key="Recipe_GenerateTip">用内置模板生成方案（日历/HPPC/最大能量）</sys:String>
+    <sys:String x:Key="Recipe_ImportTip">从 JSON 文件导入方案</sys:String>
+    <sys:String x:Key="Recipe_ExportTip">导出方案为 JSON 文件</sys:String>
     <sys:String x:Key="Recipe_AddStepTip">添加工步</sys:String>
     <sys:String x:Key="Recipe_RemoveStepTip">删除选中工步</sys:String>
     <sys:String x:Key="Recipe_MoveUpTip">上移</sys:String>

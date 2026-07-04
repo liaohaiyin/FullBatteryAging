@@ -204,6 +204,8 @@
     <sys:String x:Key="Recipe_DeleteTip">Delete</sys:String>
     <sys:String x:Key="Recipe_LoadSampleTip">Load sample recipe</sys:String>
     <sys:String x:Key="Recipe_GenerateTip">Generate from template (Calendar/HPPC/Max energy)</sys:String>
+    <sys:String x:Key="Recipe_ImportTip">Import recipe from JSON file</sys:String>
+    <sys:String x:Key="Recipe_ExportTip">Export recipe to JSON file</sys:String>
     <sys:String x:Key="Recipe_AddStepTip">Add step</sys:String>
     <sys:String x:Key="Recipe_RemoveStepTip">Remove selected step</sys:String>
     <sys:String x:Key="Recipe_MoveUpTip">Move up</sys:String>

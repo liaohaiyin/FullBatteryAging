@@ -1,6 +1,8 @@
 using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -45,6 +47,8 @@ namespace BatteryAging.ViewModels
         public IRelayCommand MoveDownCommand { get; }
         public IRelayCommand LoadSampleCommand { get; }
         public IRelayCommand GenerateBuilderCommand { get; }
+        public IAsyncRelayCommand ExportRecipeCommand { get; }
+        public IAsyncRelayCommand ImportRecipeCommand { get; }
 
         public RecipeEditorViewModel(IDataService dataService, IDialogService dialogService, IAuthService auth)
         {
@@ -71,6 +75,10 @@ namespace BatteryAging.ViewModels
                 () => _auth.HasPermission(Permission.FlowEditor_New));
             GenerateBuilderCommand = new RelayCommand(GenerateFromBuilder,
                 () => _auth.HasPermission(Permission.FlowEditor_New));
+            ExportRecipeCommand = new AsyncRelayCommand(ExportRecipeAsync,
+                () => SelectedRecipe != null && _auth.HasPermission(Permission.FlowEditor_Export));
+            ImportRecipeCommand = new AsyncRelayCommand(ImportRecipeAsync,
+                () => _auth.HasPermission(Permission.FlowEditor_Import));
 
             _ = LoadAsync();
         }
@@ -98,6 +106,7 @@ namespace BatteryAging.ViewModels
 
                 IsDirty = false;
             }
+            ((AsyncRelayCommand)ExportRecipeCommand)?.NotifyCanExecuteChanged();
         }
 
         private async Task LoadAsync()
@@ -203,6 +212,60 @@ namespace BatteryAging.ViewModels
             catch (Exception ex)
             {
                 _dialogService.ShowError($"删除失败: {ex.Message}");
+            }
+        }
+
+        private async Task ExportRecipeAsync()
+        {
+            if (SelectedRecipe == null) return;
+            var path = _dialogService.SaveFileDialog("JSON 文件|*.json", $"{SelectedRecipe.Name}.json", "导出工艺方案");
+            if (string.IsNullOrEmpty(path)) return;
+            try
+            {
+                var json = JsonSerializer.Serialize(SelectedRecipe, new JsonSerializerOptions { WriteIndented = true });
+                await File.WriteAllTextAsync(path, json);
+                await LogAuditAsync("Export", "TestRecipe", SelectedRecipe.Id, $"导出测试方案: {SelectedRecipe.Name}");
+                _dialogService.ShowMessage($"已导出方案到\n{path}");
+            }
+            catch (Exception ex)
+            {
+                _dialogService.ShowError($"导出失败: {ex.Message}");
+            }
+        }
+
+        private async Task ImportRecipeAsync()
+        {
+            var path = _dialogService.OpenFileDialog("JSON 文件|*.json", "导入工艺方案");
+            if (string.IsNullOrEmpty(path)) return;
+            try
+            {
+                var json = await File.ReadAllTextAsync(path);
+                var recipe = JsonSerializer.Deserialize<TestRecipe>(json);
+                if (recipe == null || recipe.Steps == null || recipe.Steps.Count == 0)
+                {
+                    _dialogService.ShowWarning("文件内容无效或不含工步");
+                    return;
+                }
+
+                // 生成新 Id，避免与本地已有方案冲突
+                recipe.Id = Guid.NewGuid().ToString();
+                recipe.Name = string.IsNullOrWhiteSpace(recipe.Name) ? "导入方案" : $"{recipe.Name} (导入)";
+                recipe.CreateTime = DateTime.Now;
+                recipe.UpdateTime = DateTime.Now;
+                recipe.Creator = _auth.CurrentSession.IsAuthenticated ? _auth.CurrentSession.Username : Environment.UserName;
+                recipe.IsActive = true;
+                foreach (var step in recipe.Steps)
+                    step.Id = Guid.NewGuid().ToString();
+
+                await _dataService.SaveRecipeAsync(recipe);
+                await LogAuditAsync("Create", "TestRecipe", recipe.Id, $"导入测试方案: {recipe.Name}");
+                await LoadAsync();
+                SelectedRecipe = Recipes.FirstOrDefault(r => r.Id == recipe.Id);
+                _dialogService.ShowMessage($"已导入方案 [{recipe.Name}]，共 {recipe.Steps.Count} 个工步");
+            }
+            catch (Exception ex)
+            {
+                _dialogService.ShowError($"导入失败: {ex.Message}");
             }
         }
 
