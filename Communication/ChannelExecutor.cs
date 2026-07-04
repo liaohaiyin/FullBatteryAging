@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using BatteryAging.Core.Enums;
@@ -73,6 +76,9 @@ namespace BatteryAging.Communication
         // ── dV/dt 检测 ──
         private double _lastVoltage = double.NaN;
         private DateTime _lastVoltageTime;
+
+        // ── 工况仿真波形 (StepType.Waveform) ──
+        private List<WaveformPoint> _currentWaveform;
 
         // ── dT/dt 温升速率检测（早于绝对温度阈值发现潜在热失控趋势）──
         private double _lastTempForRate = double.NaN;
@@ -337,6 +343,9 @@ namespace BatteryAging.Communication
             StepElapsedSeconds = 0;
             _lastVoltage = double.NaN;
             _lastTempForRate = double.NaN;
+            _currentWaveform = step.Type == StepType.Waveform
+                ? ParseWaveformProfile(step.WaveformProfileJson)
+                : null;
 
             var dtSec = SamplingIntervalMs / 1000.0;
 
@@ -368,6 +377,20 @@ namespace BatteryAging.Communication
             {
                 while (Status == ChannelStatus.Paused && !token.IsCancellationRequested)
                     await Task.Delay(100, token);
+
+                // ── 工况仿真波形：按已过时间插值下发目标电流 ──
+                if (_currentWaveform != null && _currentWaveform.Count > 0)
+                {
+                    var wfCurrent = InterpolateWaveformCurrent(_currentWaveform, StepElapsedSeconds);
+                    var wfSetpoint = new StepSetpoint
+                    {
+                        Type = wfCurrent >= 0 ? StepType.CC_Charge : StepType.CC_Discharge,
+                        Current = Math.Abs(wfCurrent)
+                    };
+                    try { await _driver.ApplyStepAsync(LocalChannelIndex, wfSetpoint, token); }
+                    catch (OperationCanceledException) { break; }
+                    catch { /* 下发失败交由通讯异常计数器统一处理 */ }
+                }
 
                 // ── 采样 ──
                 DeviceMeasurement m;
@@ -445,7 +468,7 @@ namespace BatteryAging.Communication
                 Capacity += dAh;
                 Energy += dWh;
 
-                if (step.Type == StepType.Pulse)
+                if (step.Type == StepType.Pulse || step.Type == StepType.Waveform)
                 {
                     if (m.Current > 0) { TotalChargeCapacity += dAh; TotalChargeEnergy += dWh; }
                     else if (m.Current < 0) { TotalDischargeCapacity += dAh; TotalDischargeEnergy += dWh; }
@@ -554,8 +577,49 @@ namespace BatteryAging.Communication
                             && Math.Abs(Current) <= step.CutoffCurrent) return true;
                     }
                     break;
+                case StepType.Waveform:
+                    if (_currentWaveform != null && _currentWaveform.Count > 0
+                        && StepElapsedSeconds >= _currentWaveform[_currentWaveform.Count - 1].TimeSeconds) return true;
+                    break;
             }
             return CheckTrigger(step);
+        }
+
+        /// <summary>解析导入的时间-电流波形 JSON，按时间升序排列</summary>
+        private static List<WaveformPoint> ParseWaveformProfile(string json)
+        {
+            if (string.IsNullOrWhiteSpace(json)) return new List<WaveformPoint>();
+            try
+            {
+                var list = JsonSerializer.Deserialize<List<WaveformPoint>>(json) ?? new List<WaveformPoint>();
+                return list.OrderBy(p => p.TimeSeconds).ToList();
+            }
+            catch
+            {
+                return new List<WaveformPoint>();
+            }
+        }
+
+        /// <summary>按已过时间线性插值波形电流，超出范围取端点值</summary>
+        private static double InterpolateWaveformCurrent(List<WaveformPoint> points, double t)
+        {
+            if (points.Count == 1 || t <= points[0].TimeSeconds) return points[0].Current;
+            var last = points[points.Count - 1];
+            if (t >= last.TimeSeconds) return last.Current;
+
+            for (int i = 1; i < points.Count; i++)
+            {
+                if (t <= points[i].TimeSeconds)
+                {
+                    var p0 = points[i - 1];
+                    var p1 = points[i];
+                    var span = p1.TimeSeconds - p0.TimeSeconds;
+                    if (span <= 0) return p1.Current;
+                    var ratio = (t - p0.TimeSeconds) / span;
+                    return p0.Current + (p1.Current - p0.Current) * ratio;
+                }
+            }
+            return last.Current;
         }
 
         private bool CheckTrigger(TestStep step)

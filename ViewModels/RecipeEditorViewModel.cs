@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -49,6 +51,7 @@ namespace BatteryAging.ViewModels
         public IRelayCommand GenerateBuilderCommand { get; }
         public IAsyncRelayCommand ExportRecipeCommand { get; }
         public IAsyncRelayCommand ImportRecipeCommand { get; }
+        public IAsyncRelayCommand ImportWaveformCommand { get; }
 
         public RecipeEditorViewModel(IDataService dataService, IDialogService dialogService, IAuthService auth)
         {
@@ -79,6 +82,8 @@ namespace BatteryAging.ViewModels
                 () => SelectedRecipe != null && _auth.HasPermission(Permission.FlowEditor_Export));
             ImportRecipeCommand = new AsyncRelayCommand(ImportRecipeAsync,
                 () => _auth.HasPermission(Permission.FlowEditor_Import));
+            ImportWaveformCommand = new AsyncRelayCommand(ImportWaveformAsync,
+                () => SelectedStep != null && _auth.HasPermission(Permission.FlowEditor_Edit));
 
             _ = LoadAsync();
         }
@@ -88,6 +93,7 @@ namespace BatteryAging.ViewModels
             ((RelayCommand)RemoveStepCommand).NotifyCanExecuteChanged();
             ((RelayCommand)MoveUpCommand).NotifyCanExecuteChanged();
             ((RelayCommand)MoveDownCommand).NotifyCanExecuteChanged();
+            ((AsyncRelayCommand)ImportWaveformCommand).NotifyCanExecuteChanged();
         }
 
         partial void OnSelectedRecipeChanged(TestRecipe value)
@@ -182,6 +188,12 @@ namespace BatteryAging.ViewModels
                             return;
                         }
                     }
+                    if (s.Type == StepType.Waveform && string.IsNullOrWhiteSpace(s.WaveformProfileJson))
+                    {
+                        _dialogService.ShowWarning(
+                            $"工步 #{s.Sequence} ({EnumHelper.GetDescription(s.Type)}) 尚未导入工况波形文件，\n请导入 CSV 波形后再保存。");
+                        return;
+                    }
                 }
 
                 await _dataService.SaveRecipeAsync(recipe);
@@ -266,6 +278,43 @@ namespace BatteryAging.ViewModels
             catch (Exception ex)
             {
                 _dialogService.ShowError($"导入失败: {ex.Message}");
+            }
+        }
+
+        private async Task ImportWaveformAsync()
+        {
+            if (SelectedStep == null) return;
+            var path = _dialogService.OpenFileDialog("CSV 文件|*.csv", "导入工况波形（每行：时间秒,电流A）");
+            if (string.IsNullOrEmpty(path)) return;
+            try
+            {
+                var lines = await File.ReadAllLinesAsync(path);
+                var points = new List<WaveformPoint>();
+                foreach (var line in lines)
+                {
+                    if (string.IsNullOrWhiteSpace(line)) continue;
+                    var parts = line.Split(new[] { ',', ';', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (parts.Length < 2) continue;
+                    if (!double.TryParse(parts[0].Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out var t)) continue;
+                    if (!double.TryParse(parts[1].Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out var i)) continue;
+                    points.Add(new WaveformPoint { TimeSeconds = t, Current = i });
+                }
+
+                if (points.Count == 0)
+                {
+                    _dialogService.ShowWarning("未解析到有效数据行，格式应为每行：时间(秒),电流(A)");
+                    return;
+                }
+
+                points = points.OrderBy(p => p.TimeSeconds).ToList();
+                SelectedStep.WaveformProfileJson = JsonSerializer.Serialize(points);
+                SelectedStep.WaveformFileName = Path.GetFileName(path);
+                IsDirty = true;
+                _dialogService.ShowMessage($"已导入波形 {points.Count} 点，时长 {points[points.Count - 1].TimeSeconds:F0} s");
+            }
+            catch (Exception ex)
+            {
+                _dialogService.ShowError($"导入波形失败: {ex.Message}");
             }
         }
 

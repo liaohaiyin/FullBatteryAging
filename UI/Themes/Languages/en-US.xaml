@@ -246,6 +246,8 @@
     <sys:String x:Key="Recipe_PulseCurrent">Pulse Current (A, +chg/-dis)</sys:String>
     <sys:String x:Key="Recipe_PulseOn">On time (s)</sys:String>
     <sys:String x:Key="Recipe_PulseOff">Off time (s)</sys:String>
+    <sys:String x:Key="Recipe_Waveform">Profile Simulation Waveform</sys:String>
+    <sys:String x:Key="Recipe_WaveformImport">Import CSV Waveform...</sys:String>
     <sys:String x:Key="Recipe_Cutoff">Cutoff</sys:String>
     <sys:String x:Key="Recipe_CutoffVoltage">Cutoff Voltage (V)</sys:String>
     <sys:String x:Key="Recipe_CutoffCurrent">Cutoff Current (A)</sys:String>

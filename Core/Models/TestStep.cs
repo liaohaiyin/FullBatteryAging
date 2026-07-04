@@ -31,6 +31,10 @@ namespace BatteryAging.Core.Models
         public double PulseOnSeconds { get; set; }   // 脉冲导通时长 (s)
         public double PulseOffSeconds { get; set; }  // 脉冲间歇时长 (s)
 
+        // ── 工况仿真波形 (Type=Waveform 时有效) ──
+        public string WaveformProfileJson { get; set; }  // 导入的时间-电流波形，JSON 序列化 List<WaveformPoint>
+        public string WaveformFileName { get; set; }      // 导入来源文件名（仅供显示）
+
         // ── 截止条件 ──
         public double CutoffVoltage { get; set; }        // 截止电压 (V)
         public double DurationSeconds { get; set; }      // 工步时长 (s)

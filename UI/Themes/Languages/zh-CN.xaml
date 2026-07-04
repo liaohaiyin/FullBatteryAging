@@ -245,6 +245,8 @@
     <sys:String x:Key="Recipe_PulseCurrent">脉冲电流 (A，正充负放)</sys:String>
     <sys:String x:Key="Recipe_PulseOn">导通时长 (s)</sys:String>
     <sys:String x:Key="Recipe_PulseOff">间歇时长 (s)</sys:String>
+    <sys:String x:Key="Recipe_Waveform">工况仿真波形</sys:String>
+    <sys:String x:Key="Recipe_WaveformImport">导入 CSV 波形...</sys:String>
     <sys:String x:Key="Recipe_Cutoff">截止条件</sys:String>
     <sys:String x:Key="Recipe_CutoffVoltage">截止电压 (V)</sys:String>
     <sys:String x:Key="Recipe_CutoffCurrent">截止电流 (A)</sys:String>

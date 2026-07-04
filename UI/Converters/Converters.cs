@@ -67,6 +67,7 @@ namespace BatteryAging.UI.Converters
                     StepType.Rest => new SolidColorBrush(Color.FromRgb(0x90, 0xA4, 0xAE)),
                     StepType.Loop => new SolidColorBrush(Color.FromRgb(0x7E, 0x57, 0xC2)),
                     StepType.End => new SolidColorBrush(Color.FromRgb(0x42, 0x42, 0x42)),
+                    StepType.Waveform => new SolidColorBrush(Color.FromRgb(0x1E, 0x88, 0xE5)),
                     _ => Brushes.Gray
                 };
             }

@@ -44,7 +44,11 @@ namespace BatteryAging.Core.Enums
         SubCall,
 
         [Description("结束")]
-        End
+        End,
+
+        // 新增工步类型请追加在末尾，切勿插入中间——Type 按枚举序号持久化，插入会错位已存方案数据
+        [Description("工况仿真(CSV波形)")]
+        Waveform
     }
 
     /// <summary>

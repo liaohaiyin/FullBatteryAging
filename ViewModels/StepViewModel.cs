@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Text.Json;
 using CommunityToolkit.Mvvm.ComponentModel;
 using BatteryAging.Core.Enums;
 using BatteryAging.Core.Models;
@@ -48,6 +50,8 @@ namespace BatteryAging.ViewModels
             _cellMinVoltage = step.CellMinVoltage;
             _maxCellVoltageDelta = step.MaxCellVoltageDelta;
             _maxTempDelta = step.MaxTempDelta;
+            _waveformProfileJson = step.WaveformProfileJson;
+            _waveformFileName = step.WaveformFileName;
         }
 
         [ObservableProperty] private int _sequence;
@@ -154,5 +158,37 @@ namespace BatteryAging.ViewModels
 
         [ObservableProperty] private double _maxTempDelta;
         partial void OnMaxTempDeltaChanged(double value) => _step.MaxTempDelta = value;
+
+        // ── 工况仿真波形 (Type=Waveform) ──
+        [ObservableProperty] private string _waveformProfileJson;
+        partial void OnWaveformProfileJsonChanged(string value)
+        {
+            _step.WaveformProfileJson = value;
+            OnPropertyChanged(nameof(WaveformSummary));
+        }
+
+        [ObservableProperty] private string _waveformFileName;
+        partial void OnWaveformFileNameChanged(string value)
+        {
+            _step.WaveformFileName = value;
+            OnPropertyChanged(nameof(WaveformSummary));
+        }
+
+        public string WaveformSummary
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(WaveformProfileJson)) return "未导入波形";
+                try
+                {
+                    var pts = JsonSerializer.Deserialize<List<WaveformPoint>>(WaveformProfileJson);
+                    if (pts == null || pts.Count == 0) return "未导入波形";
+                    var dur = pts[pts.Count - 1].TimeSeconds;
+                    var prefix = string.IsNullOrEmpty(WaveformFileName) ? "" : $"{WaveformFileName} · ";
+                    return $"{prefix}{pts.Count} 点，时长 {dur:F0} s";
+                }
+                catch { return "波形数据无效"; }
+            }
+        }
     }
 }

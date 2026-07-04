@@ -283,6 +283,15 @@
                             </Grid>
                         </StackPanel>
 
+                        <StackPanel Margin="0,0,0,12"
+                                    Visibility="{Binding Type, Converter={StaticResource StepTypeEqVisCv}, ConverterParameter=Waveform}">
+                            <TextBlock Text="{DynamicResource Recipe_Waveform}" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11"/>
+                            <Button Content="{DynamicResource Recipe_WaveformImport}"
+                                    HorizontalAlignment="Left" Margin="0,4,0,4"
+                                    Command="{Binding DataContext.ImportWaveformCommand, RelativeSource={RelativeSource AncestorType=Page}}"/>
+                            <TextBlock Text="{Binding WaveformSummary}" Foreground="{StaticResource VsTextMutedBrush}" FontSize="11" TextWrapping="Wrap"/>
+                        </StackPanel>
+
                         <Separator Margin="0,0,0,8"/>
 
                         <TextBlock Text="{DynamicResource Recipe_Cutoff}" FontWeight="SemiBold" Margin="0,0,0,6" FontSize="12"
