@@ -20,10 +20,14 @@ namespace BatteryAging.Communication
         private readonly Dictionary<string, IBmsDriver> _bmsDrivers = new();
         private readonly List<Cabinet> _cabinets = new();
 
+        /// <summary>全部通道，键为全局通道号</summary>
         public IReadOnlyDictionary<int, ChannelExecutor> Channels => _channels;
+        /// <summary>当前已启用并初始化的机柜列表</summary>
         public IReadOnlyList<Cabinet> Cabinets => _cabinets;
+        /// <summary>已初始化的通道总数</summary>
         public int ChannelCount => _channels.Count;
 
+        /// <summary>任一机柜/通道/BMS 驱动发生通讯异常时触发</summary>
         public event EventHandler<string> CommunicationError;
 
         /// <summary>用一组机柜初始化</summary>
@@ -119,11 +123,14 @@ namespace BatteryAging.Communication
             }
         }
 
+        /// <summary>按全局通道号取通道，不存在返回 null</summary>
         public ChannelExecutor GetChannel(int index)
             => _channels.TryGetValue(index, out var ch) ? ch : null;
 
+        /// <summary>全部通道</summary>
         public IEnumerable<ChannelExecutor> GetAll() => _channels.Values;
 
+        /// <summary>指定机柜下的所有通道</summary>
         public IEnumerable<ChannelExecutor> GetByCabinet(string cabinetId)
             => _channels.Values.Where(c => c.CabinetId == cabinetId);
 
@@ -158,6 +165,7 @@ namespace BatteryAging.Communication
             }, TaskScheduler.Default);
         }
 
+        /// <summary>停止所有正在运行/暂停的通道</summary>
         public void StopAll()
         {
             foreach (var ch in _channels.Values)

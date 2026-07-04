@@ -19,9 +19,12 @@ namespace BatteryAging.Communication
     /// </summary>
     public class ChannelExecutor
     {
+        /// <summary>全局通道号（跨机柜连续编号），UI/数据库都用这个区分通道</summary>
         public int ChannelIndex { get; }
+        /// <summary>所属机柜 Id</summary>
         public string CabinetId { get; }
-        public int LocalChannelIndex { get; }     // 机柜内通道号（1-based）
+        /// <summary>机柜内本地通道号（1-based），与设备驱动通信时使用</summary>
+        public int LocalChannelIndex { get; }
 
         private readonly IDeviceDriver _driver;
         private CancellationTokenSource _cts;
@@ -38,47 +41,74 @@ namespace BatteryAging.Communication
         private double _cycBaseChgCap, _cycBaseDisCap, _cycBaseChgEng, _cycBaseDisEng;
         private int _completedCycles = 0;
 
-        // 用于多通道同步触发的屏障（外部传入）
+        /// <summary>多通道同步启动屏障，由 ChannelManager.SyncStartAsync 注入，见该方法说明</summary>
         public Barrier SyncBarrier { get; set; }
 
         // ── 状态 ──
+        /// <summary>通道当前运行状态</summary>
         public ChannelStatus Status { get; private set; } = ChannelStatus.Idle;
+        /// <summary>当前正在执行的测试方案（含全部工步）</summary>
         public TestRecipe CurrentRecipe { get; private set; }
+        /// <summary>当前正在执行的工步</summary>
         public TestStep CurrentStep { get; private set; }
+        /// <summary>当前工步在方案中的索引（0-based）</summary>
         public int CurrentStepIndex { get; private set; }
+        /// <summary>当前处于 Loop 工步的第几轮（0-based）</summary>
         public int CurrentLoopIndex { get; private set; }
+        /// <summary>本次运行对应的测试记录（落库实体）</summary>
         public TestRecord CurrentRecord { get; private set; }
 
+        /// <summary>已完整跑完的循环圈数</summary>
         public int CompletedCycles => _completedCycles;
 
         // ── 实时测量值 ──
+        /// <summary>最近一次采样的端电压 (V)</summary>
         public double Voltage { get; private set; }
+        /// <summary>最近一次采样的电流 (A)，正充负放</summary>
         public double Current { get; private set; }
+        /// <summary>当前工步内累计容量 (Ah)，进入新工步时清零</summary>
         public double Capacity { get; private set; }
+        /// <summary>当前工步内累计能量 (Wh)，进入新工步时清零</summary>
         public double Energy { get; private set; }
+        /// <summary>最近一次采样的温度 (℃)</summary>
         public double Temperature { get; private set; }
+        /// <summary>当前工步已运行时长 (s)</summary>
         public double StepElapsedSeconds { get; private set; }
+        /// <summary>本次测试从启动至今的总运行时长 (s)，跨工步累计、断点恢复时接续</summary>
         public double TotalElapsedSeconds { get; private set; }
 
         // 汇总
+        /// <summary>本次测试累计充电容量 (Ah)</summary>
         public double TotalChargeCapacity { get; private set; }
+        /// <summary>本次测试累计放电容量 (Ah)</summary>
         public double TotalDischargeCapacity { get; private set; }
+        /// <summary>本次测试累计充电能量 (Wh)</summary>
         public double TotalChargeEnergy { get; private set; }
+        /// <summary>本次测试累计放电能量 (Wh)</summary>
         public double TotalDischargeEnergy { get; private set; }
+        /// <summary>联动的环境温箱，为 null 时不做温控联动</summary>
         public IClimateChamber Chamber { get; set; }
 
         // ── BMS（PACK 单体/多温度采集）──
+        /// <summary>联动的 BMS 采集驱动，为 null 时不采集单体电压/多点温度</summary>
         public IBmsDriver Bms { get; set; }
+        /// <summary>PACK 单体节数（用于分配 CellVoltages 数组大小等）</summary>
         public int CellCount { get; set; }
+        /// <summary>温度采集点数</summary>
         public int TempPointCount { get; set; }
         private int _bmsConsecErrors = 0;
         private const int MaxBmsErrors = 5;
 
         // BMS 实时派生（供 UI 直读）
+        /// <summary>最近一次 BMS 采样的单体最高电压 (V)</summary>
         public double MaxCellVoltage { get; private set; }
+        /// <summary>最近一次 BMS 采样的单体最低电压 (V)</summary>
         public double MinCellVoltage { get; private set; }
+        /// <summary>最近一次 BMS 采样的单体压差 (V) = 最高 - 最低</summary>
         public double CellVoltageDelta { get; private set; }
+        /// <summary>最近一次 BMS 采样的 PACK 最高温度 (℃)</summary>
         public double MaxPackTemperature { get; private set; }
+        /// <summary>最近一次 BMS 采样的温差 (℃)</summary>
         public double TempDelta { get; private set; }
 
         // ── dV/dt 检测 ──
@@ -97,15 +127,23 @@ namespace BatteryAging.Communication
         private const int MaxConsecutiveCommErrors = 5;
 
         // ── 配置 ──
+        /// <summary>采样/下发周期 (ms)，决定每个工步内轮询设备的频率</summary>
         public int SamplingIntervalMs { get; set; } = 1000;
 
         // ── 事件 ──
+        /// <summary>每次采样产生一条 DataPoint 时触发，供落库/绘图订阅</summary>
         public event EventHandler<DataSampleEventArgs> DataSampled;
+        /// <summary>切换到新工步时触发</summary>
         public event EventHandler<StepChangedEventArgs> StepChanged;
+        /// <summary>运行状态变化时触发（含保护/故障信息）</summary>
         public event EventHandler<ChannelStatusChangedEventArgs> StatusChanged;
+        /// <summary>断点信息更新时触发（约每 10 秒一次），供持久化层写入续测断点</summary>
         public event EventHandler<CheckpointEventArgs> CheckpointReached;
+        /// <summary>Loop 工步跑完一圈时触发，携带本圈充放电量/能量增量</summary>
         public event EventHandler<CycleCompletedEventArgs> CycleCompleted;
+        /// <summary>DCIR 内阻测量完成时触发</summary>
         public event EventHandler<DcirResultEventArgs> DcirMeasured;
+        /// <summary>BMS 采到新一帧单体电压/温度数据时触发</summary>
         public event EventHandler<BmsSampleEventArgs> BmsSampled;
 
         public ChannelExecutor(int globalChannelIndex, IDeviceDriver driver,
@@ -169,18 +207,21 @@ namespace BatteryAging.Communication
             return _runningTask;
         }
 
+        /// <summary>暂停：仅切换状态标志，采样循环仍在跑但会在 Paused 期间原地等待，不下发新设定值</summary>
         public void Pause()
         {
             if (Status == ChannelStatus.Running)
                 ChangeStatus(ChannelStatus.Paused, "已暂停");
         }
 
+        /// <summary>从暂停恢复运行</summary>
         public void Resume()
         {
             if (Status == ChannelStatus.Paused)
                 ChangeStatus(ChannelStatus.Running, "已恢复");
         }
 
+        /// <summary>用户主动停止：取消后台任务、尝试通知驱动停止输出、标记为 Stopped</summary>
         public void Stop()
         {
             _cts?.Cancel();

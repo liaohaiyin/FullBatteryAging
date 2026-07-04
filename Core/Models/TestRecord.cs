@@ -26,11 +26,11 @@ namespace BatteryAging.Core.Models
 
         public DateTime? EndTime { get; set; }
 
-        public ChannelStatus Status { get; set; }
+        public ChannelStatus Status { get; set; }         // 记录结束时的终态（Completed/Stopped/Error/Protected）
 
-        public ProtectionType ProtectionTrigger { get; set; } = ProtectionType.None;
+        public ProtectionType ProtectionTrigger { get; set; } = ProtectionType.None;  // 触发保护时的具体类型
 
-        public string FailReason { get; set; }
+        public string FailReason { get; set; }            // 异常/保护/中断时的原因描述，正常完成为空
 
         // ── 汇总统计 ──
         public double TotalChargeCapacity { get; set; }   // 总充电容量 (Ah)
@@ -53,10 +53,10 @@ namespace BatteryAging.Core.Models
         public double LastTotalElapsed { get; set; }      // 已运行总秒数
         public DateTime LastCheckpointTime { get; set; }  // 最后一次检查点时间
 
-        public string Operator { get; set; } = Environment.UserName;
+        public string Operator { get; set; } = Environment.UserName;  // 启动测试时的操作员
 
         // ── 工单关联（冗余，避免多一次联表查询）──
-        public string WorkOrderId { get; set; }
-        public string WorkOrderNo { get; set; }
+        public string WorkOrderId { get; set; }           // 关联的 WorkOrder.Id
+        public string WorkOrderNo { get; set; }            // 工单号（冗余，供查询/报表直接展示）
     }
 }
