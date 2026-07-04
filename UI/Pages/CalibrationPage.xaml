@@ -153,7 +153,7 @@
                                 Command="{Binding DataContext.SaveRecordCommand, RelativeSource={RelativeSource AncestorType=Page}}"
                                 Margin="0,14,0,0" Padding="8,6" HorizontalAlignment="Right">
                             <StackPanel Orientation="Horizontal">
-                                <ctrl:VsIcon Kind="{StaticResource Icon.ContentSave}" Width="14" Height="14" VerticalAlignment="Center"/>
+                                <ctrl:VsIcon Kind="{StaticResource Icon.ContentSave}" Width="14" Height="14" VerticalAlignment="Center" Foreground="White"/>
                                 <TextBlock Text="{DynamicResource Calibration_Save}" Margin="6,0,0,0"/>
                             </StackPanel>
                         </Button>
