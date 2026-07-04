@@ -11,9 +11,7 @@ namespace BatteryAging.Drivers
     // ════════════════════════════════════════════════════════════════════
     public interface IClimateChamber : IDisposable
     {
-        /// <summary>是否已连接</summary>
         bool IsConnected { get; }
-        /// <summary>连接到温箱控制器</summary>
         Task<bool> ConnectAsync(CancellationToken token = default);
 
         /// <summary>设定目标温度(℃)</summary>
@@ -32,7 +30,6 @@ namespace BatteryAging.Drivers
         Task<bool> WaitForTemperatureAsync(double target, double tolerance, int holdSeconds,
             int timeoutSeconds, IProgress<double> progress = null, CancellationToken token = default);
 
-        /// <summary>通讯异常事件</summary>
         event EventHandler<string> CommunicationError;
     }
 
