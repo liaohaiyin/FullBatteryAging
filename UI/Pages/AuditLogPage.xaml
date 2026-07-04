@@ -81,7 +81,7 @@
                         <DataGridTextColumn Header="{DynamicResource AuditLog_Col_User}" Binding="{Binding Username}" Width="100"/>
                         <DataGridTextColumn Header="{DynamicResource AuditLog_Col_Action}" Binding="{Binding Action}" Width="90"/>
                         <DataGridTextColumn Header="{DynamicResource AuditLog_Col_EntityType}" Binding="{Binding EntityType}" Width="120"/>
-                        <DataGridTextColumn Header="{DynamicResource AuditLog_Col_EntityId}" Binding="{Binding EntityId}" Width="140"/>
+                        <DataGridTextColumn Header="{DynamicResource AuditLog_Col_EntityId}" Binding="{Binding EntityId}" Width="260"/>
                         <DataGridTextColumn Header="{DynamicResource AuditLog_Col_Detail}" Binding="{Binding Detail}" Width="*"/>
                     </DataGrid.Columns>
                 </DataGrid>

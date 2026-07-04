@@ -169,7 +169,7 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="{DynamicResource Recipe_Col_Seq}" Binding="{Binding Sequence}" Width="50" IsReadOnly="True"/>
                         <DataGridTextColumn Header="{DynamicResource Recipe_Col_Name}" Binding="{Binding Name}" Width="120"/>
-                        <DataGridTemplateColumn Header="{DynamicResource Recipe_Col_Type}" Width="120">
+                        <DataGridTemplateColumn Header="{DynamicResource Recipe_Col_Type}" Width="150">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Type, Converter={StaticResource EnumDescCv}}"
