@@ -60,7 +60,7 @@ namespace BatteryAging.Services
                 : "容量未见明显衰减趋势，暂无法预测寿命终止点";
     }
 
-    /// <summary>dQ/dV 微分容量曲线上的一个采样点</summary>
+    /// <summary>dQ/dV 微分容量曲线上的一个采样点，电压变化对应的容量变化</summary>
     public class DqDvPoint
     {
         public double Voltage { get; set; }
@@ -71,11 +71,14 @@ namespace BatteryAging.Services
     public class ChannelUtilization
     {
         public int ChannelIndex { get; set; }
+        //占用时间
         public double OccupiedHours { get; set; }
         public double WindowHours { get; set; }
+        //利用率
         public double UtilizationPercent { get; set; }
         public int TotalRecords { get; set; }
         public int PassedRecords { get; set; }
+        //通过率百分比
         public double PassRatePercent { get; set; }
     }
 
@@ -85,7 +88,11 @@ namespace BatteryAging.Services
         public DateTime WindowStart { get; set; }
         public DateTime WindowEnd { get; set; }
         public List<ChannelUtilization> Channels { get; set; } = new();
+
+        //总体利用率百分比
         public double OverallUtilizationPercent { get; set; }
+
+        //总体通过率百分比
         public double OverallPassRatePercent { get; set; }
     }
 
@@ -95,13 +102,17 @@ namespace BatteryAging.Services
     /// </summary>
     public class EnergyCostReport
     {
+        //总充电能量
         public double TotalChargeEnergyWh { get; set; }
         public double TotalDischargeEnergyWh { get; set; }
         public double FeedbackEfficiency { get; set; } = 0.85;
+        //每千瓦时电价
         public double ElectricityPricePerKwh { get; set; }
-
+        //反馈能量
         public double FeedbackEnergyWh => TotalDischargeEnergyWh * FeedbackEfficiency;
+        //净能量
         public double NetEnergyWh => Math.Max(0, TotalChargeEnergyWh - FeedbackEnergyWh);
+        //加馈节电率
         public double FeedbackSavingPercent => TotalChargeEnergyWh > 0 ? FeedbackEnergyWh / TotalChargeEnergyWh * 100 : 0;
         public double EstimatedCost => NetEnergyWh / 1000.0 * ElectricityPricePerKwh;
     }
