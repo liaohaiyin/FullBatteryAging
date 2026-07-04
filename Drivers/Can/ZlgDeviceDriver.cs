@@ -150,6 +150,11 @@ namespace BatteryAging.Drivers.Can
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// CAN 是总线广播式协议，遥测数据由设备主动周期发送、后台 ReceiveLoop 持续收帧缓存，
+        /// 这里不像 Modbus/串口那样主动发起"读请求"，而是直接取最近一次缓存的帧。
+        /// 超过 3 秒没收到新遥测帧就视为该通道失联（设备离线/总线故障/ID 配置错误）。
+        /// </summary>
         public Task<DeviceMeasurement> ReadAsync(int channelIndex, CancellationToken token = default)
         {
             if (_latest.TryGetValue(channelIndex, out var m) && (DateTime.Now - m.Timestamp).TotalSeconds <= 3)
@@ -211,9 +216,12 @@ namespace BatteryAging.Drivers.Can
 
         private void ParseTelemetryFrame(ZlgCan.ZCAN_CAN_FRAME f)
         {
+            // & 0x1FFFFFFF 去掉扩展帧标志位，只保留 29 位的实际 CAN ID
             uint id = f.can_id & 0x1FFFFFFF;
             if (id < _map.TelemetryBaseId || f.data == null || f.data.Length < 6) return;
 
+            // 反推 CmdId() 的编码方式：ID = 基准ID + 通道号(0-based) * 跨度，
+            // 除不尽说明这帧不属于本机映射范围的通道遥测，直接丢弃。
             uint stride = Math.Max(1u, _map.TelemetryIdStridePerChannel);
             uint offset = (id - _map.TelemetryBaseId) / stride;
             if ((id - _map.TelemetryBaseId) % stride != 0) return;

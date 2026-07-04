@@ -26,6 +26,12 @@ namespace BatteryAging.Services
         string GenerateLicense(string machineCode, DateTime expiry); // 厂商端生成
     }
 
+    /// <summary>
+    /// 离线机器码授权：授权码格式 BA-到期日-签名，签名 = HMAC-SHA256(机器码|到期日, SecretKey)。
+    /// 全程本地校验、不依赖任何服务器，厂商侧用同一份 SecretKey 通过 GenerateLicense
+    /// 离线生成授权码发给客户即可。机器码由主板/系统 GUID + 主网卡 MAC + CPU 核数派生，
+    /// 换机器或改硬件后机器码会变，原授权码即失效。
+    /// </summary>
     public class LicenseService : ILicenseService
     {
         // ⚠ 发布前务必替换为你自己的随机密钥，并妥善保管（不要泄露给客户）
@@ -119,6 +125,7 @@ namespace BatteryAging.Services
             return Convert.ToHexString(sig, 0, 12);   // 24 hex
         }
 
+        /// <summary>逐字符异或比较而不提前 return，比较耗时与内容无关，避免通过响应时间差侧信道爆破签名</summary>
         private static bool ConstTimeEquals(string a, string b)
         {
             if (a.Length != b.Length) return false;

@@ -249,6 +249,7 @@ namespace BatteryAging.Services
 
             if (slope < 0)
             {
+                // 回归直线 y = slope*x + intercept，解出 y = EndOfLifeCapacity 时的 x（循环数）
                 double eolCycle = (result.EndOfLifeCapacity - intercept) / slope;
                 if (eolCycle > result.CurrentCycle)
                 {
@@ -332,6 +333,9 @@ namespace BatteryAging.Services
                 double occupiedHours = 0;
                 foreach (var r in g)
                 {
+                    // 记录的实际起止时间可能跨出统计窗口两端（测试提前开始/仍未结束），
+                    // 这里把每条记录的区间裁剪到 [windowStart, windowEnd] 内再计入占用时长，
+                    // 避免把窗口外的时间也算进稼动率。
                     var s = r.StartTime > windowStart ? r.StartTime : windowStart;
                     var e = (r.EndTime ?? DateTime.Now) < windowEnd ? (r.EndTime ?? DateTime.Now) : windowEnd;
                     if (e > s) occupiedHours += (e - s).TotalHours;
