@@ -21,7 +21,7 @@ namespace BatteryAging.Core.Models
         [StringLength(50)]
         public string Operator { get; set; }
 
-        public int PlannedQuantity { get; set; }
+        public int PlannedQuantity { get; set; }          // 计划测试电芯/PACK 数量
         public WorkOrderStatus Status { get; set; } = WorkOrderStatus.Open;
 
         public DateTime CreateTime { get; set; } = DateTime.Now;

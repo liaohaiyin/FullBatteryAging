@@ -40,10 +40,10 @@ namespace BatteryAging.Core.Models
         public double DurationSeconds { get; set; }      // 工步时长 (s)
         public double CapacityLimit { get; set; }        // 容量上限 (Ah)
 
-        // ── 触发跳转 ──
-        public TriggerType TriggerType { get; set; }
-        public CompareOperator TriggerOperator { get; set; }
-        public double TriggerValue { get; set; }
+        // ── 触发跳转 ──（TriggerValue=0 视为未配置触发条件，见 ChannelExecutor.CheckTrigger）
+        public TriggerType TriggerType { get; set; }      // 监测哪个量：时间/电压/电流/容量/能量/温度
+        public CompareOperator TriggerOperator { get; set; }  // 与 TriggerValue 的比较关系
+        public double TriggerValue { get; set; }          // 触发阈值
         public int JumpTargetIndex { get; set; } = -1;   // 触发后跳转到的工步索引(0-based)，-1=不跳转(仅结束本步)
 
         // ── 循环参数 ──（仅 Loop 类型有效）

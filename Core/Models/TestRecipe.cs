@@ -28,8 +28,8 @@ namespace BatteryAging.Core.Models
 
         public string Creator { get; set; } = Environment.UserName;
 
-        public List<TestStep> Steps { get; set; } = new();
+        public List<TestStep> Steps { get; set; } = new();   // 按 Sequence 顺序执行的工步列表
 
-        public bool IsActive { get; set; } = true;
+        public bool IsActive { get; set; } = true;   // 软删除标记：DeleteRecipeAsync 只置 false，不物理删除
     }
 }
