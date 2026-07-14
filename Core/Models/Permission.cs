@@ -124,6 +124,8 @@ namespace BatteryAging.Core.Models
         public Permission Permissions { get; init; }
         public DateTime LoginTime { get; init; }
         public bool IsDeveloper { get; init; }
+        /// <summary>是否为演示试用会话（跳过登录、按机器码限时 7 天，见 ILicenseService.ActivateDemo）</summary>
+        public bool IsDemo { get; init; }
 
         public bool HasPermission(Permission permission) =>
             IsAuthenticated && (Permissions & permission) == permission;

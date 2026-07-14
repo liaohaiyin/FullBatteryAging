@@ -50,6 +50,10 @@
                         Style="{StaticResource VsAccentButton}"
                         Command="{Binding ActivateCommand}"/>
             </Grid>
+            <Button Content="没有授权码？演示试用 7 天" HorizontalAlignment="Left"
+                    Margin="0,10,0,0" Padding="4,2"
+                    Style="{StaticResource VsFlatButton}"
+                    Command="{Binding TryDemoCommand}"/>
         </StackPanel>
 
         <TextBlock Grid.Row="4" Text="{Binding StatusText}" TextWrapping="Wrap"

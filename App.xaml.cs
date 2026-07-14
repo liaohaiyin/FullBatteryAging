@@ -60,8 +60,9 @@ namespace BatteryAging
                 StartsWith("en", StringComparison.OrdinalIgnoreCase) == true;
             // ── 主题服务（构造即套用持久化主题）──
             _ = Services.GetRequiredService<IThemeService>();
-            var license = Services.GetRequiredService<ILicenseService>();            
+            var license = Services.GetRequiredService<ILicenseService>();
             var licStatus = license.CheckCurrentLicense();
+            var demoMode = licStatus.IsValid && licStatus.IsDemo;
             if (!licStatus.IsValid)
             {
                 var licVm = Services.GetRequiredService<LicenseWindowViewModel>();
@@ -71,18 +72,27 @@ namespace BatteryAging
                     Shutdown();
                     return;
                 }
+                demoMode = licVm.IsDemoActivated;
             }
 
             // ── 鉴权初始化（建内置角色 + 默认 admin）──
-            Task.Run(() => Services.GetRequiredService<IAuthService>().InitializeAsync()).GetAwaiter().GetResult();
+            var auth = Services.GetRequiredService<IAuthService>();
+            Task.Run(() => auth.InitializeAsync()).GetAwaiter().GetResult();
 
-            // ── 登录闸门 ──
-            var loginVm = Services.GetRequiredService<LoginWindowViewModel>();
-            var login = new LoginWindow(loginVm);
-            if (login.ShowDialog() != true)
+            // ── 登录闸门（演示试用跳过登录，直接以演示会话进入）──
+            if (demoMode)
             {
-                Shutdown();
-                return;
+                auth.LoginAsDemo();
+            }
+            else
+            {
+                var loginVm = Services.GetRequiredService<LoginWindowViewModel>();
+                var login = new LoginWindow(loginVm);
+                if (login.ShowDialog() != true)
+                {
+                    Shutdown();
+                    return;
+                }
             }
 
             // ── 初始化机柜与通道 ──

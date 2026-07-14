@@ -19,6 +19,7 @@ namespace BatteryAging.ViewModels
         private readonly DispatcherTimer _clockTimer;
         private readonly IAuthService _auth;
         private readonly IDialogService _dialogService;
+        private readonly ILicenseService _license;
 
         [ObservableProperty] private Page _currentPage;
         [ObservableProperty] private string _currentTime;
@@ -53,12 +54,14 @@ namespace BatteryAging.ViewModels
         public IRelayCommand NavCellHeatmapCommand { get; }
         public IRelayCommand NavLogoutCommand { get; }
 
-        public MainWindowViewModel(IServiceProvider services, ILanguageService language, IAuthService auth, IDialogService dialogService)
+        public MainWindowViewModel(IServiceProvider services, ILanguageService language, IAuthService auth,
+            IDialogService dialogService, ILicenseService license)
         {
             _services = services;
             _language = language;
             _auth = auth;
             _dialogService = dialogService;
+            _license = license;
 
             NavExecutionCommand = new RelayCommand(() => CurrentPage = _services.GetRequiredService<TestExecutionPage>());
             NavRecipeCommand = new RelayCommand(() => CurrentPage = _services.GetRequiredService<RecipeEditorPage>());
@@ -90,7 +93,19 @@ namespace BatteryAging.ViewModels
             _clockTimer.Tick += (_, _) => CurrentTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             _clockTimer.Start();
             CurrentTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            CurrentUser = $"{CurrentSession.DisplayName}  [{CurrentSession.RoleName}]";
+            CurrentUser = BuildCurrentUserText(CurrentSession);
+        }
+
+        /// <summary>演示会话额外拼接剩余试用天数，提醒用户试用期限（跳过登录后唯一能看到期限的地方）</summary>
+        private string BuildCurrentUserText(UserSession session)
+        {
+            var text = $"{session.DisplayName}  [{session.RoleName}]";
+            if (session.IsDemo)
+            {
+                var status = _license.CheckCurrentLicense();
+                text += $"  · 演示试用剩余 {Math.Max(0, status.RemainingDays)} 天";
+            }
+            return text;
         }
 
         private void NavigateToFirstAllowed()
@@ -107,7 +122,15 @@ namespace BatteryAging.ViewModels
         {
             if (!ShowConfirmation(_language.GetString("Logout_ConfirmationMessage"), _language.GetString("Logout_ConfirmationTitle"))) return;
 
+            var wasDemo = CurrentSession.IsDemo;
             _auth.Logout();
+
+            // 演示会话没有真实账号密码可退回登录，退出登录等价于直接关闭程序
+            if (wasDemo)
+            {
+                Application.Current.Shutdown();
+                return;
+            }
 
             // ���µ���¼����
             var loginVm = _services.GetRequiredService<LoginWindowViewModel>();
@@ -122,7 +145,7 @@ namespace BatteryAging.ViewModels
 
             // ��¼�ɹ���ˢ��������״̬
             CurrentSession = _auth.CurrentSession;
-            CurrentUser = $"{CurrentSession.DisplayName}  [{CurrentSession.RoleName}]";
+            CurrentUser = BuildCurrentUserText(CurrentSession);
             CurrentPage = _services.GetRequiredService<TestExecutionPage>();
         }
 
@@ -142,9 +165,7 @@ namespace BatteryAging.ViewModels
         private void OnSessionChanged(object sender, UserSession session)
         {
             CurrentSession = session;
-            CurrentUser = session.IsAuthenticated
-                ? $"{session.DisplayName}  [{session.RoleName}]"
-                : string.Empty;
+            CurrentUser = session.IsAuthenticated ? BuildCurrentUserText(session) : string.Empty;
         }
     }
 }
