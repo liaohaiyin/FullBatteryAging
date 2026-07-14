@@ -16,6 +16,8 @@ namespace BatteryAging.Services
 
         // 认证
         Task<(bool Success, string Message)> LoginAsync(string username, string password);
+        /// <summary>建立一个演示会话（不查库、不需用户名密码），权限为工程师级去除用户/角色管理</summary>
+        void LoginAsDemo();
         void Logout();
 
         // 权限检查（供 ViewModel 和 Converter 调用）

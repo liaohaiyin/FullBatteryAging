@@ -194,6 +194,28 @@ namespace BatteryAging.Services
             }
         }
 
+        /// <summary>
+        /// 演示会话：不查库、不需要用户名密码，权限固定为 Role_Engineer
+        /// （工程师级，天然不含用户/角色管理），配合 ILicenseService 的 7 天机器码试用使用。
+        /// </summary>
+        public void LoginAsDemo()
+        {
+            var session = new UserSession
+            {
+                IsAuthenticated = true,
+                UserId = -2,
+                Username = "demo",
+                DisplayName = "演示用户",
+                RoleName = "Demo",
+                Permissions = Permission.Role_Engineer,
+                IsDemo = true,
+                LoginTime = DateTime.Now,
+            };
+            _currentSession = session;
+            SessionChanged?.Invoke(this, session);
+            _logger.LogInformation("演示会话登录");
+        }
+
         public void Logout()
         {
             var user = _currentSession.Username;
