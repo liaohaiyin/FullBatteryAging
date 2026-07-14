@@ -107,7 +107,6 @@ namespace BatteryAging.ViewModels
             }
             return text;
         }
-
         private void NavigateToFirstAllowed()
         {
             if (CanExecution) NavExecutionCommand.Execute(null);
@@ -131,8 +130,6 @@ namespace BatteryAging.ViewModels
                 Application.Current.Shutdown();
                 return;
             }
-
-            // ���µ���¼����
             var loginVm = _services.GetRequiredService<LoginWindowViewModel>();
             var loginWindow = new LoginWindow(loginVm);
             var loggedIn = loginWindow.ShowDialog();
@@ -143,7 +140,6 @@ namespace BatteryAging.ViewModels
                 return;
             }
 
-            // ��¼�ɹ���ˢ��������״̬
             CurrentSession = _auth.CurrentSession;
             CurrentUser = BuildCurrentUserText(CurrentSession);
             CurrentPage = _services.GetRequiredService<TestExecutionPage>();
